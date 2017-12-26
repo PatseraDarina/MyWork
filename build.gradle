@@ -1,0 +1,51 @@
+buildscript {
+    ext {
+        springBootVersion = '2.0.0.M7'
+    }
+    repositories {
+        mavenCentral()
+        maven { url "https://repo.spring.io/snapshot" }
+        maven { url "https://repo.spring.io/milestone" }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+allprojects{
+    //version according to build stage
+    if (isLocal || isBranch) {
+        version = "$version-LOCAL"
+    }
+    if (isDev) {
+        version = "$version-SNAPSHOT"
+    }
+    if (isRelease) {
+        version = "$version-RELEASE"
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    group = 'com.epam.autograder'
+    sourceCompatibility = 1.8
+    
+    repositories {
+        mavenCentral()
+        maven { url "https://repo.spring.io/snapshot" }
+        maven { url "https://repo.spring.io/milestone" }
+    }
+
+    dependencies {
+        compile('org.springframework.boot:spring-boot-starter')
+        compile('org.springframework.boot:spring-boot-starter-actuator')
+        runtime('org.springframework.boot:spring-boot-devtools')       
+        
+        compileOnly('org.projectlombok:lombok')
+
+        testCompile('org.springframework.boot:spring-boot-starter-test')
+    }
+}
