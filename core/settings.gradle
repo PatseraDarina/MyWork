@@ -1,9 +1,0 @@
-rootProject.name='auto-grader-core'
-//define build stage flags
-gradle.allprojects {
-    ext.isLocal = "$buildStage".contentEquals("LOCAL")
-    ext.isBranch = "$buildStage".contentEquals('BRANCH')
-    ext.isDev = "$buildStage".contentEquals('DEV')
-    ext.isRelease = "$buildStage".contentEquals('RELEASE')
-}
-

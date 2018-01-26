@@ -12,7 +12,7 @@ buildscript {
     }
 }
 
-allprojects{
+allprojects {
     //version according to build stage
     if (isLocal || isBranch) {
         version = "$version-LOCAL"
@@ -26,26 +26,29 @@ allprojects{
 }
 
 subprojects {
-    apply plugin: 'java'
-    apply plugin: 'org.springframework.boot'
-    apply plugin: 'io.spring.dependency-management'
-
     group = 'com.epam.autograder'
-    sourceCompatibility = 1.8
-    
+
     repositories {
         mavenCentral()
         maven { url "https://repo.spring.io/snapshot" }
         maven { url "https://repo.spring.io/milestone" }
     }
 
-    dependencies {
-        compile('org.springframework.boot:spring-boot-starter')
-        compile('org.springframework.boot:spring-boot-starter-actuator')
-        runtime('org.springframework.boot:spring-boot-devtools')       
-        
-        compileOnly('org.projectlombok:lombok')
+    ext.javaProject = {
+        apply plugin: 'java'
+        apply plugin: 'org.springframework.boot'
+        apply plugin: 'io.spring.dependency-management'
 
-        testCompile('org.springframework.boot:spring-boot-starter-test')
+        sourceCompatibility = 1.8
+
+        dependencies {
+            compile('org.springframework.boot:spring-boot-starter')
+            compile('org.springframework.boot:spring-boot-starter-actuator')
+            runtime('org.springframework.boot:spring-boot-devtools')
+
+            compileOnly('org.projectlombok:lombok')
+
+            testCompile('org.springframework.boot:spring-boot-starter-test')
+        }
     }
 }
