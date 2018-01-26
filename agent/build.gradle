@@ -1,0 +1,25 @@
+plugins {
+    id 'com.github.blindpirate.gogradle' version '0.8.0'
+}
+
+golang {
+    packagePath = 'agent'
+    goVersion = '1.9.2'
+}
+
+build {
+    targetPlatform = ['linux-386', 'windows-amd64', 'darwin-amd64']
+    outputLocation = 'build/${GOOS}_${GOARCH}/${PROJECT_NAME}${GOEXE}'
+    go 'build -o build/distribution/${GOOS}_${GOARCH}/${PROJECT_NAME}${GOEXE} agent/src/main'
+}
+
+clean.doLast { delete project.buildDir }
+
+task release(type: Copy) {
+    from 'build/distribution'
+    into 'distribution'
+}
+
+//If problem Execution failed for task ':prepare'. Create symbolic link at ...cdp-auto-grader\agent\.gogradle\project_gopath\src\agent failed
+//For windows use privilaged mode to run "./gradlew --no-daemon clean build"
+//
