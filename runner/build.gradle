@@ -1,5 +1,7 @@
 javaProject()
 apply plugin: 'checkstyle'
+apply plugin: 'pmd'
+
 
 checkstyle {
     toolVersion "7.6.1"
@@ -17,6 +19,14 @@ tasks.withType(Checkstyle) {
         html.enabled = true
         html.stylesheet resources.text.fromFile('config/xsl/checkstyle-custom.xsl')
     }
+}
+pmd {
+    toolVersion = '5.6.1'
+    ignoreFailures = true
+    targetJdk = '1.7'
+    sourceSets = [sourceSets.main]
+    reportsDir = file("${project.buildDir}/reports/pmd")
+    ruleSetFiles = files("/config/pmd/pmd-ruleset.xml")
 }
 //dependencies {
 //    compile('org.springframework.boot:spring-boot-starter-web')
