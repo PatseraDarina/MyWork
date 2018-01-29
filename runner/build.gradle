@@ -4,7 +4,7 @@ apply plugin: 'pmd'
 apply plugin: 'findbugs'
 apply plugin: "jacoco"
 checkstyle {
-    toolVersion "7.6.1"
+    toolVersion "8.8"
     configFile file("config/checkstyle/checkstyle.xml")
 }
 checkstyleMain {
