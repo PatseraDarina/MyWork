@@ -1,6 +1,8 @@
 javaProject()
 apply plugin: 'checkstyle'
 apply plugin: 'pmd'
+apply plugin: 'findbugs'
+
 
 
 checkstyle {
@@ -27,6 +29,28 @@ pmd {
     sourceSets = [sourceSets.main]
     reportsDir = file("${project.buildDir}/reports/pmd")
     ruleSetFiles = files("/config/pmd/pmd-ruleset.xml")
+}
+findbugs {
+    ignoreFailures = false
+    toolVersion = "3.0.1"
+    sourceSets = [sourceSets.main]
+    excludeFilter = file("config/findbugs/excludeFilter.xml")
+    reportsDir = file("$project.buildDir/reports/findbugs")
+    effort = "max"
+}
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+        html.stylesheet resources.text.fromFile('config/xsl/findbugs-custom.xsl')
+    }
 }
 //dependencies {
 //    compile('org.springframework.boot:spring-boot-starter-web')
