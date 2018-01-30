@@ -1,7 +1,25 @@
 javaProject()
 
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        mavenCentral()
+    }
+    dependencies {
+        classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.13.0')
+    }
+}
+
 apply plugin: 'eclipse-wtp'
-apply plugin: 'war'
+apply plugin: 'com.palantir.docker'
+
+docker {
+    name "${project.group}/${jar.baseName}:${version}"
+    files jar.archivePath
+    buildArgs(['JAR_FILE': "${jar.archiveName}"])
+}
 
 configurations {
     providedRuntime
