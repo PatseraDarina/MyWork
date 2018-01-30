@@ -5,7 +5,8 @@ apply plugin: 'findbugs'
 apply plugin: "jacoco"
 checkstyle {
     toolVersion "8.8"
-    configFile file("config/checkstyle/checkstyle.xml")
+    ignoreFailures = true
+    configFile file(config / checkstyle / checkstyle.xml)
 }
 checkstyleMain {
     source = 'src/main/java'
@@ -21,8 +22,8 @@ tasks.withType(Checkstyle) {
     }
 }
 pmd {
-    toolVersion = '5.6.1'
-    ignoreFailures = true
+    toolVersion = '6.0.0'
+    ignoreFailures = false
     targetJdk = '1.7'
     sourceSets = [sourceSets.main]
     reportsDir = file("${project.buildDir}/reports/pmd")
