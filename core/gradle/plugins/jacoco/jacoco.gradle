@@ -1,0 +1,25 @@
+
+jacocoTestReport {
+    reports {
+        html.enabled = true
+        html.destination file("${buildDir}/reports/jacoco/html")
+    }
+}
+jacocoTestCoverageVerification {
+
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.1
+            }
+        }
+    }
+}
+test {
+    jacoco {
+        append = false
+        destinationFile = file("$buildDir/reports/jacoco/jacocoTest.exec")
+    }
+}
+test.finalizedBy jacocoTestReport
+check.dependsOn jacocoTestCoverageVerification

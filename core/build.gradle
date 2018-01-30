@@ -11,25 +11,6 @@ configurations {
     providedRuntime
 }
 
-ext {
-    jacocoHtmlReportLocation = "${buildDir}/reports/jacoco/html"
-    jacocoExecLocation = "$buildDir/reports/jacoco/jacocoTest.exec"
-    jacocoCoverageLimit = 0.1
-
-    checkstyleToolVersion = '8.8'
-    checkstyleConfigFileLocation = 'config/checkstyle/checkstyle-rules.xml'
-    checkstyleMaxWarnings = 15
-    checkstyleMaxErrors = 4
-
-    pmdHtmlReportLocation = "${buildDir}/reports/pmd"
-    pmdToolVersion = '6.0.0'
-    pmdConfigFileLocation = 'config/pmd/pmd-rules.xml'
-
-    findbugsToolVersion = '3.0.1'
-    findbugsConfigFileLocation = 'config/findbugs/findbugs-filter.xml'
-    findbugsHtmlReportLocation = "$buildDir/reports/findbugs"
-}
-
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-web')
@@ -42,56 +23,11 @@ dependencies {
     testCompile('org.springframework.restdocs:spring-restdocs-mockmvc')
 }
 
-jacocoTestReport {
-    reports {
-        html.enabled = true
-        html.destination file(jacocoHtmlReportLocation)
-    }
-}
-jacocoTestCoverageVerification {
-    violationRules {
-        rule {
-            limit {
-                minimum = jacocoCoverageLimit
-            }
-        }
-    }
-}
-test {
-    jacoco {
-        append = false
-        destinationFile = file(jacocoExecLocation)
-    }
-}
-test.finalizedBy jacocoTestReport
-check.dependsOn jacocoTestCoverageVerification
+apply from: "/gradle/plugins/jacoco/jacoco.gradle"
+apply from: "/gradle/plugins/checkstyle/checkstyle.gradle"
+apply from: "/gradle/plugins/pmd/pmd.gradle"
+apply from: "/gradle/plugins/findbugs/findbugs.gradle"
 
-checkstyle {
-    toolVersion = checkstyleToolVersion
-    configFile file(checkstyleConfigFileLocation)
-    maxWarnings = checkstyleMaxWarnings
-    maxErrors = checkstyleMaxErrors
-}
-pmd {
-    toolVersion = pmdToolVersion
-    ignoreFailures = false
-    reportsDir = file(pmdHtmlReportLocation)
-    ruleSetFiles = files(pmdConfigFileLocation)
-}
-
-findbugs {
-    toolVersion = findbugsToolVersion
-    ignoreFailures = false
-    includeFilter = file(findbugsConfigFileLocation)
-    reportsDir = file(findbugsHtmlReportLocation)
-    effort = "max"
-}
-tasks.withType(FindBugs) {
-    reports {
-        xml.enabled = false
-        html.enabled = true
-    }
-}
 
 
 
