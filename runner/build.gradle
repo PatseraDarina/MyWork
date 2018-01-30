@@ -68,6 +68,16 @@ test {
         destinationFile = file("$buildDir/reports/jacoco/jacocoTest.exec")
     }
 }
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.3
+            }
+        }
+    }
+}
+check.dependsOn jacocoTestCoverageVerification
 test.finalizedBy jacocoTestReport
 
 //dependencies {
