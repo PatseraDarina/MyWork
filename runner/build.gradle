@@ -6,7 +6,7 @@ apply plugin: "jacoco"
 checkstyle {
     toolVersion "8.8"
     ignoreFailures = true
-    configFile file(config / checkstyle / checkstyle.xml)
+    configFile file("config/checkstyle/checkstyle.xml")
 }
 checkstyleMain {
     source = 'src/main/java'
