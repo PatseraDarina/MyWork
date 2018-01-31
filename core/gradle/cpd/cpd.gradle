@@ -1,0 +1,10 @@
+apply plugin: 'cpd'
+
+cpdCheck {
+    reports {
+        text.enabled = true
+        xml.enabled = true
+    }
+    source = sourceSets.main.allJava
+}
+check.dependsOn cpdCheck
