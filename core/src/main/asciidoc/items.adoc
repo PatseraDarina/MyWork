@@ -1,0 +1,44 @@
+= Autograder Documentation
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:toc-title: Содержание
+:sectlinks:
+
+[[overview]]
+= Обзор
+
+[[overview-http-status-codes]]
+== HTTP коды статусов
+
+В данном REST API используются стандартные коды статусов ответов HTTP.
+
+|===
+| Код статуса | Описание
+
+| `200 OK`
+| Запрос выполнен
+
+| `500 Internal server error`
+| Внутренняя ошибка сервера
+|===
+
+Данное REST API предоставляет возможность работы с topics
+
+== curl-request
+include::{snippets}/topic-controller-test/get-topic/curl-request.adoc[]
+
+== path-parameter-description
+include::{snippets}/topic-controller-test/get-topic/auto-description.adoc[]
+
+== http-response
+include::{snippets}/topic-controller-test/get-topic/http-response.adoc[]
+
+== path-parameters
+include::{snippets}/topic-controller-test/get-topic/auto-path-parameters.adoc[]
+
+== response-fields
+include::{snippets}/topic-controller-test/get-topic/auto-response-fields.adoc[]
+
