@@ -17,5 +17,4 @@ public class RunnerApplicationTest {
     public void contextLoads() {
         org.junit.Assert.assertNotNull(ctx);
     }
-
 }
