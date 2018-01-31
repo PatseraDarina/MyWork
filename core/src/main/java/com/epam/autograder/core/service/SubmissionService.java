@@ -4,5 +4,5 @@ import com.epam.autograder.core.entity.Submission;
 
 public interface SubmissionService {
 
-    void createSubmission(Submission submission);
+   Submission createSubmission(Submission submission);
 }

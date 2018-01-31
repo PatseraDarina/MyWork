@@ -9,9 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.epam.autograder.core.entity.InputSource;
 import com.epam.autograder.core.entity.Submission;
-import com.epam.autograder.core.enums.InputSource;
 
+/**
+ *
+ */
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class SubmissionRepositoryTest {
@@ -20,7 +23,7 @@ public class SubmissionRepositoryTest {
     private SubmissionRepository submissionRepository;
 
     @Test
-    public void saveSubmission() {
+    public void shouldSaveNewSubmission() {
         Submission submission = new Submission();
         submission.setEnvironmentId("gcdp_autograder_hello_world");
         submission.setInputSource(InputSource.GIT);

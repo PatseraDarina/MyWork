@@ -9,12 +9,15 @@ import com.epam.autograder.core.service.SubmissionService;
 
 @Service
 public class SubmissionServiceImpl implements SubmissionService {
-
+    /* @Autowired
+     public void setSubmissionRepository(SubmissionRepository submissionRepository) {
+         this.submissionRepository = submissionRepository;
+     }*/
     @Autowired
     private SubmissionRepository submissionRepository;
 
     @Override
-    public void createSubmission(Submission submission) {
-        submissionRepository.save(submission);
+    public Submission createSubmission(Submission submission) {
+        return submissionRepository.save(submission);
     }
 }
