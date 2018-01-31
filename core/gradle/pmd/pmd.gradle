@@ -2,5 +2,5 @@ pmd {
     toolVersion = '6.0.0'
     ignoreFailures = false
     reportsDir = file("${buildDir}/reports/pmd")
-    ruleSetFiles = files('gradle/plugins/pmd/config/pmd-rules.xml')
+    ruleSetFiles = files('gradle/pmd/config/pmd-rules.xml')
 }

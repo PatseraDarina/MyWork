@@ -1,0 +1,34 @@
+jacocoTestReport {
+    reports {
+        html.enabled = true
+        html.destination file("${buildDir}/reports/jacoco/html")
+    }
+    afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    '**/ServletInitializer.class',
+                    '**/CoreApplication.class'
+            ])
+        })
+    }
+}
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.5
+                element = 'CLASS'
+                excludes = ['com.epam.autograder.core.CoreApplication',
+                            'com.epam.autograder.core.ServletInitializer']
+            }
+        }
+    }
+}
+test {
+    jacoco {
+        append = false
+        destinationFile = file("$buildDir/reports/jacoco/jacocoTest.exec")
+    }
+}
+test.finalizedBy jacocoTestReport
+check.dependsOn jacocoTestCoverageVerification
