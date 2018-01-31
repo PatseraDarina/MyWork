@@ -22,15 +22,4 @@ public class SubmissionResource {
 
         return submission;
     }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/submission")
-    public Submission viewSubmission() {
-        Submission submission = new Submission();
-        submission.setSubmissionId(1);
-        submission.setInputSource(InputSource.GIT);
-        submission.setInputData("ghghghghg");
-        submission.setEnvironmentId("ghjhfjghfjgwdaa");
-
-        return submission;
-    }
 }

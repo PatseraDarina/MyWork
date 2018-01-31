@@ -1,6 +1,6 @@
 package com.epam.autograder.core.entity;
 
-import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import com.epam.autograder.core.enums.InputSource;
 
 @Entity
-public class Submission implements Serializable {
+public class Submission {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -48,6 +48,23 @@ public class Submission implements Serializable {
 
     public void setInputData(String inputData) {
         this.inputData = inputData;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(submissionId, environmentId, inputSource, inputData);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Submission that = (Submission) o;
+        return submissionId == that.submissionId &&
+                Objects.equals(environmentId, that.environmentId) &&
+                inputSource == that.inputSource &&
+                Objects.equals(inputData, that.inputData);
     }
 
     @Override
