@@ -1,8 +1,13 @@
 package com.epam.autograder.entity;
 
 public class Topic {
-
+    /**
+     * The id.
+     */
     private String id;
+    /**
+     * The name.
+     */
     private String name;
 
     public Topic(String id, String name) {

@@ -1,11 +1,14 @@
-= Autograder Documentation
+= Autograder Core Documentation
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
-:toc: left
-:toclevels: 4
-:toc-title: Содержание
 :sectlinks:
+:sectnums:
+:sectnumlevels: 2
+:source-highlighter: highlight.js
+:toc: left
+:toclevels: 5
+:docinfo: shared
 
 [[overview]]
 = Обзор
