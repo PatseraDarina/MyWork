@@ -10,8 +10,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class RunnerApplicationTest {
+
     @Autowired
-    private ApplicationContext ctx;
+    ApplicationContext ctx;
+
 
     @Test
     public void contextLoads() {
