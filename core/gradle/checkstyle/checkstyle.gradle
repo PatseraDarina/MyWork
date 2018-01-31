@@ -1,3 +1,5 @@
+apply plugin: 'checkstyle'
+
 checkstyle {
     toolVersion = '8.8'
     configFile file('gradle/checkstyle/config/checkstyle-rules.xml')
