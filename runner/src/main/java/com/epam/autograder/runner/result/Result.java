@@ -1,5 +1,8 @@
 package com.epam.autograder.runner.result;
 
-public interface Result {
-
+/**
+ *Docker Service answers
+ */
+public enum Result {
+    OK, ERROR
 }
