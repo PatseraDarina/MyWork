@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class RunnerApplicationTest {
 
     @Autowired
-    ApplicationContext ctx;
+    private ApplicationContext ctx;
 
 
     @Test

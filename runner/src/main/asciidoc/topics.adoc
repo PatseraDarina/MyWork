@@ -1,53 +1,50 @@
-= REST Topics
-Daryna Patsera;
+= Autograder Core Documentation
 :doctype: book
-:compat-mode:
-:page-layout!:
-:toc: right
-:toclevels: 2
-:sectanchors:
+:icons: font
+:source-highlighter: highlightjs
 :sectlinks:
 :sectnums:
-:linkattrs:
-:source-highlighter: highlightjs
+:sectnumlevels: 2
+:source-highlighter: highlight.js
+:toc: left
+:toclevels: 5
+:docinfo: shared
 
 [[overview]]
-= Обзор
+= Overview
 
 Some description
 
 [[overview-http-verbs]]
-== HTTP методы
+== HTTP methods
 
-В данном REST API используются стандартные HTTP методы.
+This REST API uses standard HTTP methods.
 
 |===
-| Метод | Описание
+| Method | Description
 
 | `GET`
-| Используется для получения объекта
+|  Used to get the object
 |===
 
 
 [[overview-http-status-codes]]
-=== HTTP коды статусов
+=== HTTP status code
 
-В данном REST API используются стандартные коды статусов ответов HTTP.
+This REST API uses standard HTTP response status codes.
 
 |===
-| Код статуса | Описание
+| Status code | Description
 
 | `200 OK`
-| Запрос выполнен
+| Request Completed
 
 | `500 Internal server error`
-| Внутренняя ошибка сервера
+| Internal server error
 |===
 
 [[overview-http-topics]]
 == Topics
-
-Данное REST API предоставляет возможность работы с topics
 
 include::{snippets}/topic-controller-test/add-topic/auto-section.adoc[]
 include::{snippets}/topic-controller-test/get-all-topics/auto-section.adoc[]
