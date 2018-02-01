@@ -1,7 +1,13 @@
 javaProject()
 
-apply plugin: 'eclipse-wtp'
-apply plugin: 'war'
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'de.aaschmid:gradle-cpd-plugin:1.0'
+    }
+}
 
 configurations {
     providedRuntime
@@ -26,3 +32,23 @@ dependencies {
             'org.junit.platform:junit-platform-runner:1.0.1'
     )
 }
+
+apply from: "/gradle/jacoco/jacoco.gradle"
+apply from: "/gradle/checkstyle/checkstyle.gradle"
+apply from: "/gradle/pmd/pmd.gradle"
+apply from: "/gradle/findbugs/findbugs.gradle"
+apply from: "/gradle/cpd/cpd.gradle"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
