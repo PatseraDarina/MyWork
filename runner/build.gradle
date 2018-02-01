@@ -102,7 +102,7 @@ docker {
 
 
 
-//dependencies {
-//    compile('org.springframework.boot:spring-boot-starter-web')
-//    compile('com.github.docker-java:docker-java:3.0.13')
-//}
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('com.github.docker-java:docker-java:3.0.13')
+}
