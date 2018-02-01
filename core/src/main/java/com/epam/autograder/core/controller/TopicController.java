@@ -1,6 +1,6 @@
-package com.epam.autograder.controller;
+package com.epam.autograder.core.controller;
 
-import com.epam.autograder.entity.Topic;
+import com.epam.autograder.core.entity.Topic;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
