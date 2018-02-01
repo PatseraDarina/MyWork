@@ -5,13 +5,15 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'de.aaschmid:gradle-cpd-plugin:1.0'
+        classpath 'de.aaschmid:gradle-cpd-plugin:1.0',
+                  'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4'
     }
 }
 
 configurations {
     providedRuntime
 }
+apply plugin: 'org.junit.platform.gradle.plugin'
 
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
@@ -38,7 +40,6 @@ apply from: "/gradle/checkstyle/checkstyle.gradle"
 apply from: "/gradle/pmd/pmd.gradle"
 apply from: "/gradle/findbugs/findbugs.gradle"
 apply from: "/gradle/cpd/cpd.gradle"
-
 
 
 

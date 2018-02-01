@@ -8,6 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.epam.autograder.core.entity.Submission;
 import com.epam.autograder.core.service.SubmissionService;
 
+/**
+ * Rest controller for submission resource
+ *
+ * @author Valeriia Chub
+ */
 @RestController
 public class SubmissionResource {
 

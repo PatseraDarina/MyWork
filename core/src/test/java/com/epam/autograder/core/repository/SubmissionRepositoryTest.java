@@ -1,7 +1,6 @@
 package com.epam.autograder.core.repository;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +23,9 @@ public class SubmissionRepositoryTest {
     @Autowired
     private SubmissionRepository submissionRepository;
 
+    /**
+     * Verifies if the submission is saved
+     */
     @Test
     public void shouldSaveNewSubmission() {
         Submission submission = new Submission();
@@ -33,7 +35,6 @@ public class SubmissionRepositoryTest {
 
         Submission savedSubmission = submissionRepository.save(submission);
 
-        assertNotNull(savedSubmission);
-        assertEquals(savedSubmission.getSubmissionId(), 1);
+        assertEquals("Submission id should be equal to 1", savedSubmission.getSubmissionId(), 1);
     }
 }
