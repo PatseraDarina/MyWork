@@ -22,12 +22,16 @@ import org.springframework.web.context.WebApplicationContext;
 import static capital.scalable.restdocs.jackson.JacksonResultHandlers.prepareJackson;
 import static capital.scalable.restdocs.response.ResponseModifyingPreprocessors.limitJsonArrayLength;
 import static capital.scalable.restdocs.response.ResponseModifyingPreprocessors.replaceBinaryContent;
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 
+/**
+ * mockMvcBase test
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class MockMvcBase {
@@ -45,17 +49,25 @@ public class MockMvcBase {
     @Rule
     public final JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation();
 
+    /**
+     * setUp method
+     *
+     * @throws Exception check on exception
+     */
     @Before
     public void setUp() throws Exception {
+        String http = "http";
+        String localhost = "localhost";
+        int port = 8080;
         mockMvc = MockMvcBuilders
                 .webAppContextSetup((WebApplicationContext) context)
                 .alwaysDo(prepareJackson(objectMapper))
                 .alwaysDo(commonDocumentation())
                 .apply(documentationConfiguration(restDocumentation)
                         .uris()
-                        .withScheme("http")
-                        .withHost("localhost")
-                        .withPort(8080)
+                        .withScheme(http)
+                        .withHost(localhost)
+                        .withPort(port)
                         .and().snippets()
                         .withDefaults(CliDocumentation.curlRequest(),
                                 HttpDocumentation.httpRequest(),
@@ -80,8 +92,11 @@ public class MockMvcBase {
                 prettyPrint());
     }
 
+    /**
+     * check on null
+     */
     @Test
     public void contextLoads() {
-        org.junit.Assert.assertNotNull(context);
+        assertNotNull("Context shouldn't be null", context);
     }
 }

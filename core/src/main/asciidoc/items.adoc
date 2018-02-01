@@ -25,7 +25,7 @@ The standard REST APIs use HTTP response status codes.
 | **200** OK
 | The request has succeeded.
 
-| **300** 300 Multiple Choices
+| **300** Multiple Choices
 | The requested resource corresponds to any one of a set of representations
 
 | **400** Bad Request

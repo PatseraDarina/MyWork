@@ -6,17 +6,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+/**
+ * simple stub controller
+ */
 @RestController
 public class TopicController {
 
-    private List<Topic> topics = new ArrayList<>(Arrays.asList(
-            new Topic("0","Spring Framework"),
-            new Topic("1", "Java Core")
-    ));
+    /**
+     *
+     */
+    private List<Topic> topics;
 
+    /**
+     * default constructor
+     */
+    public TopicController() {
+        topics = new ArrayList<>();
+        topics.add(new Topic("0", "Spring Framework"));
+        topics.add(new Topic("1", "Java Core"));
+    }
+
+    /**
+     * get all topics
+     *
+     * @return List list of Topics
+     */
     @RequestMapping("/topics")
     public List<Topic> getAllTopics() {
         return topics;
