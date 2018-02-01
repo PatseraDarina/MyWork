@@ -1,27 +1,33 @@
 package com.epam.autograder.core.service;
 
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.epam.autograder.core.entity.Submission;
 import com.epam.autograder.core.repository.SubmissionRepository;
 import com.epam.autograder.core.service.impl.SubmissionServiceImpl;
 
+/**
+ * Test class for testing SubmissionService functionality
+ *
+ * @author Valeriia Chub
+ */
 @SpringBootTest
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 public class SubmissionServiceTest {
 
     @Nested
-    @DisplayName("Test save feature ")
-    public class TestSave {
+    @DisplayName("Testing save submission feature")
+    class TestSave {
 
         @InjectMocks
         private final SubmissionServiceImpl submissionService = new SubmissionServiceImpl();
@@ -31,10 +37,9 @@ public class SubmissionServiceTest {
         private SubmissionRepository submissionRepository;
 
         @Test
-        @DisplayName("Test save feature ")
         void shouldInvokeSaveMethod() {
             submissionService.createSubmission(submission);
-            verify(submissionRepository).save(submission);
+            verify(submissionRepository, times(1)).save(submission);
         }
     }
 }

@@ -13,7 +13,9 @@ import com.epam.autograder.core.entity.InputSource;
 import com.epam.autograder.core.entity.Submission;
 
 /**
+ * Test class for further deleting
  *
+ * @author Valeriia Chub
  */
 @SpringBootTest
 @RunWith(SpringRunner.class)

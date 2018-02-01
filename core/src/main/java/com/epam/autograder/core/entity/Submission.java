@@ -6,6 +6,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+/**
+ * Represents a students homework submission.
+ *
+ * @author Valeriia Chub
+ */
 @Entity
 public class Submission {
 

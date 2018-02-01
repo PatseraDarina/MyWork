@@ -14,6 +14,12 @@ public class SubmissionResource {
     @Autowired
     private SubmissionService submissionService;
 
+    /**
+     * create new submission
+     *
+     * @param submission a submission without id
+     * @return a submission with generated id
+     */
     @PostMapping("/submission")
     public Submission createSubmission(@RequestBody Submission submission) {
         return submissionService.createSubmission(submission);
