@@ -26,16 +26,6 @@ ext {
     snippetsDir = file("$buildDir/generated-snippets")
 }
 
-apply plugin: 'war'
-// a Gradle plugin that uses Asciidoctor via JRuby to process AsciiDoc source files within the project
-apply plugin: 'org.asciidoctor.convert'
-
-repositories {
-    mavenLocal()
-    maven { url 'https://repo.spring.io/libs-snapshot' }
-    mavenCentral()
-}
-
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-web')
@@ -43,7 +33,7 @@ dependencies {
 
     runtime('org.hsqldb:hsqldb')
     runtime('org.postgresql:postgresql')
-    
+
     providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
 
     // dependency for REST docs test
@@ -53,6 +43,24 @@ dependencies {
     testCompile "org.springframework.restdocs:spring-restdocs-core:2.0.0.RELEASE"
     testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:2.0.0.RELEASE"
 }
+
+repositories {
+    mavenLocal()
+    maven { url 'https://repo.spring.io/libs-snapshot' }
+    mavenCentral()
+}
+
+apply plugin: 'war'
+// a Gradle plugin that uses Asciidoctor via JRuby to process AsciiDoc source files within the project
+apply plugin: 'org.asciidoctor.convert'
+apply from: "/gradle/jacoco/jacoco.gradle"
+apply from: "/gradle/checkstyle/checkstyle.gradle"
+apply from: "/gradle/pmd/pmd.gradle"
+apply from: "/gradle/findbugs/findbugs.gradle"
+apply from: "/gradle/cpd/cpd.gradle"
+apply plugin: 'eclipse-wtp'
+apply plugin: 'com.palantir.docker'
+apply plugin: "com.palantir.docker-run"
 
 //----- START Configuration Spring REST Docs
 task jsonDoclet(type: Javadoc, dependsOn: compileJava) {
@@ -105,3 +113,26 @@ jar {
 }
 
 build.finalizedBy asciidoctor
+
+//START Docker configuration
+
+//building and pushing docker images
+docker {
+    //name for use a container, may include a tag
+    name "${project.group}/${jar.baseName}:${version}"
+    //(optional) an argument list of files to be included in the Docker build context
+    files jar.archivePath
+    //an argument map of string to string which will set --build-arg arguments to the docker build command
+    buildArgs(['JAR_FILE': "${jar.archiveName}"])
+}
+
+//tasks for starting, stopping, statusing and cleaning up a named container
+dockerRun {
+    //name for use a container, may include a tag
+    name "${jar.baseName}"
+    //name of the image
+    image "${project.group}/${jar.baseName}:${version}"
+    //applications port
+    ports '8080'
+}
+//END Docker configuration
