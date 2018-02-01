@@ -112,4 +112,7 @@ dockerRun {
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('com.github.docker-java:docker-java:3.0.13')
+
+    //need for docker library
+    compile group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: '2.26'
 }
