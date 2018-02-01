@@ -8,7 +8,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.13.0')
+        classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.17.2')
         classpath 'de.aaschmid:gradle-cpd-plugin:1.0'
     }
 }
@@ -38,8 +38,9 @@ apply plugin: 'eclipse-wtp'
 apply plugin: 'com.palantir.docker'
 apply plugin: "com.palantir.docker-run"
 
-
 //START Docker configuration
+
+//building and pushing docker images
 docker {
     //name for use a container, may include a tag
     name "${project.group}/${jar.baseName}:${version}"
@@ -49,14 +50,12 @@ docker {
     buildArgs(['JAR_FILE': "${jar.archiveName}"])
 }
 
+//tasks for starting, stopping, statusing and cleaning up a named container
 dockerRun {
     //name for use a container, may include a tag
     name "${jar.baseName}"
     //name of the image
     image "${project.group}/${jar.baseName}:${version}"
-    //execute command when running the container
-    //-Djava.security.egd=file:/dev/./urandom - needed for generate random container id
-    command 'java', '-Djava.security.egd=file:/dev/./urandom', '-jar', 'app.jar'
     //applications port
     ports '8080'
 }
