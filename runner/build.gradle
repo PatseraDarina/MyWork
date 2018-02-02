@@ -61,6 +61,13 @@ jacocoTestReport {
         xml.enabled = true
         html.destination file("${buildDir}/reports/jacoco/jacocoHtml")
     }
+    afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(dir: it, exclude:
+                    'com/epam/autograder/runner/entity/**'
+            )
+        })
+    }
 }
 test {
     jacoco {
@@ -72,7 +79,7 @@ jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
-                minimum = 0.3
+                minimum = 0.5
             }
         }
     }
