@@ -5,7 +5,9 @@ import com.epam.autograder.runner.result.Result;
 import com.epam.autograder.runner.service.DockerService;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.exception.NotFoundException;
 import com.github.dockerjava.api.model.Info;
+import com.github.dockerjava.core.command.WaitContainerResultCallback;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -16,8 +18,6 @@ import org.springframework.stereotype.Service;
 @Service("dockerServiceImpl")
 public class DockerServiceImpl implements DockerService {
 
-    private static final String IMAGE_NAME = "busybox";
-
     @Autowired
     @Qualifier("dockerClient")
     private DockerClient dockerClient;
@@ -26,16 +26,22 @@ public class DockerServiceImpl implements DockerService {
     public Result runDocker(Submission submission) {
         Info info = dockerClient.infoCmd().exec();
         System.out.println("DOCKER INFO: " + info);
+        String imageName = submission.getEnvironmentId();
+        try {
+            CreateContainerResponse container = dockerClient
+                    .createContainerCmd(imageName)
+                    .exec();
 
-        CreateContainerResponse container = dockerClient
-                .createContainerCmd(IMAGE_NAME)
-                .exec();
-
-        dockerClient.startContainerCmd(container.getId()).exec();
+            dockerClient.startContainerCmd(container.getId()).exec();
+            dockerClient.waitContainerCmd(container.getId()).exec((new WaitContainerResultCallback()));
+            dockerClient.stopContainerCmd(container.getId()).exec();
+        } catch (NotFoundException e) {
+            return Result.ERROR;
+        }
 
         info = dockerClient.infoCmd().exec();
         System.out.println("DOCKER INFO: " + info);
 
-        return null;
+        return Result.OK;
     }
 }
