@@ -1,17 +1,16 @@
 package com.epam.autograder.runner.entity;
 
-import java.util.Objects;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * Represents a students homework submission.
- *
  */
 public class Submission {
 
     private long submissionId;
     private String environmentId;
-    private InputSource inputSource;
-    private String inputData;
+    private String payload;
 
     /**
      * @return task id
@@ -41,38 +40,19 @@ public class Submission {
         this.environmentId = environmentId;
     }
 
-    /**
-     * @return user task type
-     */
-    public InputSource getInputSource() {
-        return inputSource;
-    }
-
-    /**
-     * @param inputSource user task type
-     */
-    public void setInputSource(InputSource inputSource) {
-        this.inputSource = inputSource;
-    }
 
     /**
      * @return link to task
      */
-    public String getInputData() {
-        return inputData;
+    public String getPayload() {
+        return payload;
     }
 
     /**
-     * @param inputData link to task
+     * @param payload link to task
      */
-    public void setInputData(String inputData) {
-        this.inputData = inputData;
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(submissionId, environmentId, inputSource, inputData);
+    public void setPayload(String payload) {
+        this.payload = payload;
     }
 
     @Override
@@ -80,15 +60,26 @@ public class Submission {
         if (this == o) {
             return true;
         }
+
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
+
         Submission that = (Submission) o;
-        return submissionId == that.submissionId
-                && Objects.equals(environmentId, that.environmentId)
-                && inputSource == that.inputSource
-                && Objects.equals(inputData, that.inputData);
+
+        return new EqualsBuilder()
+                .append(submissionId, that.submissionId)
+                .append(environmentId, that.environmentId)
+                .append(payload, that.payload)
+                .isEquals();
     }
 
-
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(submissionId)
+                .append(environmentId)
+                .append(payload)
+                .toHashCode();
+    }
 }
