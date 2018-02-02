@@ -14,11 +14,24 @@ import javax.persistence.Id;
 @Entity
 public class Submission {
 
+    /**
+     * Submission id
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long submissionId;
+
+    /**
+     * Environment id
+     */
     private String environmentId;
+    /**
+     * Type of input source
+     */
     private InputSource inputSource;
+    /**
+     * Input data
+     */
     private String inputData;
 
     /**

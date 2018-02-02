@@ -32,10 +32,39 @@ The standard REST APIs use HTTP response status codes.
 | The request could not be understood by the server due to malformed syntax. The client SHOULD NOT repeat the request without modifications.
 
 | **500** Internal server error
-| Внутренняя ошибка сервера
+| Internal Server Error
 |===
 
 This REST API provides an opportunity to work with topics
 
-//include::{snippets}/topic-controller-test/get-topic/auto-section.adoc[]
+include::{snippets}/submission-resource-test/should-return-status-success/auto-section.adoc[]
 
+=== 404 Error
+
+include::{snippets}/submission-resource-test/should-return-status-client-error/auto-method-path.adoc[]
+
+include::{snippets}/submission-resource-test/should-return-status-client-error/auto-description.adoc[]
+
+==== Path parameters
+
+include::{snippets}/submission-resource-test/should-return-status-client-error/auto-path-parameters.adoc[]
+
+==== Query parameters
+
+include::{snippets}/submission-resource-test/should-return-status-client-error/auto-request-parameters.adoc[]
+
+==== Request fields
+
+include::{snippets}/submission-resource-test/should-return-status-client-error/auto-request-fields.adoc[]
+
+==== Response fields
+
+include::{snippets}/submission-resource-test/should-return-status-client-error/auto-response-fields.adoc[]
+
+==== Example request
+
+include::{snippets}/submission-resource-test/should-return-status-client-error/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/submission-resource-test/should-return-status-client-error/http-response.adoc[]

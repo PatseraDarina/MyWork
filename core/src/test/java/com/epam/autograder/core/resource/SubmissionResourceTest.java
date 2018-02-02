@@ -32,7 +32,7 @@ public class SubmissionResourceTest extends MockMvcBase {
             MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
 
     /**
-     * ghghghg
+     * Asserts that submission resource is not null
      */
     @Test
     public void contextLoads() {
@@ -40,12 +40,13 @@ public class SubmissionResourceTest extends MockMvcBase {
     }
 
     /**
-     * gfghfjghfj,df
-     * @throws Exception fdffjdkjf
+     * Test successful status of POST
+     *
+     * @throws Exception if a problem occurs
      */
 
     @Test
-    public void testPostIsOk() throws Exception {
+    public void shouldReturnStatusSuccess() throws Exception {
         assertThat(mockMvc.perform(RestDocumentationRequestBuilders.post("/submission").content(requestBody)
                 .contentType(applicationJsonUtf8))
                 .andExpect(status().isOk())
@@ -56,13 +57,16 @@ public class SubmissionResourceTest extends MockMvcBase {
     }
 
     /**
-     * hgfghgghfgh
+     * Test client error of POST
      *
-     * @throws Exception ghhkkfj
+     * @throws Exception if a problem occurs
      */
     @Test
-    public void testPost400() throws Exception {
-        assertThat(mockMvc.perform(RestDocumentationRequestBuilders.post("/submission121").content(requestBody)
+    public void shouldReturnStatusClientError() throws Exception {
+        String wrongRequestBody = "{\"submission\" : \"\", \"environmentId\" : \"gcdp_autograder_hello_world\", "
+                + "\"inputSource\" : \"GIT\",  \"inputData\" : \"git@git.epam.com:.../...git\"}";
+
+        assertThat(mockMvc.perform(RestDocumentationRequestBuilders.post("/submission121").content(wrongRequestBody)
                 .contentType(applicationJsonUtf8))
                 .andExpect(status().is4xxClientError()));
     }

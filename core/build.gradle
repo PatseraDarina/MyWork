@@ -43,13 +43,14 @@ apply from: "/gradle/cpd/cpd.gradle"
 
 
 dependencies {
-    compile('org.springframework.boot:spring-boot-starter-data-jpa',
-            'org.springframework.boot:spring-boot-starter-web',
-            'org.springframework.boot:spring-boot-starter:1.5.10.RELEASE',
-            'org.jetbrains.xodus:xodus-environment:1.1.0')
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter:1.5.10.RELEASE')
+    compile('org.jetbrains.xodus:xodus-environment:1.1.0')
 
-    runtime('org.hsqldb:hsqldb',
-            'org.postgresql:postgresql')
+
+    runtime('org.hsqldb:hsqldb')
+    runtime('org.postgresql:postgresql')
 
     providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
 
@@ -63,12 +64,10 @@ dependencies {
 
     testCompileOnly('org.apiguardian:apiguardian-api:1.0.0')
 
-    testRuntime(
-            'org.junit.jupiter:junit-jupiter-engine:5.0.1',
-            'org.junit.vintage:junit-vintage-engine:4.12.1',
-            'org.junit.platform:junit-platform-launcher:1.0.1',
-            'org.junit.platform:junit-platform-runner:1.0.1'
-    )
+    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.0.1')
+    testRuntime('org.junit.vintage:junit-vintage-engine:4.12.1')
+    testRuntime('org.junit.platform:junit-platform-launcher:1.0.1')
+    testRuntime('org.junit.platform:junit-platform-runner:1.0.1')
 }
 
 repositories {
