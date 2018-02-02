@@ -3,5 +3,6 @@ apply plugin: 'checkstyle'
 checkstyle {
     toolVersion = '8.8'
     configFile file('gradle/checkstyle/config/checkstyle-rules.xml')
+    configProperties = [suppressionsFile: "${rootDir}/gradle/checkstyle/config/checkstyle_suppressions.xml"]
     maxWarnings = 10
 }
