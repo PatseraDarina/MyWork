@@ -16,9 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class DockerController {
-    /**
-     * @param dockerService contains 'runDocker' method
-     */
     @Autowired
     @Qualifier("dockerServiceImpl")
     private DockerService dockerService;
@@ -26,7 +23,7 @@ public class DockerController {
      * @return  ResponseEntity<Result> in JSON format
      * @param submission get from Core
      */
-    @PostMapping("/container/{containerName}")
+    @PostMapping("/containers")
     public ResponseEntity<Result> createContainer(@RequestBody Submission submission) {
         Result result = dockerService.runDocker(submission);
         return new ResponseEntity<>(result, HttpStatus.OK);
