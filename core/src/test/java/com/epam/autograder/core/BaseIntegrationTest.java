@@ -39,7 +39,7 @@ public abstract class BaseIntegrationTest {
     private static final int PORT = 8080;
     private static final String CLASS_METHOD_NAME = "{class-name}/{method-name}";
     @Rule
-    private final JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation();
+    public final JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation();
     protected MockMvc mockMvc;
     @Autowired
     private ApplicationContext context;
