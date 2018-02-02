@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * topicController test
  */
-public class TopicControllerTest extends MockMvcBase {
+public class TopicControllerTest extends BaseIntegrationTest {
 
     /**
      * test to check the topic by id

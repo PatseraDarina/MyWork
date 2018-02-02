@@ -4,7 +4,6 @@ import capital.scalable.restdocs.AutoDocumentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,7 +21,6 @@ import org.springframework.web.context.WebApplicationContext;
 import static capital.scalable.restdocs.jackson.JacksonResultHandlers.prepareJackson;
 import static capital.scalable.restdocs.response.ResponseModifyingPreprocessors.limitJsonArrayLength;
 import static capital.scalable.restdocs.response.ResponseModifyingPreprocessors.replaceBinaryContent;
-import static org.junit.Assert.assertNotNull;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -34,20 +32,19 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class MockMvcBase {
+public abstract class BaseIntegrationTest {
 
-    protected static final String CLASS_METHOD_NAME = "{class-name}/{method-name}";
-
+    private static final String HTTP = "http";
+    private static final String LOCALHOST = "localhost";
+    private static final int PORT = 8080;
+    private static final String CLASS_METHOD_NAME = "{class-name}/{method-name}";
+    @Rule
+    private final JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation();
+    protected MockMvc mockMvc;
     @Autowired
     private ApplicationContext context;
-
     @Autowired
-    protected ObjectMapper objectMapper;
-
-    protected MockMvc mockMvc;
-
-    @Rule
-    public final JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation();
+    private ObjectMapper objectMapper;
 
     /**
      * setUp method
@@ -56,20 +53,19 @@ public class MockMvcBase {
      */
     @Before
     public void setUp() throws Exception {
-        String http = "http";
-        String localhost = "localhost";
-        int port = 8080;
         mockMvc = MockMvcBuilders
                 .webAppContextSetup((WebApplicationContext) context)
                 .alwaysDo(prepareJackson(objectMapper))
                 .alwaysDo(commonDocumentation())
                 .apply(documentationConfiguration(restDocumentation)
                         .uris()
-                        .withScheme(http)
-                        .withHost(localhost)
-                        .withPort(port)
-                        .and().snippets()
-                        .withDefaults(CliDocumentation.curlRequest(),
+                        .withScheme(HTTP)
+                        .withHost(LOCALHOST)
+                        .withPort(PORT)
+                        .and()
+                        .snippets()
+                        .withDefaults(
+                                CliDocumentation.curlRequest(),
                                 HttpDocumentation.httpRequest(),
                                 HttpDocumentation.httpResponse(),
                                 AutoDocumentation.requestFields(),
@@ -82,21 +78,19 @@ public class MockMvcBase {
                 .build();
     }
 
-    protected RestDocumentationResultHandler commonDocumentation() {
-        return document(CLASS_METHOD_NAME,
-                preprocessRequest(), commonResponsePreprocessor());
+    private RestDocumentationResultHandler commonDocumentation() {
+        return document(
+                CLASS_METHOD_NAME,
+                preprocessRequest(),
+                commonResponsePreprocessor()
+        );
     }
 
-    protected OperationResponsePreprocessor commonResponsePreprocessor() {
-        return preprocessResponse(replaceBinaryContent(), limitJsonArrayLength(objectMapper),
-                prettyPrint());
-    }
-
-    /**
-     * check on null
-     */
-    @Test
-    public void contextLoads() {
-        assertNotNull("Context shouldn't be null", context);
+    private OperationResponsePreprocessor commonResponsePreprocessor() {
+        return preprocessResponse(
+                replaceBinaryContent(),
+                limitJsonArrayLength(objectMapper),
+                prettyPrint()
+        );
     }
 }

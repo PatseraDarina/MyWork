@@ -24,6 +24,7 @@ repositories {
 }
 
 configurations {
+    providedRuntime
     jsondoclet
 }
 
@@ -92,13 +93,25 @@ test {
 
     dependsOn jsonDoclet
 }
+
+/**
+ * Add the documentation to jar file.
+ */
+task documentationToJar(type: Jar) {
+    baseName = "${project.archivesBaseName}"
+    classifier = 'documentation'
+    from("$buildDir/generated-docs/html") {
+        into 'static/docs'
+    }
+}
+
 /**
  * This task generate a documentation based on meta-data (result of jsonDoclet task)
  * and asciidoc template of documentation.
  */
 asciidoctor {
     // Template of documentation
-    sourceDir = file("src/main/asciidoc")
+    sourceDir = file("src/main/documentation")
     // Generated documentation file
     outputDir = file("$buildDir/generated-docs")
     // output format html or pdf, but not both
@@ -110,20 +123,10 @@ asciidoctor {
     attributes "source-highlighter": "highlightjs", "snippets": snippetsDir
 
     dependsOn test
+    finalizedBy documentationToJar
 }
-//----- END Configuration Spring REST Docs -----
-/**
- * Add documentation to jar file.
- */
-jar {
-    dependsOn asciidoctor
-    // put genereted file with documentation to current path
-    from("${asciidoctor.outputDir}/html5") {
-        into 'static/docs'
-    }
-}
-
 build.finalizedBy asciidoctor
+//----- END Configuration Spring REST Docs -----
 
 //----- START Docker configuration -----
 /**
