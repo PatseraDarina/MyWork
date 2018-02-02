@@ -102,7 +102,79 @@ docker {
 
 
 
-//dependencies {
-//    compile('org.springframework.boot:spring-boot-starter-web')
-//    compile('com.github.docker-java:docker-java:3.0.13')
-//}
+//Configuration for Spring REST Docs
+
+buildscript {
+    ext {
+        springBootVersion = "1.5.9.RELEASE"
+    }
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "org.asciidoctor:asciidoctor-gradle-plugin:1.5.3"
+    }
+}
+
+configurations {
+    jsondoclet
+}
+
+ext {
+    snippetsDir = file("$buildDir/generated-snippets")
+    javadocJsonDir = file("$buildDir/generated-javadoc-json")
+}
+
+apply plugin: "org.asciidoctor.convert"
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('com.github.docker-java:docker-java:3.0.13')
+
+    testCompile group: 'capital.scalable', name: 'spring-auto-restdocs-core', version: '1.0.11'
+    jsondoclet group: 'capital.scalable', name: 'spring-auto-restdocs-json-doclet', version: '1.0.11'
+    testCompile "com.jayway.jsonpath:json-path-assert"
+    testCompile "org.springframework.restdocs:spring-restdocs-core:1.2.3.RELEASE"
+    testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:1.2.3.RELEASE"
+}
+
+task jsonDoclet(type: Javadoc, dependsOn: compileJava) {
+    source = sourceSets.main.allJava
+    classpath = sourceSets.main.compileClasspath
+    destinationDir = javadocJsonDir
+    options.docletpath = configurations.jsondoclet.files.asType(List)
+    options.doclet = 'capital.scalable.restdocs.jsondoclet.ExtractDocumentationAsJsonDoclet'
+    options.memberLevel = JavadocMemberLevel.PACKAGE
+}
+
+test {
+    systemProperty 'org.springframework.restdocs.outputDir', snippetsDir
+
+    systemProperty 'org.springframework.restdocs.javadocJsonDir', javadocJsonDir
+    outputs.dir snippetsDir
+
+    dependsOn jsonDoclet
+}
+
+asciidoctor {
+    sourceDir = file("src/main/asciidoc")
+    outputDir = file("$buildDir/generated-docs")
+    options backend: "html", doctype: "book"
+    attributes "source-highlighter": "highlightjs", "snippets": snippetsDir
+
+    dependsOn test
+}
+
+jar {
+    dependsOn asciidoctor
+    from ("${asciidoctor.outputDir}/html5") {
+        into 'static/docs'
+    }
+}
+

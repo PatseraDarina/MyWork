@@ -2,11 +2,16 @@ javaProject()
 
 buildscript {
     repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
         mavenCentral()
     }
     dependencies {
-        classpath 'de.aaschmid:gradle-cpd-plugin:1.0',
-                  'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4'
+        classpath ('de.aaschmid:gradle-cpd-plugin:1.0',
+                  'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4',
+                  'gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.17.2'
+                  )
     }
 }
 
@@ -40,9 +45,32 @@ apply from: "/gradle/checkstyle/checkstyle.gradle"
 apply from: "/gradle/pmd/pmd.gradle"
 apply from: "/gradle/findbugs/findbugs.gradle"
 apply from: "/gradle/cpd/cpd.gradle"
+apply plugin: 'eclipse-wtp'
+apply plugin: 'com.palantir.docker'
+apply plugin: "com.palantir.docker-run"
 
+//START Docker configuration
 
+//building and pushing docker images
+docker {
+    //name for use a container, may include a tag
+    name "${project.group}/${jar.baseName}:${version}"
+    //(optional) an argument list of files to be included in the Docker build context
+    files jar.archivePath
+    //an argument map of string to string which will set --build-arg arguments to the docker build command
+    buildArgs(['JAR_FILE': "${jar.archiveName}"])
+}
 
+//tasks for starting, stopping, statusing and cleaning up a named container
+dockerRun {
+    //name for use a container, may include a tag
+    name "${jar.baseName}"
+    //name of the image
+    image "${project.group}/${jar.baseName}:${version}"
+    //applications port
+    ports '8080'
+}
+//END Docker configuration
 
 
 
