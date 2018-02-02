@@ -1,6 +1,6 @@
 javaProject()
 
-clean.execute()
+//clean.execute()
 
 buildscript {
     repositories {
@@ -30,11 +30,10 @@ ext {
 
 // a Gradle plugin that uses Asciidoctor via JRuby to process AsciiDoc source files within the project
 apply plugin: 'org.asciidoctor.convert'
-apply plugin: 'eclipse-wtp'
 apply plugin: 'war'
 apply plugin: 'com.palantir.docker'
 apply plugin: "com.palantir.docker-run"
-apply plugin: 'org.junit.platform.gradle.plugin'
+//apply plugin: 'org.junit.platform.gradle.plugin'
 
 apply from: "/gradle/jacoco/jacoco.gradle"
 apply from: "/gradle/checkstyle/checkstyle.gradle"
@@ -120,13 +119,12 @@ asciidoctor {
 jar {
     dependsOn asciidoctor
     // put genereted file with documentation to current path
-    from ("${asciidoctor.outputDir}/html5") {
+    from("${asciidoctor.outputDir}/html5") {
         into 'static/docs'
     }
 }
 
 build.finalizedBy asciidoctor
-
 
 //START Docker configuration
 

@@ -37,5 +37,5 @@ The standard REST APIs use HTTP response status codes.
 
 This REST API provides an opportunity to work with topics
 
-include::{snippets}/topic-controller-test/get-topic/auto-section.adoc[]
+//include::{snippets}/topic-controller-test/get-topic/auto-section.adoc[]
 
