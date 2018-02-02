@@ -1,4 +1,4 @@
-package com.epam.autograder.entity;
+package com.epam.autograder.core.entity;
 
 /**
  * simple stub entity

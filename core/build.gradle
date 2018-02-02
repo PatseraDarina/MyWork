@@ -1,5 +1,7 @@
 javaProject()
 
+clean.execute()
+
 buildscript {
     repositories {
         mavenCentral()
@@ -7,13 +9,10 @@ buildscript {
         maven {
             url "https://plugins.gradle.org/m2/"
         }
-
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.7.RELEASE")
-        // import asciidoctor gradle plugin
         classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.2")
-        // import asciidoctor pdf plugin
         classpath("org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16")
         classpath('de.aaschmid:gradle-cpd-plugin:1.0')
         classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.17.2')
@@ -21,45 +20,39 @@ buildscript {
 }
 
 configurations {
-    // adding jsondoclet configuration
     jsondoclet
 }
 
 ext {
-    // define path for json javadocs
     javadocJsonDir = file("$buildDir/generated-javadoc-json")
-    // define path for genereted snippets via asciidoc container resources
     snippetsDir = file("$buildDir/generated-snippets")
 }
 
-apply plugin: 'war'
-// a Gradle plugin that uses Asciidoctor via JRuby to process AsciiDoc source files within the project
 apply plugin: 'org.asciidoctor.convert'
+apply plugin: 'com.palantir.docker'
+apply plugin: "com.palantir.docker-run"
+apply plugin: 'war'
+
 apply from: "/gradle/jacoco/jacoco.gradle"
 apply from: "/gradle/checkstyle/checkstyle.gradle"
 apply from: "/gradle/pmd/pmd.gradle"
 apply from: "/gradle/findbugs/findbugs.gradle"
 apply from: "/gradle/cpd/cpd.gradle"
-apply plugin: 'eclipse-wtp'
-apply plugin: 'com.palantir.docker'
-apply plugin: "com.palantir.docker-run"
 
 dependencies {
-    compile('org.springframework.boot:spring-boot-starter-data-jpa',
-    'org.springframework.boot:spring-boot-starter-web',
-    'org.springframework.boot:spring-boot-starter:1.5.10.RELEASE')
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter:1.5.10.RELEASE')
 
-    runtime('org.hsqldb:hsqldb',
-            'org.postgresql:postgresql')
+    runtime('org.hsqldb:hsqldb')
+    runtime( 'org.postgresql:postgresql')
 
     providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
 
-    // dependency for REST docs test
     testCompile('capital.scalable:spring-auto-restdocs-core:1.0.11')
-    // dependency for json doclet configuration
     jsondoclet "capital.scalable:spring-auto-restdocs-json-doclet:1.0.11"
-    testCompile('org.springframework.restdocs:spring-restdocs-core:2.0.0.RELEASE',
-            'org.springframework.restdocs:spring-restdocs-mockmvc:2.0.0.RELEASE')
+    testCompile('org.springframework.restdocs:spring-restdocs-core:2.0.0.RELEASE')
+    testCompile('org.springframework.restdocs:spring-restdocs-mockmvc:2.0.0.RELEASE')
 }
 
 repositories {
@@ -77,20 +70,17 @@ task jsonDoclet(type: Javadoc, dependsOn: compileJava) {
     classpath = sourceSets.main.compileClasspath
     // the directory to generate the documentation into path
     destinationDir = javadocJsonDir
-    // set doclet path
+    // set path to doclet
     options.docletpath = configurations.jsondoclet.files.asType(List)
     // resource for exporting JavaDoc to JSON for Spring Auto REST Docs
     options.doclet = 'capital.scalable.restdocs.jsondoclet.ExtractDocumentationAsJsonDoclet'
-    // level of javadoc
+    // works level
     options.memberLevel = JavadocMemberLevel.PACKAGE
 }
 
 test {
-    // set path to outpudDir system property
     systemProperty 'org.springframework.restdocs.outputDir', snippetsDir
-    // set path to javadocJsonDir system property
     systemProperty 'org.springframework.restdocs.javadocJsonDir', javadocJsonDir
-    // set otput derictory by snippetsDir path
     outputs.dir snippetsDir
 
     dependsOn jsonDoclet
