@@ -84,6 +84,9 @@ dependencies {
     //need for docker library
     compile group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: '2.26'
 
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.10.0'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.10.0'
+
     testCompile group: 'capital.scalable', name: 'spring-auto-restdocs-core', version: '1.0.11'
     jsondoclet group: 'capital.scalable', name: 'spring-auto-restdocs-json-doclet', version: '1.0.11'
     testCompile "com.jayway.jsonpath:json-path-assert"

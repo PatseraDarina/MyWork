@@ -8,6 +8,7 @@ import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.exception.NotFoundException;
 import com.github.dockerjava.api.model.Info;
 import com.github.dockerjava.core.command.WaitContainerResultCallback;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 @Service("dockerServiceImpl")
 public class DockerServiceImpl implements DockerService {
 
+    private static final Logger LOGGER = Logger.getLogger(DockerServiceImpl.class);
+
     @Autowired
     @Qualifier("dockerClient")
     private DockerClient dockerClient;
@@ -25,7 +28,9 @@ public class DockerServiceImpl implements DockerService {
     @Override
     public Result runDocker(Submission submission) {
         Info info = dockerClient.infoCmd().exec();
-        System.out.println("DOCKER INFO: " + info);
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("DOCKER INFO: " + info);
+        }
         String imageName = submission.getEnvironmentId();
         try {
             CreateContainerResponse container = dockerClient
@@ -40,8 +45,9 @@ public class DockerServiceImpl implements DockerService {
         }
 
         info = dockerClient.infoCmd().exec();
-        System.out.println("DOCKER INFO: " + info);
-
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("DOCKER INFO: " + info);
+        }
         return Result.OK;
     }
 }

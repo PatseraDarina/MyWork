@@ -1,0 +1,50 @@
+= Autograder Core Documentation
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:sectlinks:
+:sectnums:
+:sectnumlevels: 2
+:source-highlighter: highlight.js
+:toc: left
+:toclevels: 5
+:docinfo: shared
+
+[[overview]]
+= Overview
+
+Some description
+
+[[overview-http-verbs]]
+== HTTP methods
+
+This REST API uses standard HTTP methods.
+
+|===
+| Method | Description
+
+| `GET`
+|  Used to get the object
+|===
+
+
+[[overview-http-status-codes]]
+=== HTTP status code
+
+This REST API uses standard HTTP response status codes.
+
+|===
+| Status code | Description
+
+| `200 OK`
+| Request Completed
+
+| `500 Internal server error`
+| Internal server error
+|===
+
+[[overview-http-topics]]
+== Docker
+
+include::{snippets}/docker-controller-test/create-container/auto-section.adoc[]
+

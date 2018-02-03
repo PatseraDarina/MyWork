@@ -3,20 +3,23 @@ package com.epam.autograder.runner.service.impl;
 import com.epam.autograder.runner.entity.Submission;
 import com.epam.autograder.runner.result.Result;
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.command.StopContainerCmd;
+import com.github.dockerjava.api.command.StartContainerCmd;
+import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.command.CreateContainerCmd;
+import com.github.dockerjava.api.command.WaitContainerCmd;
 import com.github.dockerjava.api.command.InfoCmd;
 import com.github.dockerjava.api.model.Info;
-import com.github.dockerjava.core.DockerClientImpl;
-import com.github.dockerjava.core.command.InfoCmdImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 
 /**
  * Tests docker service.
@@ -24,18 +27,28 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class DockerServiceImplTest {
 
+    private static final String IMAGE = "image";
+
+    @Mock
+    private DockerClient dockerClient;
     @InjectMocks
     private DockerServiceImpl dockerService;
     @Mock
-    private Submission submission;
+    private CreateContainerResponse containerResponse;
     @Mock
-    private AnnotationConfigApplicationContext context;
+    private WaitContainerCmd waitContainerCmd;
+    @Mock
+    private StartContainerCmd startContainerCmd;
+    @Mock
+    private StopContainerCmd stopContainerCmd;
+    @Mock
+    private CreateContainerCmd createContainerCmd;
     @Mock
     private Info info;
-    private InfoCmd infoCmd = mock(InfoCmdImpl.class);
-
-    private DockerClient dockerClient = mock(DockerClientImpl.class);
-
+    @Mock
+    private InfoCmd infoCmd;
+    @Mock
+    private Submission submission;
 
     /**
      * Tests of docker running.
@@ -43,27 +56,21 @@ public class DockerServiceImplTest {
      */
     @Test
     public void runDocker() {
-        dockerService = new DockerServiceImpl();
-        when(dockerClient.infoCmd()).thenReturn(infoCmd);
-        when(dockerClient.infoCmd().exec()).thenReturn(info);
-        when(dockerService.runDocker(submission)).thenReturn(Result.OK);
-        assertEquals(Result.OK, dockerService.runDocker(submission));
-//        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-//        context.register(RunnerConfig.class);
-//        context.refresh();
-//
-//        DockerService dockerService = (DockerService) context.getBean("dockerService");
-//        Submission submission = new Submission();
-//        submission.setEnvironmentId("busybox");
-//       // assertThrows(ProcessingException.class, () -> dockerService.runDocker(submission));
-//        dockerService.runDocker(submission);
+        given(dockerClient.infoCmd()).willReturn(infoCmd);
+        given(infoCmd.exec()).willReturn(info);
+        given(submission.getEnvironmentId()).willReturn(anyString());
+        given(dockerClient.createContainerCmd(IMAGE)).willReturn(createContainerCmd);
+        given(createContainerCmd.exec()).willReturn(containerResponse);
+        mockDockerClient();
+
+        assertThat(dockerService.runDocker(submission), is(Result.OK));
     }
 
-    /**
-     *
-     */
-    @Test
-    public void contextLoads() {
-        org.junit.Assert.assertNotNull(context);
+    private void mockDockerClient() {
+        given(dockerClient.startContainerCmd(containerResponse.getId())).willReturn(startContainerCmd);
+        given(dockerClient.waitContainerCmd(containerResponse.getId())).willReturn(waitContainerCmd);
+        given(dockerClient.stopContainerCmd(containerResponse.getId())).willReturn(stopContainerCmd);
     }
+
+
 }
