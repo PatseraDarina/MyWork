@@ -1,6 +1,6 @@
 javaProject()
 
-//clean.execute()
+clean.execute()
 
 buildscript {
     repositories {
@@ -33,7 +33,7 @@ apply plugin: 'org.asciidoctor.convert'
 apply plugin: 'war'
 apply plugin: 'com.palantir.docker'
 apply plugin: "com.palantir.docker-run"
-//apply plugin: 'org.junit.platform.gradle.plugin'
+apply plugin: 'org.junit.platform.gradle.plugin'
 
 apply from: "/gradle/jacoco/jacoco.gradle"
 apply from: "/gradle/checkstyle/checkstyle.gradle"
@@ -43,11 +43,11 @@ apply from: "/gradle/cpd/cpd.gradle"
 
 
 dependencies {
-    compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter:1.5.10.RELEASE')
+    compile 'org.jetbrains.xodus:xodus-openAPI:1.1.0'
     compile('org.jetbrains.xodus:xodus-environment:1.1.0')
-
+    compile('org.jetbrains.xodus:xodus-entity-store:1.1.0')
 
     runtime('org.hsqldb:hsqldb')
     runtime('org.postgresql:postgresql')

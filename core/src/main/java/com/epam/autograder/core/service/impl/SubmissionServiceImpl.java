@@ -19,7 +19,6 @@ public class SubmissionServiceImpl implements SubmissionService {
     private SubmissionRepository submissionRepository;
 
     /**
-     *
      * @param submission a submission without id
      * @return a submission with generated id
      */

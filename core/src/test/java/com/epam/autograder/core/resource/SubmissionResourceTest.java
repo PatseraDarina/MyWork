@@ -18,6 +18,7 @@ import com.epam.autograder.core.MockMvcBase;
 /**
  * Test class for testing SubmissionResource functionality
  */
+
 @SpringBootTest
 public class SubmissionResourceTest extends MockMvcBase {
 
@@ -34,6 +35,7 @@ public class SubmissionResourceTest extends MockMvcBase {
     /**
      * Asserts that submission resource is not null
      */
+
     @Test
     public void contextLoads() {
         assertThat(submissionResource).isNotNull();
@@ -61,6 +63,7 @@ public class SubmissionResourceTest extends MockMvcBase {
      *
      * @throws Exception if a problem occurs
      */
+
     @Test
     public void shouldReturnStatusClientError() throws Exception {
         String wrongRequestBody = "{\"submission\" : \"\", \"environmentId\" : \"gcdp_autograder_hello_world\", "
@@ -71,4 +74,5 @@ public class SubmissionResourceTest extends MockMvcBase {
                 .andExpect(status().is4xxClientError()));
     }
 }
+
 

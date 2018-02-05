@@ -1,24 +1,18 @@
 package com.epam.autograder.core.entity;
 
 import java.util.Objects;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 /**
  * Represents a students homework submission.
  *
  * @author Valeriia Chub
  */
-@Entity
 public class Submission {
 
     /**
      * Submission id
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     private long submissionId;
 
     /**
