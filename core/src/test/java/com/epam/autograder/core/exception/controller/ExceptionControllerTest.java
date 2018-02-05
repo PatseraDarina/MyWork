@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -55,11 +55,10 @@ public class ExceptionControllerTest {
                 + "    \"statusName\": \"BAD_REQUEST\",\n"
                 + "    \"description\": \"BusinessException\"\n"
                 + "}";
-        mockMvc.perform(get(requestUrl))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().json(expectedJson));
 
-        assertTrue("forCheckStyle", true);
+        assertThat(mockMvc.perform(get(requestUrl))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(expectedJson)));
     }
 
     /**
@@ -76,11 +75,9 @@ public class ExceptionControllerTest {
                 + "    \"description\": \"RuntimeException\"\n"
                 + "}";
 
-        mockMvc.perform(get(requestUrl))
+        assertThat(mockMvc.perform(get(requestUrl))
                 .andExpect(status().isInternalServerError())
-                .andExpect(content().json(expectedJson));
-
-        assertTrue("forCheckStyle", true);
+                .andExpect(content().json(expectedJson)));
     }
 
 }
