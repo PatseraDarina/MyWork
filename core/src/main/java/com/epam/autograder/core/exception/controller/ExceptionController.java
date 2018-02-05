@@ -18,14 +18,14 @@ public class ExceptionController {
     private static final String DEFAULT_ERROR_DESCRIPTION = "Oops...looks like something went wrong";
 
     /**
-     * DTO which provides information about exception which  will be sent as response in http body.
+     * DTO  provides information about exception which  will be sent as response in http body.
      */
     private class ResponseBody {
         private int statusCode;
         private String statusName;
         private String description;
 
-        private ResponseBody(int statusCode, String statusName, String description) {
+        ResponseBody(int statusCode, String statusName, String description) {
             this.statusCode = statusCode;
             this.statusName = statusName;
             this.description = description;
@@ -53,7 +53,7 @@ public class ExceptionController {
      * @see ResponseBody
      */
     @ExceptionHandler(BusinessException.class)
-    private ResponseEntity<ResponseBody> handleBusinessException(BusinessException exception) {
+    protected ResponseEntity<ResponseBody> handleBusinessException(BusinessException exception) {
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
         return buildResponseEntity(exception, httpStatus);
     }
@@ -66,14 +66,14 @@ public class ExceptionController {
      * @see ResponseBody
      */
     @ExceptionHandler(RuntimeException.class)
-    private ResponseEntity<ResponseBody> handleInternalServerException(RuntimeException exception) {
+    protected ResponseEntity<ResponseBody> handleInternalServerException(RuntimeException exception) {
         HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         return buildResponseEntity(exception, httpStatus);
     }
 
     /**
      * Build ResponseEntity for response.
-     * If exception does not provide message  description will be set by default value
+     * If exception does not provide message  then description will be set by default value
      *
      * @param exception  exception that occurred in application
      * @param httpStatus status for response
