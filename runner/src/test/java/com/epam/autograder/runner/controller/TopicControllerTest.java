@@ -7,14 +7,23 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ *
+ */
 public class TopicControllerTest extends MockMvcBase {
 
+    /**
+     * @throws Exception exception
+     */
     @Test
     public void getTopic() throws Exception {
         mockMvc.perform(RestDocumentationRequestBuilders.get("/topics/{id}", 1))
                 .andExpect(status().isOk());
     }
 
+    /**
+     * @throws Exception exception
+     */
     @Test
     public void addTopic() throws Exception {
         mockMvc.perform(RestDocumentationRequestBuilders.post("/topics")
@@ -23,6 +32,9 @@ public class TopicControllerTest extends MockMvcBase {
                 .andExpect(status().isOk());
     }
 
+    /**
+     * @throws Exception exception
+     */
     @Test
     public void getAllTopics() throws Exception {
         mockMvc.perform(RestDocumentationRequestBuilders.get("/topics"))
