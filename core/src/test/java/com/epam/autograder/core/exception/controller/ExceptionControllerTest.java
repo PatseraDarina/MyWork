@@ -29,6 +29,9 @@ public class ExceptionControllerTest {
     @Autowired
     private StubController stubController;
 
+    @Autowired
+    private ExceptionController exceptionController;
+
     private MockMvc mockMvc;
 
     /**
@@ -38,7 +41,7 @@ public class ExceptionControllerTest {
     public void setUp() {
         mockMvc = MockMvcBuilders
                 .standaloneSetup(stubController)
-                .setControllerAdvice(new ExceptionController())
+                .setControllerAdvice(exceptionController)
                 .build();
     }
 
