@@ -5,8 +5,6 @@ import org.springframework.context.annotation.Configuration;
 
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import jetbrains.exodus.entitystore.PersistentEntityStores;
-import jetbrains.exodus.env.Environment;
-import jetbrains.exodus.env.Environments;
 
 /**
  * Configuration class for Core module
@@ -15,18 +13,10 @@ import jetbrains.exodus.env.Environments;
 public class StoreConfiguration {
 
     /**
-     * @return new instance Environment
+     * @return an instance of PersistentEntityStore
      */
     @Bean
-    public Environment getEnvironment() {
-        return Environments.newInstance("/src/store/.autoGraderData");
-    }
-
-    /**
-     * @return new instance of PersistentEntityStore
-     */
-    @Bean
-    public PersistentEntityStore getStore() {
+    public PersistentEntityStore getSubmissionStore() {
         return PersistentEntityStores.newInstance(".SubmissionData");
     }
 }

@@ -12,7 +12,6 @@ public class Submission {
     /**
      * Submission id
      */
-
     private long submissionId;
 
     /**

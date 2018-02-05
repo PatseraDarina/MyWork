@@ -9,9 +9,9 @@ import com.epam.autograder.core.entity.Submission;
  */
 public interface SubmissionService {
 
-   /**
-    * @param submission a submission without id
-    * @return a submission with set up id
-    */
-   Submission createSubmission(Submission submission);
+    /**
+     * @param submission a submission without id
+     * @return a submission with set up id
+     */
+    Submission createSubmission(Submission submission);
 }

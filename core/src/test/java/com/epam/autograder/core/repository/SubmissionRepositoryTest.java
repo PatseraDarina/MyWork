@@ -1,6 +1,6 @@
 package com.epam.autograder.core.repository;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,21 +20,23 @@ import com.epam.autograder.core.entity.Submission;
 @RunWith(SpringRunner.class)
 public class SubmissionRepositoryTest {
 
+    private static final String ENVIRONMENT_ID = "gcdp_autograder_hello_world";
+    private static final String INPUT_DATA = "git@git.epam.com:.../...git";
     @Autowired
     private SubmissionRepository submissionRepository;
 
     /**
-     * Verifies if the submission is saved
+     * Verifies if the submission was saved
      */
     @Test
     public void shouldSaveNewSubmission() {
         Submission submission = new Submission();
-        submission.setEnvironmentId("gcdp_autograder_hello_world");
+        submission.setEnvironmentId(ENVIRONMENT_ID);
         submission.setInputSource(InputSource.GIT);
-        submission.setInputData("git@git.epam.com:.../...git");
+        submission.setInputData(INPUT_DATA);
 
         Submission savedSubmission = submissionRepository.save(submission);
 
-        assertEquals("Submission id should be equal to 1", savedSubmission.getSubmissionId(), 1);
+        assertNotNull(savedSubmission);
     }
 }
