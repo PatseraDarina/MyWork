@@ -39,6 +39,9 @@ This REST API uses standard HTTP response status codes.
 | `200 OK`
 | Request Completed
 
+| `400 Bad Request`
+| Bad Request
+
 | `500 Internal server error`
 | Internal server error
 |===

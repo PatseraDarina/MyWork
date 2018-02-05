@@ -52,14 +52,17 @@ public class DockerServiceImplTest {
 
     /**
      * Tests of docker running.
-     *
      */
     @Test
     public void runDocker() {
         given(dockerClient.infoCmd()).willReturn(infoCmd);
         given(infoCmd.exec()).willReturn(info);
+        given(submission.getSubmissionId()).willReturn(123L);
         given(submission.getEnvironmentId()).willReturn(anyString());
         given(dockerClient.createContainerCmd(IMAGE)).willReturn(createContainerCmd);
+        given(dockerClient.createContainerCmd(IMAGE).withCmd("sleep", "9999")).willReturn(createContainerCmd);
+        given(dockerClient.createContainerCmd(IMAGE).withCmd("sleep", "9999").withName(String.valueOf(submission.getSubmissionId())))
+                .willReturn(createContainerCmd);
         given(createContainerCmd.exec()).willReturn(containerResponse);
         mockDockerClient();
 

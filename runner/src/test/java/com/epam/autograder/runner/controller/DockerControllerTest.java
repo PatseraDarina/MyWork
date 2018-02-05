@@ -10,8 +10,11 @@ import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Map;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -26,6 +29,8 @@ public class DockerControllerTest extends MockMvcBase {
     private DockerService service;
     @Mock
     private Submission submission;
+    @Mock
+    private Map<Result, HttpStatus> statusMap;
 
     /**
      * Tests creating container
@@ -34,7 +39,9 @@ public class DockerControllerTest extends MockMvcBase {
      */
     @Test
     public void createContainer() throws Exception {
-        ResponseEntity<Result> responseEntity = new ResponseEntity<>(HttpStatus.OK);
+        when(service.runDocker(submission)).thenReturn(Result.OK);
+        when(statusMap.get(Result.OK)).thenReturn(HttpStatus.OK);
+        ResponseEntity<?> responseEntity = new ResponseEntity<>(HttpStatus.OK);
         mockMvc.perform(post("/containers"))
                 .andExpect(status().is4xxClientError());
         assertThat(controller.createContainer(submission), is(responseEntity));

@@ -11,21 +11,27 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 /**
  * Create docker container.
  */
 @RestController
 public class DockerController {
     @Autowired
+    @Qualifier("initHttpStatusMap")
+    private Map<Result, HttpStatus> statusMap;
+    @Autowired
     @Qualifier("dockerServiceImpl")
     private DockerService dockerService;
+
     /**
-     * @return  ResponseEntity<Result> in JSON format
      * @param submission get from Core
+     * @return ResponseEntity<Result> in JSON format
      */
     @PostMapping("/containers")
-    public ResponseEntity<Result> createContainer(@RequestBody Submission submission) {
+    public ResponseEntity<?> createContainer(@RequestBody Submission submission) {
         Result result = dockerService.runDocker(submission);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(statusMap.get(result));
     }
 }

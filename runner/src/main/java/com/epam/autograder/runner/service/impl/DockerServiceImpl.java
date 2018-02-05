@@ -8,18 +8,25 @@ import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.exception.NotFoundException;
 import com.github.dockerjava.api.model.Info;
 import com.github.dockerjava.core.command.WaitContainerResultCallback;
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by Andrii_Kasianenko on 2/1/2018.
  */
 @Service("dockerServiceImpl")
 public class DockerServiceImpl implements DockerService {
-
     private static final Logger LOGGER = Logger.getLogger(DockerServiceImpl.class);
+    private static final String FILE_DIRECTORY = "var/runner/input/payload";
+    private static final String FILE_NAME = "payload";
+    private static final String SLEEP_TIME = "9999";
+    private static final String SLEEP_COMMAND = "sleep";
 
     @Autowired
     @Qualifier("dockerClient")
@@ -28,26 +35,33 @@ public class DockerServiceImpl implements DockerService {
     @Override
     public Result runDocker(Submission submission) {
         Info info = dockerClient.infoCmd().exec();
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("DOCKER INFO: " + info);
-        }
+        LOGGER.info("DOCKER INFO: " + info);
+
         String imageName = submission.getEnvironmentId();
         try {
+            writeToFile(submission.getPayload());
             CreateContainerResponse container = dockerClient
                     .createContainerCmd(imageName)
+                    .withCmd(SLEEP_COMMAND, SLEEP_TIME)
+                    .withName(String.valueOf(submission.getSubmissionId()))
                     .exec();
-
             dockerClient.startContainerCmd(container.getId()).exec();
             dockerClient.waitContainerCmd(container.getId()).exec((new WaitContainerResultCallback()));
             dockerClient.stopContainerCmd(container.getId()).exec();
         } catch (NotFoundException e) {
-            return Result.ERROR;
+            LOGGER.warn("Exception: " + e);
+            return Result.BAD_REQUEST;
+        } catch (Exception e) {
+            LOGGER.warn("Exception: " + e);
+            return Result.INTERNAL_ERROR;
         }
-
         info = dockerClient.infoCmd().exec();
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("DOCKER INFO: " + info);
-        }
+        LOGGER.info("DOCKER INFO: " + info);
         return Result.OK;
+    }
+
+    private void writeToFile(String payload) throws IOException {
+        File file = new File(FILE_DIRECTORY, FILE_NAME);
+        FileUtils.writeStringToFile(file, payload);
     }
 }
