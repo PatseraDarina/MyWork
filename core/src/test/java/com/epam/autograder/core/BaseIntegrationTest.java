@@ -1,10 +1,9 @@
-package com.epam.autograder.runner.setup;
+package com.epam.autograder.core;
 
 import capital.scalable.restdocs.AutoDocumentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,7 +21,6 @@ import org.springframework.web.context.WebApplicationContext;
 import static capital.scalable.restdocs.jackson.JacksonResultHandlers.prepareJackson;
 import static capital.scalable.restdocs.response.ResponseModifyingPreprocessors.limitJsonArrayLength;
 import static capital.scalable.restdocs.response.ResponseModifyingPreprocessors.replaceBinaryContent;
-import static org.junit.Assert.assertNotNull;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -30,32 +28,28 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 
 /**
- * Initial class for testing
+ * mockMvcBase test
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class MockMvcBase {
+public abstract class BaseIntegrationTest {
 
-    protected static final String CLASS_METHOD_NAME = "{class-name}/{method-name}";
     private static final String HTTP = "http";
     private static final String LOCALHOST = "localhost";
     private static final int PORT = 8080;
-
-    @Autowired
-    protected ApplicationContext context;
-
-    @Autowired
-    protected ObjectMapper objectMapper;
-
-    protected MockMvc mockMvc;
-
+    private static final String CLASS_METHOD_NAME = "{class-name}/{method-name}";
     @Rule
     public final JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation();
+    protected MockMvc mockMvc;
+    @Autowired
+    private ApplicationContext context;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     /**
-     * Initial setup for tests. This method performed before each test method.
+     * setUp method
      *
-     * @throws Exception exception
+     * @throws Exception check on exception
      */
     @Before
     public void setUp() throws Exception {
@@ -68,46 +62,35 @@ public class MockMvcBase {
                         .withScheme(HTTP)
                         .withHost(LOCALHOST)
                         .withPort(PORT)
-                        .and().snippets()
-                .withDefaults(CliDocumentation.curlRequest(),
-                        HttpDocumentation.httpRequest(),
-                        HttpDocumentation.httpResponse(),
-                        AutoDocumentation.requestFields(),
-                        AutoDocumentation.responseFields(),
-                        AutoDocumentation.pathParameters(),
-                        AutoDocumentation.requestParameters(),
-                        AutoDocumentation.description(),
-                        AutoDocumentation.methodAndPath(),
-                        AutoDocumentation.section()))
+                        .and()
+                        .snippets()
+                        .withDefaults(
+                                CliDocumentation.curlRequest(),
+                                HttpDocumentation.httpRequest(),
+                                HttpDocumentation.httpResponse(),
+                                AutoDocumentation.requestFields(),
+                                AutoDocumentation.responseFields(),
+                                AutoDocumentation.pathParameters(),
+                                AutoDocumentation.requestParameters(),
+                                AutoDocumentation.description(),
+                                AutoDocumentation.methodAndPath(),
+                                AutoDocumentation.section()))
                 .build();
     }
 
-    /**
-     * Common documentation.
-     *
-     * @return
-     */
-    protected RestDocumentationResultHandler commonDocumentation() {
-        return document(CLASS_METHOD_NAME,
-                preprocessRequest(), commonResponsePreprocessor());
+    private RestDocumentationResultHandler commonDocumentation() {
+        return document(
+                CLASS_METHOD_NAME,
+                preprocessRequest(),
+                commonResponsePreprocessor()
+        );
     }
 
-    /**
-     * Common response preprocessor
-     *
-     * @return
-     */
-    protected OperationResponsePreprocessor commonResponsePreprocessor() {
-        return preprocessResponse(replaceBinaryContent(), limitJsonArrayLength(objectMapper),
-                prettyPrint());
+    private OperationResponsePreprocessor commonResponsePreprocessor() {
+        return preprocessResponse(
+                replaceBinaryContent(),
+                limitJsonArrayLength(objectMapper),
+                prettyPrint()
+        );
     }
-
-    /**
-     * Tests context loading.
-     *
-     */
-    @Test
-    public void contextLoads() {
-        assertNotNull(context);
-       }
 }
