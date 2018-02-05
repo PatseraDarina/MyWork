@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  *
  * @author Eduard Khachirov
  */
-
 @ControllerAdvice
 public class ExceptionController {
 
