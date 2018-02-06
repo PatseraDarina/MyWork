@@ -1,4 +1,4 @@
-= Autograder Core Documentation
+= Auto Grader Core API Documentation
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
@@ -19,14 +19,8 @@ The standard REST APIs use HTTP response status codes.
 |===
 | Status code | Description
 
-| **100** Continue
-| The client SHOULD continue with its request.
-
 | **200** OK
 | The request has succeeded.
-
-| **300** Multiple Choices
-| The requested resource corresponds to any one of a set of representations
 
 | **400** Bad Request
 | The request could not be understood by the server due to malformed syntax. The client SHOULD NOT repeat the request without modifications.
@@ -34,8 +28,6 @@ The standard REST APIs use HTTP response status codes.
 | **500** Internal server error
 | Internal Server Error
 |===
-
-This REST API provides an opportunity to work with topics
 
 include::{snippets}/submission-resource-test/should-return-status-success/auto-section.adoc[]
 
