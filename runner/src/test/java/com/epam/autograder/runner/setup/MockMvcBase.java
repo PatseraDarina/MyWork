@@ -22,18 +22,27 @@ import org.springframework.web.context.WebApplicationContext;
 import static capital.scalable.restdocs.jackson.JacksonResultHandlers.prepareJackson;
 import static capital.scalable.restdocs.response.ResponseModifyingPreprocessors.limitJsonArrayLength;
 import static capital.scalable.restdocs.response.ResponseModifyingPreprocessors.replaceBinaryContent;
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 
+/**
+ * Initial class for testing
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class MockMvcBase {
 
     protected static final String CLASS_METHOD_NAME = "{class-name}/{method-name}";
+    private static final String HTTP = "http";
+    private static final String LOCALHOST = "localhost";
+    private static final int PORT = 8080;
 
     @Autowired
-    private ApplicationContext context;
+    protected ApplicationContext context;
 
     @Autowired
     protected ObjectMapper objectMapper;
@@ -43,6 +52,11 @@ public class MockMvcBase {
     @Rule
     public final JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation();
 
+    /**
+     * Initial setup for tests. This method performed before each test method.
+     *
+     * @throws Exception exception
+     */
     @Before
     public void setUp() throws Exception {
         mockMvc = MockMvcBuilders
@@ -51,9 +65,9 @@ public class MockMvcBase {
                 .alwaysDo(commonDocumentation())
                 .apply(documentationConfiguration(restDocumentation)
                         .uris()
-                        .withScheme("http")
-                        .withHost("localhost")
-                        .withPort(8080)
+                        .withScheme(HTTP)
+                        .withHost(LOCALHOST)
+                        .withPort(PORT)
                         .and().snippets()
                 .withDefaults(CliDocumentation.curlRequest(),
                         HttpDocumentation.httpRequest(),
@@ -68,19 +82,32 @@ public class MockMvcBase {
                 .build();
     }
 
-
+    /**
+     * Common documentation.
+     *
+     * @return
+     */
     protected RestDocumentationResultHandler commonDocumentation() {
         return document(CLASS_METHOD_NAME,
                 preprocessRequest(), commonResponsePreprocessor());
     }
 
+    /**
+     * Common response preprocessor
+     *
+     * @return
+     */
     protected OperationResponsePreprocessor commonResponsePreprocessor() {
         return preprocessResponse(replaceBinaryContent(), limitJsonArrayLength(objectMapper),
                 prettyPrint());
     }
 
+    /**
+     * Tests context loading.
+     *
+     */
     @Test
     public void contextLoads() {
-        org.junit.Assert.assertNotNull(context);
-    }
+        assertNotNull(context);
+       }
 }

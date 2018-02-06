@@ -55,7 +55,7 @@ public abstract class Foo {
         <description>
             Instantiation by way of private constructors from outside of the constructor's class often causes the
             generation of an accessor. A factory method, or non-privatization of the constructor can eliminate this
-            situation. The generated class file is actually an interface.  It gives the accessing class the ability
+            situation. The generated class file is actually an interface. It gives the accessing class the ability
             to invoke a new hidden package scope constructor that takes the interface as a supplementary parameter.
             This turns a private constructor effectively into one with package scope, and is challenging to discern.
         </description>
@@ -81,8 +81,10 @@ public class Outer {
           class="net.sourceforge.pmd.lang.java.rule.bestpractices.AccessorMethodGenerationRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_bestpractices.html#accessormethodgeneration">
         <description>
-            When accessing a private field / method from another class, the Java compiler will generate a accessor methods
-            with package-private visibility. This adds overhead, and to the dex method count on Android. This situation can
+            When accessing a private field / method from another class, the Java compiler will generate a accessor
+            methods
+            with package-private visibility. This adds overhead, and to the dex method count on Android. This situation
+            can
             be avoided by changing the visibility of the field / method from private to package-private.
         </description>
         <priority>3</priority>
@@ -169,7 +171,7 @@ class Foo {
           class="net.sourceforge.pmd.lang.java.rule.bestpractices.AvoidReassigningParametersRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_bestpractices.html#avoidreassigningparameters">
         <description>
-            Reassigning values to incoming parameters is not recommended.  Use temporary local variables instead.
+            Reassigning values to incoming parameters is not recommended. Use temporary local variables instead.
         </description>
         <priority>2</priority>
         <example>
@@ -223,7 +225,8 @@ public class Foo {
         </description>
         <priority>3</priority>
         <properties>
-            <property name="pattern" type="String" description="Regular Expression" value='^"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}"$'/>
+            <property name="pattern" type="String" description="Regular Expression"
+                      value='^"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}"$'/>
         </properties>
         <example>
             <![CDATA[
@@ -274,7 +277,9 @@ if (rst.next()) {    // result is properly examined and used
         </description>
         <priority>3</priority>
         <properties>
-            <property name="ignoreIfHasMethods" type="Boolean" description="Whether to ignore constants in interfaces if the interface defines any methods" value="true"/>
+            <property name="ignoreIfHasMethods" type="Boolean"
+                      description="Whether to ignore constants in interfaces if the interface defines any methods"
+                      value="true"/>
             <property name="xpath">
                 <value>
                     <![CDATA[
@@ -375,25 +380,25 @@ public class MyClass {
         </example>
     </rule>
 
-    <rule name="GuardLogStatement"
-          language="java"
-          since="5.1.0"
-          message="There is log block not surrounded by if"
-          class="net.sourceforge.pmd.lang.java.rule.bestpractices.GuardLogStatementRule"
-          externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_bestpractices.html#guardlogstatement">
-        <description>
-            Whenever using a log level, one should check if the loglevel is actually enabled, or
-            otherwise skip the associate String creation and manipulation.
-        </description>
-        <priority>2</priority>
-        <example>
-            <![CDATA[
-    // Add this for performance
-    if (log.isDebugEnabled() { ...
-        log.debug("log something" + " and " + "concat strings");
-]]>
-        </example>
-    </rule>
+    <!--<rule name="GuardLogStatement"-->
+          <!--language="java"-->
+          <!--since="5.1.0"-->
+          <!--message="There is log block not surrounded by if"-->
+          <!--class="net.sourceforge.pmd.lang.java.rule.bestpractices.GuardLogStatementRule"-->
+          <!--externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_bestpractices.html#guardlogstatement">-->
+        <!--<description>-->
+            <!--Whenever using a log level, one should check if the loglevel is actually enabled, or-->
+            <!--otherwise skip the associate String creation and manipulation.-->
+        <!--</description>-->
+        <!--<priority>1</priority>-->
+        <!--<example>-->
+            <!--<![CDATA[-->
+    <!--// Add this for performance-->
+    <!--if (log.isDebugEnabled() { ...-->
+        <!--log.debug("log something" + " and " + "concat strings");-->
+<!--]]>-->
+        <!--</example>-->
+    <!--</rule>-->
 
     <rule name="JUnit4SuitesShouldUseSuiteAnnotation"
           language="java"
@@ -575,13 +580,15 @@ public class Foo extends TestCase {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_bestpractices.html#junittestcontainstoomanyasserts">
         <description>
-            JUnit tests should not contain too many asserts.  Many asserts are indicative of a complex test, for which
-            it is harder to verify correctness.  Consider breaking the test scenario into multiple, shorter test scenarios.
+            JUnit tests should not contain too many asserts. Many asserts are indicative of a complex test, for which
+            it is harder to verify correctness. Consider breaking the test scenario into multiple, shorter test
+            scenarios.
             Customize the maximum number of assertions used by this Rule to suit your needs.
         </description>
         <priority>3</priority>
         <properties>
-            <property name="maximumAsserts" type="Integer" min="1" max="1000" description="Maximum number of Asserts in a test method" value="1"/>
+            <property name="maximumAsserts" type="Integer" min="1" max="1000"
+                      description="Maximum number of Asserts in a test method" value="1"/>
             <property name="xpath">
                 <value>
                     <![CDATA[
@@ -615,7 +622,7 @@ public class MyTestCase extends TestCase {
           class="net.sourceforge.pmd.lang.java.rule.bestpractices.JUnitTestsShouldIncludeAssertRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_bestpractices.html#junittestsshouldincludeassert">
         <description>
-            JUnit tests should include at least one assertion.  This makes the tests more robust, and using assert
+            JUnit tests should include at least one assertion. This makes the tests more robust, and using assert
             with messages provide the developer a clearer idea of what the test does.
         </description>
         <priority>3</priority>
@@ -943,7 +950,8 @@ public class Foo {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_bestpractices.html#replacevectorwithlist">
         <description>
-            Consider replacing Vector usages with the newer java.util.ArrayList if expensive thread-safe operations are not required.
+            Consider replacing Vector usages with the newer java.util.ArrayList if expensive thread-safe operations are
+            not required.
         </description>
         <priority>3</priority>
         <properties>
@@ -1142,7 +1150,8 @@ public class Something {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_bestpractices.html#useassertequalsinsteadofasserttrue">
         <description>
-            This rule detects JUnit assertions in object equality. These assertions should be made by more specific methods, like assertEquals.
+            This rule detects JUnit assertions in object equality. These assertions should be made by more specific
+            methods, like assertEquals.
         </description>
         <priority>3</priority>
         <properties>
@@ -1262,7 +1271,8 @@ public class FooTest extends TestCase {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_bestpractices.html#useasserttrueinsteadofassertequals">
         <description>
-            When asserting a value is the same as a literal or Boxed boolean, use assertTrue/assertFalse, instead of assertEquals.
+            When asserting a value is the same as a literal or Boxed boolean, use assertTrue/assertFalse, instead of
+            assertEquals.
         </description>
         <priority>3</priority>
         <properties>
@@ -1339,7 +1349,7 @@ public class Foo {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_bestpractices.html#usevarargs">
         <description>
-            Java 5 introduced the varargs parameter declaration for methods and constructors.  This syntactic
+            Java 5 introduced the varargs parameter declaration for methods and constructors. This syntactic
             sugar provides flexibility for users of these methods and constructors, allowing them to avoid
             having to deal with the creation of an array.
         </description>
