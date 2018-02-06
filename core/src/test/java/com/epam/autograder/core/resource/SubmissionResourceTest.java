@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.nio.charset.Charset;
 
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 
@@ -19,7 +18,6 @@ public class SubmissionResourceTest extends MockMvcBaseIntegrationTest {
             + "\"inputSource\" : \"GIT\",  \"inputData\" : \"git@git.epam.com:.../...git\"}";
     private static final String URL_TEMPLATE = "/submission";
     private static final String WRONG_URL_TEMPLATE = "/submission111";
-    @Autowired
     private MediaType applicationJsonUtf8 = new MediaType(
             MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));

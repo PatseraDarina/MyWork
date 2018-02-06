@@ -4,10 +4,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import com.epam.autograder.core.entity.Submission;
 import com.epam.autograder.core.repository.SubmissionRepository;
@@ -18,7 +16,7 @@ import com.epam.autograder.core.service.impl.SubmissionServiceImpl;
  *
  * @author Valeriia Chub
  */
-public class SubmissionServiceTest extends BaseTest{
+public class SubmissionServiceTest extends BaseTest {
 
     @InjectMocks
     private final SubmissionServiceImpl submissionService = new SubmissionServiceImpl();
