@@ -8,8 +8,19 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  */
 public class Submission {
 
+    /**
+     * Task id
+     */
     private long submissionId;
+
+    /**
+     * Image id which container will create
+     */
     private String environmentId;
+
+    /**
+     * Link to task
+     */
     private String payload;
 
     /**

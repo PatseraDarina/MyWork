@@ -1,4 +1,4 @@
-= Autograder Core Documentation
+= Autograder Runner Documentation
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
