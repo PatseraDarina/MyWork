@@ -9,7 +9,8 @@ jacocoTestReport {
         classDirectories = files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
                     '**/ServletInitializer.class',
-                    '**/CoreApplication.class'
+                    '**/CoreApplication.class',
+                    '**/Submission.class'
             ])
         })
     }
@@ -21,7 +22,8 @@ jacocoTestCoverageVerification {
                 minimum = 0.5
                 element = 'CLASS'
                 excludes = ['com.epam.autograder.core.CoreApplication',
-                            'com.epam.autograder.core.ServletInitializer']
+                            'com.epam.autograder.core.ServletInitializer',
+                            'com.epam.autograder.core.entity.Submission']
             }
         }
     }
