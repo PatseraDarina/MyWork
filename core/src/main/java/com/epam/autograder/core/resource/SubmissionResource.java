@@ -20,7 +20,8 @@ public class SubmissionResource {
     private SubmissionService submissionService;
 
     /**
-     * create new submission
+     * Endpoint which gets a Submission object, saves it
+     * in DB and returns it with generated id.
      *
      * @param submission a submission without id
      * @return a submission with generated id

@@ -41,30 +41,30 @@ include::{snippets}/submission-resource-test/should-return-status-success/auto-s
 
 === 404 Error
 
-include::{snippets}/submission-resource-test/should-return-status-client-error/auto-method-path.adoc[]
+include::{snippets}/submission-resource-test/should-return-status-client-error-when-u-r-l-template-is-wrong/auto-method-path.adoc[]
 
-include::{snippets}/submission-resource-test/should-return-status-client-error/auto-description.adoc[]
+include::{snippets}/submission-resource-test/should-return-status-client-error-when-u-r-l-template-is-wrong/auto-description.adoc[]
 
 ==== Path parameters
 
-include::{snippets}/submission-resource-test/should-return-status-client-error/auto-path-parameters.adoc[]
+include::{snippets}/submission-resource-test/should-return-status-client-error-when-u-r-l-template-is-wrong/auto-path-parameters.adoc[]
 
 ==== Query parameters
 
-include::{snippets}/submission-resource-test/should-return-status-client-error/auto-request-parameters.adoc[]
+include::{snippets}/submission-resource-test/should-return-status-client-error-when-u-r-l-template-is-wrong/auto-request-parameters.adoc[]
 
 ==== Request fields
 
-include::{snippets}/submission-resource-test/should-return-status-client-error/auto-request-fields.adoc[]
+include::{snippets}/submission-resource-test/should-return-status-client-error-when-u-r-l-template-is-wrong/auto-request-fields.adoc[]
 
 ==== Response fields
 
-include::{snippets}/submission-resource-test/should-return-status-client-error/auto-response-fields.adoc[]
+include::{snippets}/submission-resource-test/should-return-status-client-error-when-u-r-l-template-is-wrong/auto-response-fields.adoc[]
 
 ==== Example request
 
-include::{snippets}/submission-resource-test/should-return-status-client-error/curl-request.adoc[]
+include::{snippets}/submission-resource-test/should-return-status-client-error-when-u-r-l-template-is-wrong/curl-request.adoc[]
 
 ==== Example response
 
-include::{snippets}/submission-resource-test/should-return-status-client-error/http-response.adoc[]
+include::{snippets}/submission-resource-test/should-return-status-client-error-when-u-r-l-template-is-wrong/http-response.adoc[]
