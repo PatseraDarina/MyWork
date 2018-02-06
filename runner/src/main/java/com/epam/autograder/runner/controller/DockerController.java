@@ -27,7 +27,7 @@ public class DockerController {
 
     /**
      * @param submission get from Core
-     * @return ResponseEntity<Result> in JSON format
+     * @return ResponseEntity<>(HttpStatus) in JSON format
      */
     @PostMapping("/containers")
     public ResponseEntity<?> createContainer(@RequestBody Submission submission) {

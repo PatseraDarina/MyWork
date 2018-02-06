@@ -24,9 +24,17 @@ This REST API uses standard HTTP methods.
 | Method | Description
 
 | `GET`
-|  Used to get the object
-|===
+| Used to retrieve a resource (idempotent)
 
+| `POST`
+| Used to create a new resource
+
+| `PUT`
+| Used to update an existing resource (idempotent)
+
+| `DELETE`
+| Used to delete an existing resource
+|===
 
 [[overview-http-status-codes]]
 === HTTP status code

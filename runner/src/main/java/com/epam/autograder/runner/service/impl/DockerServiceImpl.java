@@ -5,6 +5,7 @@ import com.epam.autograder.runner.result.Result;
 import com.epam.autograder.runner.service.DockerService;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.exception.ConflictException;
 import com.github.dockerjava.api.exception.NotFoundException;
 import com.github.dockerjava.api.model.Info;
 import org.apache.commons.io.FileUtils;
@@ -42,7 +43,7 @@ public class DockerServiceImpl implements DockerService {
                     .withName(String.valueOf(submission.getSubmissionId()))
                     .exec();
             dockerClient.startContainerCmd(container.getId()).exec();
-        } catch (NotFoundException e) {
+        } catch (NotFoundException | ConflictException e) {
             LOGGER.warn("Exception: " + e);
             return Result.BAD_REQUEST;
         } catch (Exception e) {
