@@ -1,3 +1,5 @@
+//for rendering snippets by plugin. Comment it after work!
+:snippets: C:\Users\Valeriia_Chub\Desktop\EPM-RDK1-AutoGrader\core\build\generated-snippets
 = Auto Grader Core API Documentation
 :doctype: book
 :icons: font
@@ -11,7 +13,7 @@
 :docinfo: shared
 
 [[overview-http-status-codes]]
-== HTTP status codes
+=== HTTP status codes
 
 The standard REST APIs use HTTP response status codes.
 
@@ -29,34 +31,42 @@ The standard REST APIs use HTTP response status codes.
 | Internal Server Error
 |===
 
-include::{snippets}/submission-resource-test/should-return-status-success/auto-section.adoc[]
+[[resources-submission-resource-test-should-return-status-success]]
+=== Create Submission
 
-=== 404 Error
+include::{snippets}/submission-resource-test/should-return-status-success/auto-method-path.adoc[]
 
-include::{snippets}/submission-resource-test/should-return-status-client-error-when-u-r-l-template-is-wrong/auto-method-path.adoc[]
-
-include::{snippets}/submission-resource-test/should-return-status-client-error-when-u-r-l-template-is-wrong/auto-description.adoc[]
+include::{snippets}/submission-resource-test/should-return-status-success/auto-description.adoc[]
 
 ==== Path parameters
 
-include::{snippets}/submission-resource-test/should-return-status-client-error-when-u-r-l-template-is-wrong/auto-path-parameters.adoc[]
+include::{snippets}/submission-resource-test/should-return-status-success/auto-path-parameters.adoc[]
 
 ==== Query parameters
 
-include::{snippets}/submission-resource-test/should-return-status-client-error-when-u-r-l-template-is-wrong/auto-request-parameters.adoc[]
+include::{snippets}/submission-resource-test/should-return-status-success/auto-request-parameters.adoc[]
 
 ==== Request fields
 
-include::{snippets}/submission-resource-test/should-return-status-client-error-when-u-r-l-template-is-wrong/auto-request-fields.adoc[]
+include::{snippets}/submission-resource-test/should-return-status-success/auto-request-fields.adoc[]
 
 ==== Response fields
 
-include::{snippets}/submission-resource-test/should-return-status-client-error-when-u-r-l-template-is-wrong/auto-response-fields.adoc[]
+include::{snippets}/submission-resource-test/should-return-status-success/auto-response-fields.adoc[]
 
-==== Example request
+==== Examples:
 
+===== SUCCESS (200)
+include::{snippets}/submission-resource-test/should-return-status-success/curl-request.adoc[]
+include::{snippets}/submission-resource-test/should-return-status-success/http-response.adoc[]
+
+===== BAD_REQUEST (400)
 include::{snippets}/submission-resource-test/should-return-status-client-error-when-u-r-l-template-is-wrong/curl-request.adoc[]
 
-==== Example response
-
 include::{snippets}/submission-resource-test/should-return-status-client-error-when-u-r-l-template-is-wrong/http-response.adoc[]
+
+
+===== INTERNAL_SERVER_ERROR (500)
+
+
+TODO: to be implemented

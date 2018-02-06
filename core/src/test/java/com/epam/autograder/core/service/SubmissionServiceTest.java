@@ -18,8 +18,7 @@ import com.epam.autograder.core.service.impl.SubmissionServiceImpl;
  *
  * @author Valeriia Chub
  */
-@RunWith(MockitoJUnitRunner.class)
-public class SubmissionServiceTest {
+public class SubmissionServiceTest extends BaseTest{
 
     @InjectMocks
     private final SubmissionServiceImpl submissionService = new SubmissionServiceImpl();

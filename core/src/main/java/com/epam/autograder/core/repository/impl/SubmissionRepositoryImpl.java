@@ -29,12 +29,21 @@ public class SubmissionRepositoryImpl implements SubmissionRepository {
     private static final String DATA_BASE_DIR = ".SubmissionData";
     private PersistentEntityStore store;
 
+
     /**
      * get instance of entity store
      */
     @PostConstruct
     public void initStore() {
         store = PersistentEntityStores.newInstance(DATA_BASE_DIR);
+    }
+
+    /**
+     * close entity store
+     */
+    @PreDestroy
+    public void closeStore() {
+        store.close();
     }
 
     /**
@@ -50,14 +59,6 @@ public class SubmissionRepositoryImpl implements SubmissionRepository {
         });
         submission.setSubmissionId(id.getLocalId());
         return submission;
-    }
-
-    /**
-     * close entity store
-     */
-    @PreDestroy
-    public void closeStore() {
-        store.close();
     }
 
     /**

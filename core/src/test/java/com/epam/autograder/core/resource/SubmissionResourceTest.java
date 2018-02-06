@@ -13,25 +13,16 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 /**
  * Test class for testing SubmissionResource functionality
  */
-public class SubmissionResourceTest extends MockMvcBase {
+public class SubmissionResourceTest extends MockMvcBaseIntegrationTest {
 
     private static final String REQUEST_BODY = "{\"submissionId\" : \"\", \"environmentId\" : \"gcdp_autograder_hello_world\", "
             + "\"inputSource\" : \"GIT\",  \"inputData\" : \"git@git.epam.com:.../...git\"}";
     private static final String URL_TEMPLATE = "/submission";
     private static final String WRONG_URL_TEMPLATE = "/submission111";
     @Autowired
-    private SubmissionResource submissionResource;
     private MediaType applicationJsonUtf8 = new MediaType(
             MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
-
-    /**
-     * Asserts that submission resource is not null
-     */
-    @Test
-    public void contextLoads() {
-        assertThat(submissionResource).isNotNull();
-    }
 
     /**
      * Test successful status of POST
@@ -56,6 +47,9 @@ public class SubmissionResourceTest extends MockMvcBase {
                 .contentType(applicationJsonUtf8))
                 .andExpect(status().is4xxClientError()));
     }
+
+    //TODO REQUEST_BODY to JSONPath
+    //TODO Implement tests for cases: BadRequest, InternalServerError
 }
 
 

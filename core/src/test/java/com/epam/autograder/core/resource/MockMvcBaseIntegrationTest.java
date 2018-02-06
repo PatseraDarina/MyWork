@@ -35,7 +35,7 @@ import capital.scalable.restdocs.AutoDocumentation;
  */
 @SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
-public class MockMvcBase {
+public class MockMvcBaseIntegrationTest {
 
     private static final String CLASS_METHOD_NAME = "{class-name}/{method-name}";
     @Rule
