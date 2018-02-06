@@ -1,5 +1,3 @@
-//for rendering snippets by plugin. Comment it after work!
-:snippets: C:\Users\Valeriia_Chub\Desktop\EPM-RDK1-AutoGrader\core\build\generated-snippets
 = Auto Grader Core API Documentation
 :doctype: book
 :icons: font
