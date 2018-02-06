@@ -60,20 +60,12 @@ public class DockerServiceImplTest {
         when(submission.getSubmissionId()).thenReturn(123L);
         when(submission.getEnvironmentId()).thenReturn(anyString());
         when(dockerClient.createContainerCmd(IMAGE)).thenReturn(createContainerCmd);
-        when(dockerClient.createContainerCmd(IMAGE).withCmd("sleep", "9999")).thenReturn(createContainerCmd);
-        when(dockerClient.createContainerCmd(IMAGE).withCmd("sleep", "9999").withName(String.valueOf(submission.getSubmissionId())))
-            .thenReturn(createContainerCmd);
+        when(dockerClient.createContainerCmd(IMAGE)
+                .withName(String.valueOf(submission.getSubmissionId())))
+                .thenReturn(createContainerCmd);
         when(createContainerCmd.exec()).thenReturn(containerResponse);
-        mockDockerClient();
+        when(dockerClient.startContainerCmd(containerResponse.getId())).thenReturn(startContainerCmd);
 
         assertThat(dockerService.runDocker(submission), is(Result.OK));
     }
-
-    private void mockDockerClient() {
-        when(dockerClient.startContainerCmd(containerResponse.getId())).thenReturn(startContainerCmd);
-        when(dockerClient.waitContainerCmd(containerResponse.getId())).thenReturn(waitContainerCmd);
-        when(dockerClient.stopContainerCmd(containerResponse.getId())).thenReturn(stopContainerCmd);
-    }
-
-
 }

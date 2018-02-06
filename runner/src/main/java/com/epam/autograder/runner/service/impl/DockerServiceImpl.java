@@ -7,7 +7,6 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.exception.NotFoundException;
 import com.github.dockerjava.api.model.Info;
-import com.github.dockerjava.core.command.WaitContainerResultCallback;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,6 @@ public class DockerServiceImpl implements DockerService {
     private static final Logger LOGGER = Logger.getLogger(DockerServiceImpl.class);
     private static final String FILE_DIRECTORY = "var/runner/input/payload";
     private static final String FILE_NAME = "payload";
-    private static final String SLEEP_TIME = "9999";
-    private static final String SLEEP_COMMAND = "sleep";
 
     @Autowired
     @Qualifier("dockerClient")
@@ -42,12 +39,9 @@ public class DockerServiceImpl implements DockerService {
             writeToFile(submission.getPayload());
             CreateContainerResponse container = dockerClient
                     .createContainerCmd(imageName)
-                    .withCmd(SLEEP_COMMAND, SLEEP_TIME)
                     .withName(String.valueOf(submission.getSubmissionId()))
                     .exec();
             dockerClient.startContainerCmd(container.getId()).exec();
-            dockerClient.waitContainerCmd(container.getId()).exec((new WaitContainerResultCallback()));
-            dockerClient.stopContainerCmd(container.getId()).exec();
         } catch (NotFoundException e) {
             LOGGER.warn("Exception: " + e);
             return Result.BAD_REQUEST;
