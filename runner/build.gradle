@@ -160,18 +160,18 @@ tasks.withType(FindBugs) {
 }
 jacoco {
     toolVersion = '0.7.9'
-    reportsDir = file("${buildDir}/reports/jacoco/customJacocoReportDir")
 }
 jacocoTestReport {
     reports {
         csv.enabled = false
-        xml.enabled = true
+        xml.enabled = false
         html.destination file("${buildDir}/reports/jacoco/jacocoHtml")
     }
     afterEvaluate {
         classDirectories = files(classDirectories.files.collect {
             fileTree(dir: it, exclude:
-                    'com/epam/autograder/runner/entity/**'
+                    ['com/epam/autograder/runner/entity/**',
+                     'com/epam/autograder/runner/RunnerApplication.class']
             )
         })
     }
