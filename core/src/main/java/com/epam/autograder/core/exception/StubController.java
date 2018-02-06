@@ -4,27 +4,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * Stub controller for testing
+ * Stub interface for testing
  * <p>
  * TO BE removed
  */
 @Controller
-public class StubController {
-
+public interface StubController {
     /**
      * emulate incorrect working in order to test ExceptionController
      */
-    @RequestMapping("/businessError")
-    public void throwBusinessException() {
-        throw new BusinessException("BusinessException");
-    }
-
-    /**
-     * emulate incorrect working in order to test ExceptionController
-     */
-    @RequestMapping("/runtimeError")
-    public void throwRuntimeException() {
-        throw new RuntimeException("RuntimeException");
-    }
+    @RequestMapping("/throwException")
+    String handleRequest();
 
 }

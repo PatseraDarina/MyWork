@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import static java.util.Optional.ofNullable;
+
 /**
  * Class provides cross-cutting exception handling for all application controllers
  *
@@ -53,8 +55,7 @@ public class ExceptionController {
      */
     @ExceptionHandler(BusinessException.class)
     protected ResponseEntity<ResponseBody> handleBusinessException(BusinessException exception) {
-        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
-        return buildResponseEntity(exception, httpStatus);
+        return buildResponseEntity(exception, HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -66,8 +67,7 @@ public class ExceptionController {
      */
     @ExceptionHandler(RuntimeException.class)
     protected ResponseEntity<ResponseBody> handleInternalServerException(RuntimeException exception) {
-        HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-        return buildResponseEntity(exception, httpStatus);
+        return buildResponseEntity(exception, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -79,10 +79,7 @@ public class ExceptionController {
      * @return ResponseEntity object with ResponseBody DTO and http status
      */
     private ResponseEntity<ResponseBody> buildResponseEntity(Throwable exception, HttpStatus httpStatus) {
-        String description = exception.getMessage();
-        if (description == null) {
-            description = DEFAULT_ERROR_DESCRIPTION;
-        }
+        String description = ofNullable(exception.getMessage()).orElse(DEFAULT_ERROR_DESCRIPTION);
         ResponseBody body = new ResponseBody(httpStatus.value(), httpStatus.name(), description);
         return new ResponseEntity<>(body, httpStatus);
     }

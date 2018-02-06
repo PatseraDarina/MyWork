@@ -6,12 +6,6 @@ package com.epam.autograder.core.exception;
  * @author Eduard Khachirov
  */
 public class BusinessException extends RuntimeException {
-    /**
-     * Create instance of BusinessException
-     */
-    public BusinessException() {
-        super();
-    }
 
     /**
      * Create instance of BusinessException
