@@ -16,6 +16,8 @@ dependencies {
 }
 
 test {
+    systemProperties(System.getProperties())
+
     useTestNG {
         useDefaultListeners = false
         options.outputDirectory = file("$project.buildDir//testngOutput")
