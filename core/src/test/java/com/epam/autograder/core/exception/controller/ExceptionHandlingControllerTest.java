@@ -2,6 +2,7 @@ package com.epam.autograder.core.exception.controller;
 
 import com.epam.autograder.core.entity.Submission;
 import com.epam.autograder.core.exception.BusinessException;
+import com.epam.autograder.core.resource.ExceptionHandlingController;
 import com.epam.autograder.core.resource.SubmissionResource;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,29 +26,27 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Class tests exception handling in application
  *
  * @author Eduard Khachirov
- * @see ExceptionController
+ * @see ExceptionHandlingController
  */
 @SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
-public class ExceptionControllerTest {
+public class ExceptionHandlingControllerTest {
 
-    private static final String JSON_RESPONSE_STATUS_CODE_FIELD = "$.statusCode";
-    private static final String JSON_RESPONSE_STATUS_NAME_FIELD = "$.statusName";
-    private static final String JSON_RESPONSE_DESCRIPTION_FIELD = "$.description";
+    private static final String STATUS_CODE_FIELD = "$.statusCode";
+    private static final String STATUS_NAME_FIELD = "$.statusName";
+    private static final String DESCRIPTION_FIELD = "$.description";
     private static final String REQUEST_URL = "/submission";
     private String submissionJson;
     private MediaType jsonMediaType;
 
     @Autowired
-    private ExceptionController exceptionController;
-    @Autowired
-    private ObjectMapper objectMapper;
+    private ExceptionHandlingController exceptionHandlingController;
+
     @Mock
     private SubmissionResource stubController;
 
@@ -62,9 +61,9 @@ public class ExceptionControllerTest {
     public void setUp() throws JsonProcessingException {
         mockMvc = MockMvcBuilders
                 .standaloneSetup(stubController)
-                .setControllerAdvice(exceptionController)
+                .setControllerAdvice(exceptionHandlingController)
                 .build();
-        submissionJson = objectMapper.writeValueAsString(new Submission());
+        submissionJson = new ObjectMapper().writeValueAsString(new Submission());
         jsonMediaType = new MediaType(MediaType.APPLICATION_JSON, Charset.forName("utf8"));
     }
 
@@ -81,10 +80,9 @@ public class ExceptionControllerTest {
         when(stubController.createSubmission(any(Submission.class))).thenThrow(new BusinessException(expectedDescription));
 
         assertThat(mockMvc.perform(post(REQUEST_URL).contentType(jsonMediaType).content(submissionJson))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath(JSON_RESPONSE_STATUS_CODE_FIELD, is(expectedHttpStatus.value())))
-                .andExpect(jsonPath(JSON_RESPONSE_STATUS_NAME_FIELD, is(expectedHttpStatus.name())))
-                .andExpect(jsonPath(JSON_RESPONSE_DESCRIPTION_FIELD, is(expectedDescription))));
+                .andExpect(jsonPath(STATUS_CODE_FIELD, is(expectedHttpStatus.value())))
+                .andExpect(jsonPath(STATUS_NAME_FIELD, is(expectedHttpStatus.name())))
+                .andExpect(jsonPath(DESCRIPTION_FIELD, is(expectedDescription))));
     }
 
     /**
@@ -100,10 +98,9 @@ public class ExceptionControllerTest {
         when(stubController.createSubmission(any(Submission.class))).thenThrow(new RuntimeException(expectedDescription));
 
         assertThat(mockMvc.perform(post(REQUEST_URL).contentType(jsonMediaType).content(submissionJson))
-                .andExpect(status().isInternalServerError())
-                .andExpect(jsonPath(JSON_RESPONSE_STATUS_CODE_FIELD, is(expectedHttpStatus.value())))
-                .andExpect(jsonPath(JSON_RESPONSE_STATUS_NAME_FIELD, is(expectedHttpStatus.name())))
-                .andExpect(jsonPath(JSON_RESPONSE_DESCRIPTION_FIELD, is(expectedDescription))));
+                .andExpect(jsonPath(STATUS_CODE_FIELD, is(expectedHttpStatus.value())))
+                .andExpect(jsonPath(STATUS_NAME_FIELD, is(expectedHttpStatus.name())))
+                .andExpect(jsonPath(DESCRIPTION_FIELD, is(expectedDescription))));
     }
 
 }

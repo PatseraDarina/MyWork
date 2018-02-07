@@ -11,7 +11,6 @@ jacocoTestReport {
                     '**/ServletInitializer.class',
                     '**/CoreApplication.class',
                     '**/BusinessException.class',
-                    '**/CoreApplication.class',
                     '**/Submission.class'
             ])
         })
@@ -26,7 +25,6 @@ jacocoTestCoverageVerification {
                 excludes = ['com.epam.autograder.core.CoreApplication',
                             'com.epam.autograder.core.ServletInitializer',
                             'com.epam.autograder.core.exception.BusinessException',
-                            'com.epam.autograder.core.ServletInitializer',
                             'com.epam.autograder.core.entity.Submission']
             }
         }
