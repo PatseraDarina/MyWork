@@ -44,10 +44,10 @@ checkstyle {
     configFile file("$projectDir/config/checkstyle/checkstyle.xml")
 }
 checkstyleMain {
-    source = 'src/main/java'
+    source =  "$projectDir/src/main/java"
 }
 checkstyleTest {
-    source = 'src/test/java'
+    source =  "$projectDir/src/test/java" 
 }
 tasks.withType(Checkstyle) {
     reports {
@@ -130,7 +130,7 @@ jacocoTestCoverageVerification {
 }
 
 asciidoctor {
-    sourceDir = file("src/main/asciidoc")
+    sourceDir = file("$projectDir/src/main/asciidoc")
     outputDir = file("$buildDir/generated-docs")
     options backend: "html", doctype: "book"
     attributes "source-highlighter": "highlightjs", "snippets": snippetsDir
