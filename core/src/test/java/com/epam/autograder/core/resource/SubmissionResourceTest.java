@@ -1,26 +1,58 @@
 package com.epam.autograder.core.resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.nio.charset.Charset;
 
+import com.epam.autograder.core.CoreApplication;
+import com.epam.autograder.core.CoreTestConfiguration;
+import com.epam.autograder.core.entity.InputSource;
+import com.epam.autograder.core.entity.Submission;
+import com.epam.autograder.core.repository.SubmissionRepository;
+import com.epam.autograder.core.service.SubmissionService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Test class for testing SubmissionResource functionality
  */
+@ContextConfiguration(classes = {CoreTestConfiguration.class, CoreApplication.class})
+@ActiveProfiles("coreConfigurationProfile")
 public class SubmissionResourceTest extends MockMvcBaseIntegrationTest {
-
-    private static final String REQUEST_BODY = "{\"submissionId\" : \"\", \"environmentId\" : \"gcdp_autograder_hello_world\", "
-            + "\"inputSource\" : \"GIT\",  \"inputData\" : \"git@git.epam.com:.../...git\"}";
     private static final String URL_TEMPLATE = "/submission";
-    private static final String WRONG_URL_TEMPLATE = "/submission111";
     private MediaType applicationJsonUtf8 = new MediaType(
             MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
+    private static final String ENVIRONMENT_ID = "environmentId";
+    private static final String INPUT_SOURCE = "inputSource";
+    private static final String INPUT_DATA = "inputData";
+    private static final String ENVIRONMENT_ID_VALUE = "gcdp_autograder_hello_world";
+    private static final String INPUT_SOURCE_VALUE = "GIT";
+    private static final String INPUT_DATA_VALUE = "git@git.epam.com:.../...git";
+    private Submission submission;
+    @Autowired
+    private ObjectMapper objectMapper;
+    @Autowired
+    private SubmissionRepository submissionRepository;
+    @Autowired
+    private SubmissionService submissionService;
+
+    public SubmissionResourceTest() {
+        submission = new Submission();
+        submission.setInputSource(InputSource.GIT);
+        submission.setInputData(INPUT_DATA_VALUE);
+        submission.setEnvironmentId(ENVIRONMENT_ID_VALUE);
+    }
 
     /**
      * Test successful status of POST
@@ -29,8 +61,12 @@ public class SubmissionResourceTest extends MockMvcBaseIntegrationTest {
      */
     @Test
     public void shouldReturnStatusSuccess() throws Exception {
-        assertThat(mockMvc.perform(RestDocumentationRequestBuilders.post(URL_TEMPLATE).content(REQUEST_BODY)
+        when(submissionService.createSubmission(any(Submission.class))).thenReturn(submissionRepository.save(submission));
+        assertThat(mockMvc.perform(RestDocumentationRequestBuilders.post(URL_TEMPLATE).content(objectMapper.writeValueAsString(submission))
                 .contentType(applicationJsonUtf8))
+                .andExpect(jsonPath(ENVIRONMENT_ID, is(ENVIRONMENT_ID_VALUE)))
+                .andExpect(jsonPath(INPUT_SOURCE, is(INPUT_SOURCE_VALUE)))
+                .andExpect(jsonPath(INPUT_DATA, is(INPUT_DATA_VALUE)))
                 .andExpect(status().isOk()));
     }
 
@@ -40,14 +76,24 @@ public class SubmissionResourceTest extends MockMvcBaseIntegrationTest {
      * @throws Exception if a problem occurs
      */
     @Test
-    public void shouldReturnStatusClientErrorWhenURLTemplateIsWrong() throws Exception {
-        assertThat(mockMvc.perform(RestDocumentationRequestBuilders.post(WRONG_URL_TEMPLATE).content(REQUEST_BODY)
+    public void shouldReturnClientStatusErrorWhenBadRequest() throws Exception {
+        String INCORRECT_REQUEST_BODY = "{\"submissionId\" : , \"environmentId\" : \"gcdp_autograder_hello_world\", "
+                + "\"inputSource\" : \"GIT\",  \"inputTTTTData\" : \"git@git.epam.com:.../...git\"}";
+        assertThat(mockMvc.perform(RestDocumentationRequestBuilders.post(URL_TEMPLATE).content(objectMapper.writeValueAsString(INCORRECT_REQUEST_BODY))
                 .contentType(applicationJsonUtf8))
                 .andExpect(status().is4xxClientError()));
     }
 
-    //TODO REQUEST_BODY to JSONPath
-    //TODO Implement tests for cases: BadRequest, InternalServerError
+    /**
+     * Test server error of POST
+     *
+     * @throws Exception if a problem occurs
+     */
+    @Test
+    public void shouldReturnServerStatusErrorWhenErrorOnServer() throws Exception {
+        when(submissionService.createSubmission(any(Submission.class))).thenThrow(RuntimeException.class);
+        assertThat(mockMvc.perform(RestDocumentationRequestBuilders.post(URL_TEMPLATE).content(objectMapper.writeValueAsString(submission))
+                .contentType(applicationJsonUtf8))
+                .andExpect(status().is5xxServerError()));
+    }
 }
-
-
