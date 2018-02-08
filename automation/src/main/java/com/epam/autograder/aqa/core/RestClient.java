@@ -1,7 +1,6 @@
 package com.epam.autograder.aqa.core;
 
 import com.epam.autograder.aqa.util.JsonHelper;
-import com.epam.autograder.aqa.util.RestClientHelper;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
@@ -12,7 +11,6 @@ public abstract class RestClient {
     private String baseUrl;
 
     public RestClient(String baseUrl) {
-        RestClientHelper.verifyAddressIsReachable(baseUrl);
         this.baseUrl = baseUrl;
     }
 
