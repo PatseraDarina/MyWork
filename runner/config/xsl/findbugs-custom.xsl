@@ -133,7 +133,10 @@
 
             <body>
 
-                <h1><a href="http://findbugs.sourceforge.net">FindBugs</a> Report</h1>
+                <h1>
+                    <a href="http://findbugs.sourceforge.net">FindBugs</a>
+                    Report
+                </h1>
 
                 <h2>Project Information</h2>
                 <xsl:apply-templates select="/BugCollection/Project"/>
@@ -146,12 +149,19 @@
                     <xsl:for-each select="$unique-catkey">
                         <xsl:sort/>
                         <xsl:variable name="catkey" select="."/>
-                        <xsl:variable name="catdesc" select="/BugCollection/BugCategory[@category=$catkey]/Description"/>
+                        <xsl:variable name="catdesc"
+                                      select="/BugCollection/BugCategory[@category=$catkey]/Description"/>
 
-                        <li><a href="#Warnings_{$catkey}"><xsl:value-of select="$catdesc"/> Warnings</a></li>
+                        <li>
+                            <a href="#Warnings_{$catkey}">
+                                <xsl:value-of select="$catdesc"/> Warnings
+                            </a>
+                        </li>
                     </xsl:for-each>
 
-                    <li><a href="#Details">Details</a></li>
+                    <li>
+                        <a href="#Details">Details</a>
+                    </li>
                 </ul>
 
                 <h1>Summary</h1>
@@ -164,27 +174,43 @@
                     <xsl:for-each select="$unique-catkey">
                         <xsl:sort/>
                         <xsl:variable name="catkey" select="."/>
-                        <xsl:variable name="catdesc" select="/BugCollection/BugCategory[@category=$catkey]/Description"/>
+                        <xsl:variable name="catdesc"
+                                      select="/BugCollection/BugCategory[@category=$catkey]/Description"/>
                         <xsl:variable name="styleclass">
-                            <xsl:choose><xsl:when test="position() mod 2 = 1">tablerow0</xsl:when>
+                            <xsl:choose>
+                                <xsl:when test="position() mod 2 = 1">tablerow0</xsl:when>
                                 <xsl:otherwise>tablerow1</xsl:otherwise>
                             </xsl:choose>
                         </xsl:variable>
 
                         <tr class="{$styleclass}">
-                            <td><a href="#Warnings_{$catkey}"><xsl:value-of select="$catdesc"/> Warnings</a></td>
-                            <td align="right"><xsl:value-of select="count(/BugCollection/BugInstance[(@category=$catkey) and not(@last)])"/></td>
+                            <td>
+                                <a href="#Warnings_{$catkey}">
+                                    <xsl:value-of select="$catdesc"/> Warnings
+                                </a>
+                            </td>
+                            <td align="right">
+                                <xsl:value-of
+                                        select="count(/BugCollection/BugInstance[(@category=$catkey) and not(@last)])"/>
+                            </td>
                         </tr>
                     </xsl:for-each>
 
                     <xsl:variable name="styleclass">
-                        <xsl:choose><xsl:when test="count($unique-catkey) mod 2 = 0">tablerow0</xsl:when>
+                        <xsl:choose>
+                            <xsl:when test="count($unique-catkey) mod 2 = 0">tablerow0</xsl:when>
                             <xsl:otherwise>tablerow1</xsl:otherwise>
                         </xsl:choose>
                     </xsl:variable>
                     <tr class="{$styleclass}">
-                        <td><b>Total</b></td>
-                        <td align="right"><b><xsl:value-of select="count(/BugCollection/BugInstance[not(@last)])"/></b></td>
+                        <td>
+                            <b>Total</b>
+                        </td>
+                        <td align="right">
+                            <b>
+                                <xsl:value-of select="count(/BugCollection/BugInstance[not(@last)])"/>
+                            </b>
+                        </td>
                     </tr>
                 </table>
 
@@ -198,13 +224,19 @@
                     <xsl:variable name="catdesc" select="/BugCollection/BugCategory[@category=$catkey]/Description"/>
 
                     <xsl:call-template name="generateWarningTable">
-                        <xsl:with-param name="warningSet" select="/BugCollection/BugInstance[(@category=$catkey) and not(@last)]"/>
-                        <xsl:with-param name="sectionTitle"><xsl:value-of select="$catdesc"/> Warnings</xsl:with-param>
-                        <xsl:with-param name="sectionId">Warnings_<xsl:value-of select="$catkey"/></xsl:with-param>
+                        <xsl:with-param name="warningSet"
+                                        select="/BugCollection/BugInstance[(@category=$catkey) and not(@last)]"/>
+                        <xsl:with-param name="sectionTitle">
+                            <xsl:value-of select="$catdesc"/> Warnings
+                        </xsl:with-param>
+                        <xsl:with-param name="sectionId">Warnings_<xsl:value-of select="$catkey"/>
+                        </xsl:with-param>
                     </xsl:call-template>
                 </xsl:for-each>
 
-                <h1><a name="Details">Details</a></h1>
+                <h1>
+                    <a name="Details">Details</a>
+                </h1>
 
                 <xsl:apply-templates select="/BugCollection/BugPattern">
                     <xsl:sort select="@abbrev"/>
@@ -218,28 +250,43 @@
     <xsl:template match="Project">
         <p>Project:
             <xsl:choose>
-                <xsl:when test='string-length(/BugCollection/Project/@projectName)>0'><xsl:value-of select="/BugCollection/Project/@projectName" /></xsl:when>
-                <xsl:otherwise><xsl:value-of select="/BugCollection/Project/@filename" /></xsl:otherwise>
+                <xsl:when test='string-length(/BugCollection/Project/@projectName)>0'>
+                    <xsl:value-of select="/BugCollection/Project/@projectName"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="/BugCollection/Project/@filename"/>
+                </xsl:otherwise>
             </xsl:choose>
         </p>
-        <p>FindBugs version: <xsl:value-of select="/BugCollection/@version"/></p>
+        <p>FindBugs version:
+            <xsl:value-of select="/BugCollection/@version"/>
+        </p>
 
         <p>Code analyzed:</p>
         <ul>
             <xsl:for-each select="./Jar">
-                <li><xsl:value-of select="text()"/></li>
+                <li>
+                    <xsl:value-of select="text()"/>
+                </li>
             </xsl:for-each>
         </ul>
-        <p><br/><br/></p>
+        <p>
+            <br/>
+            <br/>
+        </p>
     </xsl:template>
 
     <xsl:template match="BugInstance[not(@last)]">
-        <xsl:variable name="warningId"><xsl:value-of select="generate-id()"/></xsl:variable>
+        <xsl:variable name="warningId">
+            <xsl:value-of select="generate-id()"/>
+        </xsl:variable>
 
         <tr class="tablerow{position() mod 2}" onclick="toggleRow('{$warningId}');">
 
             <td>
-                <span><xsl:attribute name="class">priority-<xsl:value-of select="@priority"/></xsl:attribute>
+                <span>
+                    <xsl:attribute name="class">priority-<xsl:value-of select="@priority"/>
+                    </xsl:attribute>
                     <xsl:value-of select="@abbrev"/>
                 </span>
             </td>
@@ -255,9 +302,12 @@
             <td/>
             <td>
                 <p id="{$warningId}" style="display: none;">
-                    <a href="#{@type}">Bug type <xsl:value-of select="@type"/> (click for details)</a>
+                    <a href="#{@type}">Bug type
+                        <xsl:value-of select="@type"/> (click for details)
+                    </a>
                     <xsl:for-each select="./*/Message">
-                        <br/><xsl:value-of select="text()"/>
+                        <br/>
+                        <xsl:value-of select="text()"/>
                     </xsl:for-each>
                 </p>
             </td>
@@ -265,7 +315,11 @@
     </xsl:template>
 
     <xsl:template match="BugPattern">
-        <h2><a name="{@type}"><xsl:value-of select="@type"/>: <xsl:value-of select="ShortDescription"/></a></h2>
+        <h2>
+            <a name="{@type}"><xsl:value-of select="@type"/>:
+                <xsl:value-of select="ShortDescription"/>
+            </a>
+        </h2>
         <xsl:value-of select="Details" disable-output-escaping="yes"/>
     </xsl:template>
 
@@ -274,7 +328,11 @@
         <xsl:param name="sectionTitle"/>
         <xsl:param name="sectionId"/>
 
-        <h2><a name="{$sectionId}"><xsl:value-of select="$sectionTitle"/></a></h2>
+        <h2>
+            <a name="{$sectionId}">
+                <xsl:value-of select="$sectionTitle"/>
+            </a>
+        </h2>
         <table class="warningtable" width="100%" cellspacing="0">
             <xsl:copy-of select="$bugTableHeader"/>
             <xsl:apply-templates select="$warningSet">
@@ -288,9 +346,13 @@
         <xsl:variable name="kloc" select="@total_size div 1000.0"/>
         <xsl:variable name="format" select="'#######0.00'"/>
 
-        <p><xsl:value-of select="@total_size"/> lines of code analyzed,
-            in <xsl:value-of select="@total_classes"/> classes,
-            in <xsl:value-of select="@num_packages"/> packages.</p>
+        <p>
+            <xsl:value-of select="@total_size"/> lines of code analyzed,
+            in
+            <xsl:value-of select="@total_classes"/> classes,
+            in
+            <xsl:value-of select="@num_packages"/> packages.
+        </p>
         <table width="500" cellpadding="5" cellspacing="2">
             <tr class="tableheader">
                 <th align="left">Metric</th>
@@ -299,10 +361,12 @@
             </tr>
             <tr class="tablerow0">
                 <td>High Priority Warnings</td>
-                <td align="right"><xsl:value-of select="@priority_1"/></td>
+                <td align="right">
+                    <xsl:value-of select="@priority_1"/>
+                </td>
                 <td align="right">
                     <xsl:choose>
-                        <xsl:when test= "$kloc &gt; 0.0 and number(@priority_1) &gt; 0.0">
+                        <xsl:when test="$kloc &gt; 0.0 and number(@priority_1) &gt; 0.0">
                             <xsl:value-of select="format-number(@priority_1 div $kloc, $format)"/>
                         </xsl:when>
                         <xsl:otherwise>
@@ -313,10 +377,12 @@
             </tr>
             <tr class="tablerow1">
                 <td>Medium Priority Warnings</td>
-                <td align="right"><xsl:value-of select="@priority_2"/></td>
+                <td align="right">
+                    <xsl:value-of select="@priority_2"/>
+                </td>
                 <td align="right">
                     <xsl:choose>
-                        <xsl:when test= "$kloc &gt; 0.0 and number(@priority_2) &gt; 0.0">
+                        <xsl:when test="$kloc &gt; 0.0 and number(@priority_2) &gt; 0.0">
                             <xsl:value-of select="format-number(@priority_2 div $kloc, $format)"/>
                         </xsl:when>
                         <xsl:otherwise>
@@ -330,10 +396,12 @@
                 <xsl:when test="@priority_3">
                     <tr class="tablerow1">
                         <td>Low Priority Warnings</td>
-                        <td align="right"><xsl:value-of select="@priority_3"/></td>
+                        <td align="right">
+                            <xsl:value-of select="@priority_3"/>
+                        </td>
                         <td align="right">
                             <xsl:choose>
-                                <xsl:when test= "$kloc &gt; 0.0 and number(@priority_3) &gt; 0.0">
+                                <xsl:when test="$kloc &gt; 0.0 and number(@priority_3) &gt; 0.0">
                                     <xsl:value-of select="format-number(@priority_3 div $kloc, $format)"/>
                                 </xsl:when>
                                 <xsl:otherwise>
@@ -348,20 +416,39 @@
             </xsl:choose>
 
             <tr class="$totalClass">
-                <td><b>Total Warnings</b></td>
-                <td align="right"><b><xsl:value-of select="@total_bugs"/></b></td>
+                <td>
+                    <b>Total Warnings</b>
+                </td>
+                <td align="right">
+                    <b>
+                        <xsl:value-of select="@total_bugs"/>
+                    </b>
+                </td>
                 <xsl:choose>
                     <xsl:when test="$kloc &gt; 0.0">
-                        <td align="right"><b><xsl:value-of select="format-number(@total_bugs div $kloc, $format)"/></b></td>
+                        <td align="right">
+                            <b>
+                                <xsl:value-of select="format-number(@total_bugs div $kloc, $format)"/>
+                            </b>
+                        </td>
                     </xsl:when>
                     <xsl:otherwise>
-                        <td align="right"><b><xsl:value-of select="format-number(0.0, $format)"/></b></td>
+                        <td align="right">
+                            <b>
+                                <xsl:value-of select="format-number(0.0, $format)"/>
+                            </b>
+                        </td>
                     </xsl:otherwise>
                 </xsl:choose>
             </tr>
         </table>
-        <p><i>(* Defects per Thousand lines of non-commenting source statements)</i></p>
-        <p><br/><br/></p>
+        <p>
+            <i>(* Defects per Thousand lines of non-commenting source statements)</i>
+        </p>
+        <p>
+            <br/>
+            <br/>
+        </p>
 
     </xsl:template>
 

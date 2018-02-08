@@ -8,4 +8,5 @@ gradle.allprojects {
 
 include 'runner'
 include 'core'
+include 'runner-api'
 //include 'agent'
