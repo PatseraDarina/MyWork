@@ -1,18 +1,22 @@
 package com.epam.autograder.core.repository.impl;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import com.epam.autograder.core.entity.Submission;
+import com.epam.autograder.core.mapper.SubmissionMapper;
 import com.epam.autograder.core.repository.SubmissionRepository;
 
 import jetbrains.exodus.entitystore.Entity;
 import jetbrains.exodus.entitystore.EntityId;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import jetbrains.exodus.entitystore.PersistentEntityStores;
-import jetbrains.exodus.entitystore.StoreTransaction;
 
 /**
  * Implementation for the Submission repository.
@@ -22,20 +26,28 @@ import jetbrains.exodus.entitystore.StoreTransaction;
 @Repository
 public class SubmissionRepositoryImpl implements SubmissionRepository {
 
-    private static final String SUBMISSION_ENTITY_NAME = "Submission";
-    private static final String ENVIRONMENT_ID_PROPERTY = "environmentId";
-    private static final String INPUT_SOURCE_PROPERTY = "inputSource";
-    private static final String INPUT_DATA_PROPERTY = "inputData";
-    private static final String DATA_BASE_DIR = ".SubmissionData";
+    @Autowired
+    private SubmissionMapper mapper;
     private PersistentEntityStore store;
+    @Value("${store_dir}")
+    private String dataStoreDir;
 
+    /**
+     * @param store store
+     */
+    public void setStore(PersistentEntityStore store) {
+        this.store = store;
+    }
 
     /**
      * get instance of entity store
      */
     @PostConstruct
     public void initStore() {
-        store = PersistentEntityStores.newInstance(DATA_BASE_DIR);
+        String userDir = System.getProperty("user.dir");
+        Path dirPath = Paths.get(userDir, dataStoreDir);
+
+        store = PersistentEntityStores.newInstance(dirPath.toString());
     }
 
     /**
@@ -53,26 +65,11 @@ public class SubmissionRepositoryImpl implements SubmissionRepository {
     @Override
     public Submission save(Submission submission) {
         EntityId id = store.computeInTransaction(txn -> {
-            Entity submissionEntity = submissionToEntity(submission, txn);
+            Entity submissionEntity = mapper.submissionToEntity(submission, txn);
             txn.saveEntity(submissionEntity);
             return submissionEntity.getId();
         });
         submission.setSubmissionId(id.getLocalId());
         return submission;
-    }
-
-    /**
-     * @param submission Submission
-     * @param txn        StoreTransaction
-     * @return new Entity "Submission"
-     */
-    private Entity submissionToEntity(Submission submission, StoreTransaction txn) {
-        Entity submissionEntity = txn.newEntity(SUBMISSION_ENTITY_NAME);
-
-        submissionEntity.setProperty(ENVIRONMENT_ID_PROPERTY, submission.getEnvironmentId());
-        submissionEntity.setProperty(INPUT_SOURCE_PROPERTY, submission.getInputSource().toString());
-        submissionEntity.setProperty(INPUT_DATA_PROPERTY, submission.getInputData());
-
-        return submissionEntity;
     }
 }
