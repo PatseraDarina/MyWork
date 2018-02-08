@@ -27,7 +27,8 @@ public class TestCase extends BaseTest {
         HttpResponse response = coreRestClient.postSubmission(testSubmission);
         RestClientHelper.verifyStatusCode(response, HttpStatus.SC_OK);
         Submission receivedSubmission = JsonHelper.fromJson(RestClientHelper.getContent(response), Submission.class);
-        Assert.assertTrue(receivedSubmission.getId() >= 0,
-                String.format("FAIL to Verify Submission Id. Actual: '%s', Expected: '>0'", receivedSubmission.getId()));
+        long id = receivedSubmission.getId();
+        Assert.assertTrue(id >= 0,
+                String.format("Invalid 'Submission' id. Value: %d", id));
     }
 }
