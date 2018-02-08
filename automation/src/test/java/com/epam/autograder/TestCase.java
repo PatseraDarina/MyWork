@@ -11,14 +11,13 @@ import org.testng.annotations.Test;
 public class TestCase extends BaseTest {
 
     @Test
-    public void test_post_submission_with_status_server_error() {
-        Submission testSubmission = null;
-        HttpResponse response = coreRestClient.postSubmission(testSubmission);
+    public void test_postSubmission_internalServerError() {
+        HttpResponse response = coreRestClient.postSubmission(null);
         RestClientHelper.verifyStatusCode(response, HttpStatus.SC_INTERNAL_SERVER_ERROR);
     }
 
     @Test
-    public void test_post_submission_status_OK() {
+    public void test_postSubmission_OK() {
         Submission testSubmission = new Submission(
                 "cdp_autograder_hello_world",
                 "GIT",
@@ -30,13 +29,5 @@ public class TestCase extends BaseTest {
         Submission receivedSubmission = JsonHelper.fromJson(RestClientHelper.getContent(response), Submission.class);
         Assert.assertTrue(receivedSubmission.getId() >= 0,
                 String.format("FAIL to Verify Submission Id. Actual: '%s', Expected: '>0'", receivedSubmission.getId()));
-
-        HttpResponse response2 = coreRestClient.postSubmission(testSubmission);
-        RestClientHelper.verifyStatusCode(response2, HttpStatus.SC_OK);
-        Submission receivedSubmission2 = JsonHelper.fromJson(RestClientHelper.getContent(response2), Submission.class);
-        Assert.assertTrue(receivedSubmission2.getId() >= 0,
-                String.format("FAIL to Verify Submission Id. Actual: '%s', Expected: '>0'", receivedSubmission.getId()));
-        Assert.assertNotEquals(receivedSubmission.getId(), receivedSubmission2.getId(),
-                String.format("Id is not unique. Actual: '%s', Expected: unique id", receivedSubmission.getId()));
     }
 }
