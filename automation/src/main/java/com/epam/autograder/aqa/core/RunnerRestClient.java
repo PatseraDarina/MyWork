@@ -4,13 +4,13 @@ import com.epam.autograder.aqa.entity.RunnerSubmission;
 import org.apache.http.HttpResponse;
 
 public class RunnerRestClient extends RestClient {
-    private static final String POST_SUBMISSION = "/containers";
+    private static final String CREATE_CONTAINER = "/containers";
 
     public RunnerRestClient(String baseUrl) {
         super(baseUrl);
     }
 
-    public HttpResponse postSubmission(RunnerSubmission submission) {
-        return post(POST_SUBMISSION, submission);
+    public HttpResponse createContainer(RunnerSubmission submission) {
+        return post(CREATE_CONTAINER, submission);
     }
 }
