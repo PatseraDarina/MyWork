@@ -1,7 +1,6 @@
 package com.epam.autograder.runner.entity;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import java.util.Objects;
 
 /**
  * Represents a students homework submission.
@@ -77,20 +76,13 @@ public class Submission {
         }
 
         Submission that = (Submission) o;
-
-        return new EqualsBuilder()
-                .append(submissionId, that.submissionId)
-                .append(environmentId, that.environmentId)
-                .append(payload, that.payload)
-                .isEquals();
+        return submissionId == that.submissionId
+                && Objects.equals(environmentId, that.environmentId)
+                && Objects.equals(payload, that.payload);
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(submissionId)
-                .append(environmentId)
-                .append(payload)
-                .toHashCode();
+        return Objects.hash(submissionId, environmentId, payload);
     }
 }
