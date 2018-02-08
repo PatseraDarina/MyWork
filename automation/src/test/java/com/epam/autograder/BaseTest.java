@@ -7,7 +7,7 @@ public abstract class BaseTest {
     protected CoreRestClient coreRestClient;
 
     @BeforeClass
-    public void getSystemProperty() {
-        coreRestClient = new CoreRestClient(System.getProperty("coreURL", "127.0.0.1:8080"));
+    public void setUp() {
+        coreRestClient = new CoreRestClient(System.getProperty("coreURL"));
     }
 }
