@@ -3,6 +3,7 @@ apply plugin: 'pmd'
 pmd {
     toolVersion = '6.0.0'
     ignoreFailures = false
+    pmdTest.enabled = false
     reportsDir = file("${buildDir}/reports/pmd")
-    ruleSetFiles = files('gradle/pmd/config/pmd-rules.xml')
+    ruleSetFiles = files("$projectDir/gradle/pmd/config/pmd-rules.xml")
 }

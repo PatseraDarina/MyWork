@@ -3,7 +3,7 @@ apply plugin: 'findbugs'
 findbugs {
     toolVersion = '3.0.1'
     ignoreFailures = false
-    includeFilter = file('gradle/findbugs/config/findbugs-filter.xml')
+    includeFilter = file("$projectDir/gradle/findbugs/config/findbugs-filter.xml")
     reportsDir = file("$buildDir/reports/findbugs")
     effort = "max"
 }

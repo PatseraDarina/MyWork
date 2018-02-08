@@ -8,26 +8,38 @@
                 <title>Sun Coding Style Violations</title>
             </head>
             <body bgcolor="#FFFFEF">
-                <p><b>Coding Style Check Results</b></p>
+                <p>
+                    <b>Coding Style Check Results</b>
+                </p>
                 <table border="1" cellspacing="0" cellpadding="2">
                     <tr bgcolor="#CC9966">
-                        <th colspan="2"><b>Summary</b></th>
+                        <th colspan="2">
+                            <b>Summary</b>
+                        </th>
                     </tr>
                     <tr bgcolor="#CCF3D0">
                         <td>Total files checked</td>
-                        <td><xsl:number level="any" value="count(descendant::file)"/></td>
+                        <td>
+                            <xsl:number level="any" value="count(descendant::file)"/>
+                        </td>
                     </tr>
                     <tr bgcolor="#F3F3E1">
                         <td>Files with errors</td>
-                        <td><xsl:number level="any" value="count(descendant::file[error])"/></td>
+                        <td>
+                            <xsl:number level="any" value="count(descendant::file[error])"/>
+                        </td>
                     </tr>
                     <tr bgcolor="#CCF3D0">
                         <td>Total errors</td>
-                        <td><xsl:number level="any" value="count(descendant::error)"/></td>
+                        <td>
+                            <xsl:number level="any" value="count(descendant::error)"/>
+                        </td>
                     </tr>
                     <tr bgcolor="#F3F3E1">
                         <td>Errors per file</td>
-                        <td><xsl:number level="any" value="count(descendant::error) div count(descendant::file)"/></td>
+                        <td>
+                            <xsl:number level="any" value="count(descendant::error) div count(descendant::file)"/>
+                        </td>
                     </tr>
                 </table>
                 <hr align="left" width="95%" size="1"/>
@@ -41,7 +53,7 @@
     <xsl:template match="file[error]">
         <table bgcolor="#AFFFFF" width="95%" border="1" cellspacing="0" cellpadding="2">
             <tr>
-                <th> File: </th>
+                <th>File:</th>
                 <td>
                     <xsl:value-of select="@name"/>
                 </td>
@@ -49,8 +61,8 @@
         </table>
         <table bgcolor="#DFFFFF" width="95%" border="1" cellspacing="0" cellpadding="2">
             <tr>
-                <th> Line Number </th>
-                <th> Error Message </th>
+                <th>Line Number</th>
+                <th>Error Message</th>
             </tr>
             <xsl:apply-templates select="error"/>
         </table>

@@ -1,0 +1,65 @@
+= Auto Grader Core API Documentation
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:sectlinks:
+:sectnums:
+:sectnumlevels: 2
+:source-highlighter: highlight.js
+:toc: left
+:toclevels: 5
+:docinfo: shared
+
+.List of main status codes
+|===
+| Status code | Description
+
+| **200** OK
+| The request has succeeded.
+
+| **400** Bad Request
+| The request could not be understood by the server due to malformed syntax. The client SHOULD NOT repeat the request without modifications.
+
+| **500** Internal server error
+| Internal Server Error
+|===
+
+[[resources-submission-resource-test-should-return-status-success]]
+== Create Submission
+
+include::{snippets}/submission-resource-test/should-return-status-success/auto-method-path.adoc[]
+
+include::{snippets}/submission-resource-test/should-return-status-success/auto-description.adoc[]
+
+=== Path parameters
+
+include::{snippets}/submission-resource-test/should-return-status-success/auto-path-parameters.adoc[]
+
+=== Query parameters
+
+include::{snippets}/submission-resource-test/should-return-status-success/auto-request-parameters.adoc[]
+
+=== Request fields
+
+include::{snippets}/submission-resource-test/should-return-status-success/auto-request-fields.adoc[]
+
+=== Response fields
+
+include::{snippets}/submission-resource-test/should-return-status-success/auto-response-fields.adoc[]
+
+=== Examples:
+
+==== SUCCESS (200)
+include::{snippets}/submission-resource-test/should-return-status-success/curl-request.adoc[]
+include::{snippets}/submission-resource-test/should-return-status-success/http-response.adoc[]
+
+==== BAD_REQUEST (400)
+include::{snippets}/submission-resource-test/should-return-status-client-error-when-u-r-l-template-is-wrong/curl-request.adoc[]
+
+include::{snippets}/submission-resource-test/should-return-status-client-error-when-u-r-l-template-is-wrong/http-response.adoc[]
+
+
+==== INTERNAL_SERVER_ERROR (500)
+
+
+TODO: to be implemented
