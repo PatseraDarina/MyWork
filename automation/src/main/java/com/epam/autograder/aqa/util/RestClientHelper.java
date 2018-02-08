@@ -5,11 +5,21 @@ import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.Arrays;
 
 public class RestClientHelper {
 
     private RestClientHelper() {
+    }
+
+    public static void verifyAddressIsReachable(String url) {
+        try {
+            Assert.assertTrue(InetAddress.getByName(url).isReachable(30000),
+                    "FAIL to Connect ".concat(url));
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     private static int getStatusCode(HttpResponse response) {
