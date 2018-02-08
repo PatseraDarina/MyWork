@@ -8,7 +8,7 @@ import org.apache.http.HttpStatus;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class TestCase extends BaseTest {
+public class CoreTestSuite extends BaseTest {
 
     @Test
     public void test_postSubmission_internalServerError() {
