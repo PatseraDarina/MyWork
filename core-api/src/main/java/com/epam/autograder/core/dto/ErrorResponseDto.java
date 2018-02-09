@@ -1,4 +1,4 @@
-package com.epam.autograder.core.entity;
+package com.epam.autograder.core.dto;
 
 /**
  * Entity that will be sent if some problems in application  occur
@@ -7,7 +7,7 @@ package com.epam.autograder.core.entity;
  *
  * @author EduardKhachirov
  */
-public class ErrorResponse {
+public class ErrorResponseDto {
     private int statusCode;
     private String statusName;
     private String description;
@@ -19,7 +19,7 @@ public class ErrorResponse {
      * @param statusName  reserved HTTP status
      * @param description an error message from exception that was occurred
      */
-    public ErrorResponse(int statusCode, String statusName, String description) {
+    public ErrorResponseDto(int statusCode, String statusName, String description) {
         this.statusCode = statusCode;
         this.statusName = statusName;
         this.description = description;

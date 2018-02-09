@@ -3,7 +3,7 @@ package com.epam.autograder.core.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.epam.autograder.core.entity.Submission;
+import com.epam.autograder.core.dto.SubmissionDto;
 import com.epam.autograder.core.repository.SubmissionRepository;
 import com.epam.autograder.core.service.SubmissionService;
 
@@ -23,7 +23,7 @@ public class SubmissionServiceImpl implements SubmissionService {
      * @return a submission with generated id
      */
     @Override
-    public Submission createSubmission(Submission submission) {
+    public SubmissionDto createSubmission(SubmissionDto submission) {
         return submissionRepository.save(submission);
     }
 }

@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import com.epam.autograder.core.entity.Submission;
+import com.epam.autograder.core.dto.SubmissionDto;
 import com.epam.autograder.core.repository.SubmissionRepository;
 import com.epam.autograder.core.service.impl.SubmissionServiceImpl;
 
@@ -21,7 +21,7 @@ public class SubmissionServiceTest extends BaseTest {
     @InjectMocks
     private final SubmissionServiceImpl submissionService = new SubmissionServiceImpl();
     @Mock
-    private Submission submission;
+    private SubmissionDto submission;
     @Mock
     private SubmissionRepository submissionRepository;
 

@@ -1,4 +1,4 @@
-package com.epam.autograder.core.entity;
+package com.epam.autograder.core.dto;
 
 import java.util.Objects;
 
@@ -7,7 +7,7 @@ import java.util.Objects;
  *
  * @author Valeriia Chub
  */
-public class Submission {
+public class SubmissionDto {
 
     /**
      * Submission id
@@ -21,7 +21,7 @@ public class Submission {
     /**
      * Type of input source
      */
-    private InputSource inputSource;
+    private InputSourceDto inputSource;
     /**
      * Input data
      */
@@ -58,14 +58,14 @@ public class Submission {
     /**
      * @return current type of input source
      */
-    public InputSource getInputSource() {
+    public InputSourceDto getInputSource() {
         return inputSource;
     }
 
     /**
      * @param inputSource sets type of input source
      */
-    public void setInputSource(InputSource inputSource) {
+    public void setInputSource(InputSourceDto inputSource) {
         this.inputSource = inputSource;
     }
 
@@ -97,7 +97,7 @@ public class Submission {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Submission that = (Submission) o;
+        SubmissionDto that = (SubmissionDto) o;
         return submissionId == that.submissionId
                 && Objects.equals(environmentId, that.environmentId)
                 && inputSource == that.inputSource

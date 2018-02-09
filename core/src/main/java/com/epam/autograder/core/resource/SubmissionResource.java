@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.epam.autograder.core.entity.Submission;
+import com.epam.autograder.core.dto.SubmissionDto;
 import com.epam.autograder.core.service.SubmissionService;
 
 /**
@@ -27,7 +27,7 @@ public class SubmissionResource {
      * @return a submission with generated id
      */
     @PostMapping("/submission")
-    public Submission createSubmission(@RequestBody Submission submission) {
+    public SubmissionDto createSubmission(@RequestBody SubmissionDto submission) {
         return submissionService.createSubmission(submission);
     }
 }
