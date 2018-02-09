@@ -62,6 +62,7 @@ dependencies {
     testCompile('org.springframework.boot:spring-boot-starter-test:1.5.2.RELEASE')
 
     compile project(':core-api')
+    compile project (':runner-api')
 }
 
 // clean before generate documentation
