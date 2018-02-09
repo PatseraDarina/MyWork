@@ -1,6 +1,6 @@
 package com.epam.autograder.core.exception.controller;
 
-import com.epam.autograder.core.entity.Submission;
+import com.epam.autograder.core.dto.SubmissionDto;
 import com.epam.autograder.core.exception.BusinessException;
 import com.epam.autograder.core.resource.ExceptionHandlingController;
 import com.epam.autograder.core.resource.SubmissionResource;
@@ -63,7 +63,7 @@ public class ExceptionHandlingControllerTest {
                 .standaloneSetup(stubController)
                 .setControllerAdvice(exceptionHandlingController)
                 .build();
-        submissionJson = new ObjectMapper().writeValueAsString(new Submission());
+        submissionJson = new ObjectMapper().writeValueAsString(new SubmissionDto());
         jsonMediaType = new MediaType(MediaType.APPLICATION_JSON, Charset.forName("utf8"));
     }
 
@@ -77,7 +77,7 @@ public class ExceptionHandlingControllerTest {
         HttpStatus expectedHttpStatus = HttpStatus.BAD_REQUEST;
         String expectedDescription = "BusinessException";
 
-        when(stubController.createSubmission(any(Submission.class))).thenThrow(new BusinessException(expectedDescription));
+        when(stubController.createSubmission(any(SubmissionDto.class))).thenThrow(new BusinessException(expectedDescription));
 
         assertThat(mockMvc.perform(post(REQUEST_URL).contentType(jsonMediaType).content(submissionJson))
                 .andExpect(jsonPath(STATUS_CODE_FIELD, is(expectedHttpStatus.value())))
@@ -95,7 +95,7 @@ public class ExceptionHandlingControllerTest {
         HttpStatus expectedHttpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         String expectedDescription = "RuntimeException";
 
-        when(stubController.createSubmission(any(Submission.class))).thenThrow(new RuntimeException(expectedDescription));
+        when(stubController.createSubmission(any(SubmissionDto.class))).thenThrow(new RuntimeException(expectedDescription));
 
         assertThat(mockMvc.perform(post(REQUEST_URL).contentType(jsonMediaType).content(submissionJson))
                 .andExpect(jsonPath(STATUS_CODE_FIELD, is(expectedHttpStatus.value())))

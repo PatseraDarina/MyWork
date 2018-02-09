@@ -5,7 +5,7 @@ import javax.annotation.PreDestroy;
 
 import org.springframework.stereotype.Repository;
 
-import com.epam.autograder.core.entity.Submission;
+import com.epam.autograder.core.dto.SubmissionDto;
 import com.epam.autograder.core.repository.SubmissionRepository;
 
 import jetbrains.exodus.entitystore.Entity;
@@ -51,7 +51,7 @@ public class SubmissionRepositoryImpl implements SubmissionRepository {
      * @return submission with generated id
      */
     @Override
-    public Submission save(Submission submission) {
+    public SubmissionDto save(SubmissionDto submission) {
         EntityId id = store.computeInTransaction(txn -> {
             Entity submissionEntity = submissionToEntity(submission, txn);
             txn.saveEntity(submissionEntity);
@@ -66,7 +66,7 @@ public class SubmissionRepositoryImpl implements SubmissionRepository {
      * @param txn        StoreTransaction
      * @return new Entity "Submission"
      */
-    private Entity submissionToEntity(Submission submission, StoreTransaction txn) {
+    private Entity submissionToEntity(SubmissionDto submission, StoreTransaction txn) {
         Entity submissionEntity = txn.newEntity(SUBMISSION_ENTITY_NAME);
 
         submissionEntity.setProperty(ENVIRONMENT_ID_PROPERTY, submission.getEnvironmentId());

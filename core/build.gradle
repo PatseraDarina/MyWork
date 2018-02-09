@@ -67,6 +67,7 @@ dependencies {
     testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.0.2'
     testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.0.2'
     testCompileOnly('org.apiguardian:apiguardian-api:1.0.0')
+    compile project(':core-api')
     compile project (':runner-api')
 }
 
