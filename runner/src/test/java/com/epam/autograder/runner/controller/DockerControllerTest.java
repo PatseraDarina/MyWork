@@ -1,5 +1,6 @@
 package com.epam.autograder.runner.controller;
 
+import com.epam.autograder.runner.entity.Sandbox;
 import com.epam.autograder.runner.result.Result;
 import com.epam.autograder.runner.service.DockerService;
 import com.epam.autograder.runner.setup.MockMvcBase;
@@ -23,11 +24,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class DockerControllerTest extends MockMvcBase {
 
     @InjectMocks
-    private DockerController controller;
+    private SandboxController controller;
     @Mock
     private DockerService service;
     @Mock
-    private Submission submission;
+    private Sandbox sandbox;
     @Mock
     private Map<Result, HttpStatus> statusMap;
 
@@ -38,12 +39,12 @@ public class DockerControllerTest extends MockMvcBase {
      */
     @Test
     public void createContainer() throws Exception {
-        when(service.runDocker(submission)).thenReturn(Result.OK);
+        when(service.runDocker(sandbox)).thenReturn(Result.OK);
         when(statusMap.get(Result.OK)).thenReturn(HttpStatus.OK);
         ResponseEntity<?> responseEntity = new ResponseEntity<>(HttpStatus.OK);
         mockMvc.perform(post("/containers"))
                 .andExpect(status().is4xxClientError());
-        assertThat(controller.createContainer(submission), is(responseEntity));
+        assertThat(controller.acceptSandbox(sandbox), is(responseEntity));
     }
 
     /**

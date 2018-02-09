@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
 
 /**
  * Created by Andrii_Kasianenko on 2/1/2018.
@@ -42,7 +41,7 @@ public class DockerServiceImpl implements DockerService {
             writeToFile(sandbox.getPayload());
             CreateContainerResponse container = dockerClient
                     .createContainerCmd(imageName)
-                    .withName(String.valueOf(sandbox.getSubmissionId()))
+                    .withName(String.valueOf(sandbox.getId()))
                     .exec();
             dockerClient.startContainerCmd(container.getId()).exec();
         } catch (NotFoundException | ConflictException e) {
@@ -58,7 +57,14 @@ public class DockerServiceImpl implements DockerService {
     }
 
     @Override
-    public SandboxStatus getStatus(UUID id) {
+    public SandboxStatus getStatus(String id) {
+       // String status;
+       // List<Container> containers = dockerClient.listContainersCmd().exec();
+        // for (Container element : containers){
+        // String [] arr  =  element.getNames(); }
+        // check of file exist
+        // check id in file
+        //Statuses of container: created, restarting, running, removing, paused, exited and dead.
         return SandboxStatus.COMPLETE;
     }
 

@@ -4,7 +4,6 @@ import com.epam.autograder.runner.entity.Sandbox;
 import com.epam.autograder.runner.entity.SandboxStatus;
 import com.epam.autograder.runner.result.Result;
 
-import java.util.UUID;
 
 /**
  * Service which works with Docker
@@ -24,5 +23,5 @@ public interface DockerService {
      * @param id identifier for getting container status
      * @return container status
      */
-    SandboxStatus getStatus(UUID id);
+    SandboxStatus getStatus(String id);
 }

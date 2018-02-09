@@ -1,5 +1,7 @@
 package com.epam.autograder.runner.service.impl;
 
+import com.epam.autograder.runner.entity.Sandbox;
+
 import com.epam.autograder.runner.result.Result;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +19,7 @@ import static org.hamcrest.Matchers.is;
 public class StubDockerServiceTest {
 
     @Mock
-    private Submission submission;
+    private Sandbox sandbox;
     @InjectMocks
     private StubDockerService dockerService;
 
@@ -26,7 +28,7 @@ public class StubDockerServiceTest {
      */
     @Test
     public void runDocker() {
-        assertThat(dockerService.runDocker(submission), is(Result.OK));
+        assertThat(dockerService.runDocker(sandbox), is(Result.OK));
     }
 
 }

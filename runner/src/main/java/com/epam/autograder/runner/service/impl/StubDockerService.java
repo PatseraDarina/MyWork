@@ -6,7 +6,6 @@ import com.epam.autograder.runner.result.Result;
 import com.epam.autograder.runner.service.DockerService;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
 
 /**
  * Stub Service
@@ -20,7 +19,7 @@ public class StubDockerService implements DockerService {
     }
 
     @Override
-    public SandboxStatus getStatus(UUID id) {
-        return null;
+    public SandboxStatus getStatus(String id) {
+        return SandboxStatus.COMPLETE;
     }
 }

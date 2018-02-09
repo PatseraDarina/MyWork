@@ -1,17 +1,19 @@
 package com.epam.autograder.runner.controller;
 
 import com.epam.autograder.runner.entity.Sandbox;
-import com.epam.autograder.runner.entity.SandboxStatus;
 import com.epam.autograder.runner.result.Result;
 import com.epam.autograder.runner.service.DockerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.GetMapping;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Create docker container.
@@ -27,17 +29,20 @@ public class SandboxController {
 
     /**
      * @param sandbox get from Core
-     * @return ResponseEntity<>(HttpStatus) in JSON format
+     * @return should return ResponseEntity<Sandbox> in JSON format
      */
     @PostMapping("/sandboxes")
     public ResponseEntity<?> acceptSandbox(@RequestBody Sandbox sandbox) {
         Result result = dockerService.runDocker(sandbox);
         return new ResponseEntity<>(statusMap.get(result));
     }
-
+    /**
+     * @param id get from Core
+     * @return SandboxStatus
+     */
     @GetMapping("/sandboxes/{id}")
-    public SandboxStatus getContainerStatus(@PathVariable String id) {
-        return dockerService.getStatus(UUID.fromString(id));
+    public Sandbox getContainerStatus(@PathVariable String id) {
+        //SandboxStatus status = dockerService.getStatus(id);
+        return new Sandbox();
     }
-
 }
