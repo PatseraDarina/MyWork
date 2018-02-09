@@ -10,18 +10,18 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.restdocs.JUnitRestDocumentation;
+import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.cli.CliDocumentation;
 import org.springframework.restdocs.http.HttpDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.operation.preprocess.OperationResponsePreprocessor;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -34,23 +34,25 @@ import capital.scalable.restdocs.AutoDocumentation;
  * mockMvcBase test
  */
 @SpringBootTest
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith({SpringExtension.class, RestDocumentationExtension.class})
 public class MockMvcBaseIntegrationTest {
 
     private static final String CLASS_METHOD_NAME = "{class-name}/{method-name}";
-    @Rule
-    public final JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation();
+
     protected MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
     private WebApplicationContext context;
 
+
     /**
-     * setUp method
+     * Sets up.
+     *
+     * @param restDocumentation the rest documentation
      */
-    @Before
-    public void setUp() {
+    @BeforeEach
+    public void setUp(RestDocumentationExtension restDocumentation) {
         String http = "http";
         String localhost = "localhost";
         int port = 8080;
