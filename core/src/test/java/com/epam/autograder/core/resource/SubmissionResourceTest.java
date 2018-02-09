@@ -26,8 +26,7 @@ import org.springframework.test.context.ContextConfiguration;
 /**
  * Test class for testing SubmissionResource functionality
  */
-@ContextConfiguration(classes = {CoreTestConfiguration.class, CoreApplication.class})
-@ActiveProfiles("coreConfigurationProfile")
+
 public class SubmissionResourceTest extends MockMvcBaseIntegrationTest {
     private static final String URL_TEMPLATE = "/submission";
     private MediaType applicationJsonUtf8 = new MediaType(

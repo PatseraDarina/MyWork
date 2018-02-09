@@ -10,6 +10,8 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 
+import com.epam.autograder.core.CoreApplication;
+import com.epam.autograder.core.CoreTestConfiguration;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,7 +23,10 @@ import org.springframework.restdocs.cli.CliDocumentation;
 import org.springframework.restdocs.http.HttpDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.operation.preprocess.OperationResponsePreprocessor;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -33,7 +38,9 @@ import capital.scalable.restdocs.AutoDocumentation;
 /**
  * mockMvcBase test
  */
-@SpringBootTest
+@WebAppConfiguration
+@ContextConfiguration(classes = {CoreTestConfiguration.class, CoreApplication.class})
+@ActiveProfiles("coreConfigurationProfile")
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MockMvcBaseIntegrationTest {
 
@@ -50,7 +57,7 @@ public class MockMvcBaseIntegrationTest {
      * setUp method
      */
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         String http = "http";
         String localhost = "localhost";
         int port = 8080;

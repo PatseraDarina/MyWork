@@ -3,6 +3,7 @@ package com.epam.autograder.core.exception.controller;
 import com.epam.autograder.core.entity.Submission;
 import com.epam.autograder.core.exception.BusinessException;
 import com.epam.autograder.core.resource.ExceptionHandlingController;
+import com.epam.autograder.core.resource.MockMvcBaseIntegrationTest;
 import com.epam.autograder.core.resource.SubmissionResource;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,9 +34,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Eduard Khachirov
  * @see ExceptionHandlingController
  */
-@SpringBootTest
-@RunWith(SpringJUnit4ClassRunner.class)
-public class ExceptionHandlingControllerTest {
+//@SpringBootTest
+//@RunWith(SpringJUnit4ClassRunner.class)
+public class ExceptionHandlingControllerTest extends MockMvcBaseIntegrationTest {
 
     private static final String STATUS_CODE_FIELD = "$.statusCode";
     private static final String STATUS_NAME_FIELD = "$.statusName";
@@ -58,7 +59,9 @@ public class ExceptionHandlingControllerTest {
      * @throws JsonProcessingException throws when can not parse Submission to json
      */
     @Before
-    public void setUp() throws JsonProcessingException {
+    @Override
+    public void setUp() throws Exception {
+//        super.setUp();
         mockMvc = MockMvcBuilders
                 .standaloneSetup(stubController)
                 .setControllerAdvice(exceptionHandlingController)
