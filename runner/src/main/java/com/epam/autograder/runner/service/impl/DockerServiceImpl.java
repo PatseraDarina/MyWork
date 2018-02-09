@@ -7,7 +7,9 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.exception.ConflictException;
 import com.github.dockerjava.api.exception.NotFoundException;
+import com.github.dockerjava.api.model.Bind;
 import com.github.dockerjava.api.model.Info;
+import com.github.dockerjava.api.model.Volume;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,15 +25,31 @@ import java.io.IOException;
 @Service("dockerServiceImpl")
 public class DockerServiceImpl implements DockerService {
     private static final Logger LOGGER = Logger.getLogger(DockerServiceImpl.class);
-    private static final String FILE_DIRECTORY = "var/runner/input/payload";
+    private static final String FILE_DIRECTORY = "var" + File.separator + "runner" + File.separator + "input"
+            + File.separator + "payload";
     private static final String FILE_NAME = "payload";
+
 
     @Autowired
     @Qualifier("dockerClient")
     private DockerClient dockerClient;
+    @Autowired
+    @Qualifier("inVolume")
+    private Volume inputVolume;
+    @Autowired
+    @Qualifier("outVolume")
+    private Volume outputVolume;
+    @Autowired
+    @Qualifier("inBind")
+    private Bind inputBind;
+    @Autowired
+    @Qualifier("outBind")
+    private Bind outputBind;
+
 
     @Override
     public Result runDocker(Submission submission) {
+
         Info info = dockerClient.infoCmd().exec();
         LOGGER.info("DOCKER INFO: " + info);
 
@@ -39,7 +57,9 @@ public class DockerServiceImpl implements DockerService {
         try {
             writeToFile(submission.getPayload());
             CreateContainerResponse container = dockerClient
-                    .createContainerCmd(imageName)
+                    .createContainerCmd(imageName).withVolumes(inputVolume, outputVolume)
+                    .withBinds(
+                            inputBind, outputBind)
                     .withName(String.valueOf(submission.getSubmissionId()))
                     .exec();
             dockerClient.startContainerCmd(container.getId()).exec();
@@ -58,5 +78,6 @@ public class DockerServiceImpl implements DockerService {
     private void writeToFile(String payload) throws IOException {
         File file = new File(FILE_DIRECTORY, FILE_NAME);
         FileUtils.writeStringToFile(file, payload);
+
     }
 }
