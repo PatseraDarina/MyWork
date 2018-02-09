@@ -1,5 +1,6 @@
 package com.epam.autograder.aqa.core;
 
+import com.epam.autograder.aqa.annotation.Step;
 import com.epam.autograder.aqa.entity.Submission;
 import org.apache.http.HttpResponse;
 
@@ -10,6 +11,7 @@ public class CoreRestClient extends RestClient {
         super(baseUrl);
     }
 
+    @Step
     public HttpResponse postSubmission(Submission submission) {
         return post(POST_SUBMISSION, submission);
     }
