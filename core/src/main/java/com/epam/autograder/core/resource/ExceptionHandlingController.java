@@ -3,6 +3,7 @@ package com.epam.autograder.core.resource;
 import com.epam.autograder.core.entity.ErrorResponse;
 import com.epam.autograder.core.exception.BusinessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,7 +30,7 @@ public class ExceptionHandlingController {
      * @see ErrorResponse
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(BusinessException.class)
+    @ExceptionHandler({BusinessException.class, HttpMessageNotReadableException.class})
     protected ErrorResponse handleBusinessException(BusinessException exception) {
         return buildErrorResponse(exception, HttpStatus.BAD_REQUEST);
     }
