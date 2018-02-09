@@ -1,6 +1,7 @@
 package com.epam.autograder.runner.service.impl;
 
-import com.epam.autograder.runner.entity.Submission;
+import com.epam.autograder.runner.entity.Sandbox;
+import com.epam.autograder.runner.entity.SandboxStatus;
 import com.epam.autograder.runner.result.Result;
 import com.epam.autograder.runner.service.DockerService;
 import com.github.dockerjava.api.DockerClient;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 /**
  * Created by Andrii_Kasianenko on 2/1/2018.
@@ -31,16 +33,16 @@ public class DockerServiceImpl implements DockerService {
     private DockerClient dockerClient;
 
     @Override
-    public Result runDocker(Submission submission) {
+    public Result runDocker(Sandbox sandbox) {
         Info info = dockerClient.infoCmd().exec();
         LOGGER.info("DOCKER INFO: " + info);
 
-        String imageName = submission.getEnvironmentId();
+        String imageName = sandbox.getType();
         try {
-            writeToFile(submission.getPayload());
+            writeToFile(sandbox.getPayload());
             CreateContainerResponse container = dockerClient
                     .createContainerCmd(imageName)
-                    .withName(String.valueOf(submission.getSubmissionId()))
+                    .withName(String.valueOf(sandbox.getSubmissionId()))
                     .exec();
             dockerClient.startContainerCmd(container.getId()).exec();
         } catch (NotFoundException | ConflictException e) {
@@ -53,6 +55,11 @@ public class DockerServiceImpl implements DockerService {
         info = dockerClient.infoCmd().exec();
         LOGGER.info("DOCKER INFO: " + info);
         return Result.OK;
+    }
+
+    @Override
+    public SandboxStatus getStatus(UUID id) {
+        return SandboxStatus.COMPLETE;
     }
 
     private void writeToFile(String payload) throws IOException {

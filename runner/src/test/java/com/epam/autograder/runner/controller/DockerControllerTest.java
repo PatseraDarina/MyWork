@@ -1,6 +1,5 @@
 package com.epam.autograder.runner.controller;
 
-import com.epam.autograder.runner.entity.Submission;
 import com.epam.autograder.runner.result.Result;
 import com.epam.autograder.runner.service.DockerService;
 import com.epam.autograder.runner.setup.MockMvcBase;

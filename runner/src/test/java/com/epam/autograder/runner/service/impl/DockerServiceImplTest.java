@@ -1,14 +1,8 @@
 package com.epam.autograder.runner.service.impl;
 
-import com.epam.autograder.runner.entity.Submission;
 import com.epam.autograder.runner.result.Result;
 import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.api.command.StopContainerCmd;
-import com.github.dockerjava.api.command.StartContainerCmd;
-import com.github.dockerjava.api.command.CreateContainerResponse;
-import com.github.dockerjava.api.command.CreateContainerCmd;
-import com.github.dockerjava.api.command.WaitContainerCmd;
-import com.github.dockerjava.api.command.InfoCmd;
+import com.github.dockerjava.api.command.*;
 import com.github.dockerjava.api.model.Info;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,12 +54,20 @@ public class DockerServiceImplTest {
         when(submission.getSubmissionId()).thenReturn(123L);
         when(submission.getEnvironmentId()).thenReturn(anyString());
         when(dockerClient.createContainerCmd(IMAGE)).thenReturn(createContainerCmd);
-        when(dockerClient.createContainerCmd(IMAGE)
-                .withName(String.valueOf(submission.getSubmissionId())))
-                .thenReturn(createContainerCmd);
+        when(dockerClient.createContainerCmd(IMAGE).withCmd("sleep", "9999")).thenReturn(createContainerCmd);
+        when(dockerClient.createContainerCmd(IMAGE).withCmd("sleep", "9999").withName(String.valueOf(submission.getSubmissionId())))
+            .thenReturn(createContainerCmd);
         when(createContainerCmd.exec()).thenReturn(containerResponse);
-        when(dockerClient.startContainerCmd(containerResponse.getId())).thenReturn(startContainerCmd);
+        mockDockerClient();
 
         assertThat(dockerService.runDocker(submission), is(Result.OK));
     }
+
+    private void mockDockerClient() {
+        when(dockerClient.startContainerCmd(containerResponse.getId())).thenReturn(startContainerCmd);
+        when(dockerClient.waitContainerCmd(containerResponse.getId())).thenReturn(waitContainerCmd);
+        when(dockerClient.stopContainerCmd(containerResponse.getId())).thenReturn(stopContainerCmd);
+    }
+
+
 }

@@ -1,6 +1,5 @@
 package com.epam.autograder.runner.service.impl;
 
-import com.epam.autograder.runner.entity.Submission;
 import com.epam.autograder.runner.result.Result;
 import org.junit.Test;
 import org.junit.runner.RunWith;
