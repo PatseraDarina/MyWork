@@ -10,11 +10,6 @@
 :toclevels: 5
 :docinfo: shared
 
-[[overview-http-status-codes]]
-=== HTTP status codes
-
-The standard REST APIs use HTTP response status codes.
-
 .List of main status codes
 |===
 | Status code | Description
@@ -30,41 +25,41 @@ The standard REST APIs use HTTP response status codes.
 |===
 
 [[resources-submission-resource-test-should-return-status-success]]
-=== Create Submission
+== Create Submission
 
 include::{snippets}/submission-resource-test/should-return-status-success/auto-method-path.adoc[]
 
 include::{snippets}/submission-resource-test/should-return-status-success/auto-description.adoc[]
 
-==== Path parameters
+=== Path parameters
 
 include::{snippets}/submission-resource-test/should-return-status-success/auto-path-parameters.adoc[]
 
-==== Query parameters
+=== Query parameters
 
 include::{snippets}/submission-resource-test/should-return-status-success/auto-request-parameters.adoc[]
 
-==== Request fields
+=== Request fields
 
 include::{snippets}/submission-resource-test/should-return-status-success/auto-request-fields.adoc[]
 
-==== Response fields
+=== Response fields
 
 include::{snippets}/submission-resource-test/should-return-status-success/auto-response-fields.adoc[]
 
-==== Examples:
+=== Examples:
 
-===== SUCCESS (200)
+==== SUCCESS (200)
 include::{snippets}/submission-resource-test/should-return-status-success/curl-request.adoc[]
 include::{snippets}/submission-resource-test/should-return-status-success/http-response.adoc[]
 
-===== BAD_REQUEST (400)
+==== BAD_REQUEST (400)
 include::{snippets}/submission-resource-test/should-return-status-client-error-when-u-r-l-template-is-wrong/curl-request.adoc[]
 
 include::{snippets}/submission-resource-test/should-return-status-client-error-when-u-r-l-template-is-wrong/http-response.adoc[]
 
 
-===== INTERNAL_SERVER_ERROR (500)
+==== INTERNAL_SERVER_ERROR (500)
 
 
 TODO: to be implemented
