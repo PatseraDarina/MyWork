@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
+import com.epam.autograder.core.dto.SubmissionDto;
 import com.epam.autograder.core.entity.Submission;
 import com.epam.autograder.core.mapper.SubmissionMapper;
 import com.epam.autograder.core.repository.SubmissionRepository;
@@ -63,7 +64,7 @@ public class SubmissionRepositoryImpl implements SubmissionRepository {
      * @return submission with generated id
      */
     @Override
-    public Submission save(Submission submission) {
+    public SubmissionDto save(SubmissionDto submission) {
         EntityId id = store.computeInTransaction(txn -> {
             Entity submissionEntity = mapper.submissionToEntity(submission, txn);
             txn.saveEntity(submissionEntity);
@@ -71,5 +72,20 @@ public class SubmissionRepositoryImpl implements SubmissionRepository {
         });
         submission.setSubmissionId(id.getLocalId());
         return submission;
+    }
+
+    /**
+     * @param submission Submission
+     * @param txn        StoreTransaction
+     * @return new Entity "Submission"
+     */
+    private Entity submissionToEntity(Submission submission, StoreTransaction txn) {
+        Entity submissionEntity = txn.newEntity(SUBMISSION_ENTITY_NAME);
+
+        submissionEntity.setProperty(ENVIRONMENT_ID_PROPERTY, submission.getEnvironmentId());
+        submissionEntity.setProperty(INPUT_SOURCE_PROPERTY, submission.getInputSource().toString());
+        submissionEntity.setProperty(INPUT_DATA_PROPERTY, submission.getInputData());
+
+        return submissionEntity;
     }
 }

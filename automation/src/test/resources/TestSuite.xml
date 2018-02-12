@@ -10,5 +10,4 @@
             <class name="com.epam.autograder.RunnerTestSuite" />
         </classes>
     </test>
-
 </suite>

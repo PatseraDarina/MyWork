@@ -1,10 +1,10 @@
-package com.epam.autograder.core.entity;
+package com.epam.autograder.core.dto;
 
 /**
  * Represents types of submission input source
  *
  * @author Valeriia Chub
  */
-public enum InputSource {
+public enum InputSourceDto {
     GIT
 }
