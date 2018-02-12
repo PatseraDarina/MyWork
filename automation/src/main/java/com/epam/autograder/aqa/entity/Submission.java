@@ -20,11 +20,9 @@ public class Submission {
     private String status;
 
     public Submission(String envId, String inputSource, String inputData) {
-        this.id = -1;
         this.envId = envId;
         this.inputSource = inputSource;
         this.inputData = inputData;
-        this.status = "";
     }
 
     public long getId() {
