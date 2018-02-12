@@ -19,11 +19,10 @@ public class Submission {
     @SerializedName("status")
     private String status;
 
-    public Submission(String envId, String inputSource, String inputData, String status) {
+    public Submission(String envId, String inputSource, String inputData) {
         this.envId = envId;
         this.inputSource = inputSource;
         this.inputData = inputData;
-        this.status = status;
     }
 
     public long getId() {
