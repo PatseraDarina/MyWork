@@ -35,7 +35,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
  */
 @WebAppConfiguration
 @ContextConfiguration(classes = {CoreTestConfiguration.class, CoreApplication.class})
-@ActiveProfiles("coreConfigurationProfile")
+@ActiveProfiles("DEV")
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MockMvcBaseIntegrationTest {
 
