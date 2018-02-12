@@ -43,7 +43,7 @@ public class SubmissionResourceTest extends MockMvcBaseIntegrationTest {
     private SubmissionService submissionService;
 
     @Before
-    public void setUp() {
+    public void init() {
         submission = new Submission();
         submission.setInputSource(InputSource.GIT);
         submission.setInputData(INPUT_DATA_VALUE);
