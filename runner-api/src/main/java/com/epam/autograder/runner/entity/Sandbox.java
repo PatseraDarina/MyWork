@@ -1,28 +1,38 @@
 package com.epam.autograder.runner.entity;
 
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Objects;
-import java.util.UUID;
 
 public class Sandbox {
-
     /**
      * Id of the sandbox
      */
+    @NotEmpty(message = "Id cannot be null or empty")
+    @Pattern(regexp = "\\S+", message = "Spaces are not allowed")
     private String id;
 
     /**
      * Environment id
      */
+    @NotEmpty(message = "Type cannot be null or empty")
+    @Pattern(regexp = "\\S+", message = "Spaces are not allowed")
     private String type;
 
     /**
      * Link to task
      */
+    @NotEmpty(message = "Payload cannot be null or empty")
     private String payload;
 
     /**
      * Current status of the environment
      */
+    @NotNull(message = "Status cannot be null")
+    @Valid
     private SandboxStatus status;
 
     public String getId() {

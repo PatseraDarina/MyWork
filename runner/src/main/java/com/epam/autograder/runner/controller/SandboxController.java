@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import javax.validation.Valid;
 import java.util.Map;
 
 /**
@@ -32,7 +34,7 @@ public class SandboxController {
      * @return should return ResponseEntity<Sandbox> in JSON format
      */
     @PostMapping("/sandboxes")
-    public ResponseEntity<?> acceptSandbox(@RequestBody Sandbox sandbox) {
+    public ResponseEntity<?> acceptSandbox(@Valid @RequestBody Sandbox sandbox) {
         Result result = dockerService.runDocker(sandbox);
         return new ResponseEntity<>(statusMap.get(result));
     }
