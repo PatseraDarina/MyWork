@@ -1,7 +1,7 @@
 package com.epam.autograder.aqa.core;
 
 import com.epam.autograder.aqa.annotation.Step;
-import com.epam.autograder.aqa.entity.RunnerSubmission;
+import com.epam.autograder.runner.entity.Submission;
 import org.apache.http.HttpResponse;
 
 public class RunnerRestClient extends RestClient {
@@ -12,7 +12,7 @@ public class RunnerRestClient extends RestClient {
     }
 
     @Step
-    public HttpResponse createContainer(RunnerSubmission submission) {
+    public HttpResponse createContainer(Submission submission) {
         return post(CREATE_CONTAINER, submission);
     }
 }
