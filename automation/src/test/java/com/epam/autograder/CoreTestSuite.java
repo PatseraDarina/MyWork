@@ -21,9 +21,7 @@ public class CoreTestSuite extends BaseTest {
         Submission testSubmission = new Submission(
                 "cdp_autograder_hello_world",
                 "GIT",
-                "git@git.epam.com:.../...git",
-                "etre"
-
+                "git@git.epam.com:.../...git"
         );
 
         HttpResponse response = coreRestClient.postSubmission(testSubmission);
