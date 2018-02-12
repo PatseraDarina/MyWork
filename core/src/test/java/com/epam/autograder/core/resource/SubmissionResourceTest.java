@@ -2,6 +2,7 @@ package com.epam.autograder.core.resource;
 
 import com.epam.autograder.core.dto.InputSourceDto;
 import com.epam.autograder.core.dto.SubmissionDto;
+import com.epam.autograder.core.exception.BusinessException;
 import com.epam.autograder.core.repository.SubmissionRepository;
 import com.epam.autograder.core.service.SubmissionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -73,9 +74,8 @@ public class SubmissionResourceTest extends MockMvcBaseIntegrationTest {
      */
     @Test
     public void shouldReturnClientStatusErrorWhenBadRequest() throws Exception {
-        String INCORRECT_REQUEST_BODY = "{\"submissionId\" : , \"environmentId\" : \"gcdp_autograder_hello_world\", "
-                + "\"inputSource\" : \"GIT\",  \"inputData\" : \"git@git.epam.com:.../...git\"}";
-        mockMvc.perform(RestDocumentationRequestBuilders.post(URL_TEMPLATE).content(objectMapper.writeValueAsString(INCORRECT_REQUEST_BODY))
+        when(submissionService.createSubmission(any(SubmissionDto.class))).thenThrow(BusinessException.class);
+        mockMvc.perform(RestDocumentationRequestBuilders.post(URL_TEMPLATE).content(objectMapper.writeValueAsString(submission))
                 .contentType(applicationJsonUtf8))
                 .andExpect(status().is4xxClientError());
     }
