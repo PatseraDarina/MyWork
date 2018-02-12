@@ -1,5 +1,10 @@
 apply plugin: 'jacoco'
 
+jacoco{
+    toolVersion = '0.8.0'
+    applyTo junitPlatformTest
+}
+
 jacocoTestReport {
     reports {
         html.enabled = true
@@ -30,11 +35,11 @@ jacocoTestCoverageVerification {
         }
     }
 }
-test {
+junitPlatformTest {
     jacoco {
         append = false
-        destinationFile = file("$buildDir/reports/jacoco/jacocoTest.exec")
+        destinationFile = file("$buildDir/jacoco/test.exec")
     }
 }
-test.finalizedBy jacocoTestReport
+junitPlatformTest.finalizedBy jacocoTestReport
 check.dependsOn jacocoTestCoverageVerification

@@ -1,21 +1,21 @@
 package com.epam.autograder.core.exception.controller;
 
-import com.epam.autograder.core.entity.Submission;
+import com.epam.autograder.core.dto.SubmissionDto;
 import com.epam.autograder.core.exception.BusinessException;
 import com.epam.autograder.core.resource.ExceptionHandlingController;
 import com.epam.autograder.core.resource.MockMvcBaseIntegrationTest;
 import com.epam.autograder.core.resource.SubmissionResource;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -34,9 +34,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Eduard Khachirov
  * @see ExceptionHandlingController
  */
-//@SpringBootTest
-//@RunWith(SpringJUnit4ClassRunner.class)
-public class ExceptionHandlingControllerTest extends MockMvcBaseIntegrationTest {
+@SpringBootTest
+@ExtendWith({SpringExtension.class})
+public class ExceptionHandlingControllerTest {
 
     private static final String STATUS_CODE_FIELD = "$.statusCode";
     private static final String STATUS_NAME_FIELD = "$.statusName";
@@ -58,15 +58,13 @@ public class ExceptionHandlingControllerTest extends MockMvcBaseIntegrationTest 
      *
      * @throws JsonProcessingException throws when can not parse Submission to json
      */
-    @Before
-    @Override
-    public void setUp() throws Exception {
-//        super.setUp();
+    @BeforeEach
+    public void setUp() throws JsonProcessingException {
         mockMvc = MockMvcBuilders
                 .standaloneSetup(stubController)
                 .setControllerAdvice(exceptionHandlingController)
                 .build();
-        submissionJson = new ObjectMapper().writeValueAsString(new Submission());
+        submissionJson = new ObjectMapper().writeValueAsString(new SubmissionDto());
         jsonMediaType = new MediaType(MediaType.APPLICATION_JSON, Charset.forName("utf8"));
     }
 
@@ -80,7 +78,7 @@ public class ExceptionHandlingControllerTest extends MockMvcBaseIntegrationTest 
         HttpStatus expectedHttpStatus = HttpStatus.BAD_REQUEST;
         String expectedDescription = "BusinessException";
 
-        when(stubController.createSubmission(any(Submission.class))).thenThrow(new BusinessException(expectedDescription));
+        when(stubController.createSubmission(any(SubmissionDto.class))).thenThrow(new BusinessException(expectedDescription));
 
         assertThat(mockMvc.perform(post(REQUEST_URL).contentType(jsonMediaType).content(submissionJson))
                 .andExpect(jsonPath(STATUS_CODE_FIELD, is(expectedHttpStatus.value())))
@@ -98,7 +96,7 @@ public class ExceptionHandlingControllerTest extends MockMvcBaseIntegrationTest 
         HttpStatus expectedHttpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         String expectedDescription = "RuntimeException";
 
-        when(stubController.createSubmission(any(Submission.class))).thenThrow(new RuntimeException(expectedDescription));
+        when(stubController.createSubmission(any(SubmissionDto.class))).thenThrow(new RuntimeException(expectedDescription));
 
         assertThat(mockMvc.perform(post(REQUEST_URL).contentType(jsonMediaType).content(submissionJson))
                 .andExpect(jsonPath(STATUS_CODE_FIELD, is(expectedHttpStatus.value())))

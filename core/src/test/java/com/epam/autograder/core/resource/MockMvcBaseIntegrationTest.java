@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.restdocs.JUnitRestDocumentation;
+import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.cli.CliDocumentation;
 import org.springframework.restdocs.http.HttpDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
@@ -40,8 +41,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 public class MockMvcBaseIntegrationTest {
 
     private static final String CLASS_METHOD_NAME = "{class-name}/{method-name}";
-    @Rule
-    public final JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation();
+
     protected MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
@@ -49,10 +49,14 @@ public class MockMvcBaseIntegrationTest {
     private WebApplicationContext context;
 
     /**
-     * setUp method
+     * Sets up.
+     *
+     * @param restDocumentation the rest documentation
      */
-    @Before
-    public void setUp() throws Exception {
+//    @Before
+//    public void setUp() throws Exception {
+    @BeforeEach
+    public void setUp(RestDocumentationExtension restDocumentation) {
         String http = "http";
         String localhost = "localhost";
         int port = 8080;

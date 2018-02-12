@@ -1,6 +1,6 @@
 package com.epam.autograder.core.resource;
 
-import com.epam.autograder.core.entity.ErrorResponse;
+import com.epam.autograder.core.dto.ErrorResponseDto;
 import com.epam.autograder.core.exception.BusinessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -27,11 +27,11 @@ public class ExceptionHandlingController {
      *
      * @param exception exception that occurred in application
      * @return ErrorResponse entity
-     * @see ErrorResponse
+     * @see ErrorResponseDto
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({BusinessException.class, HttpMessageNotReadableException.class})
-    protected ErrorResponse handleBusinessException(BusinessException exception) {
+    protected ErrorResponseDto handleBusinessException(BusinessException exception) {
         return buildErrorResponse(exception, HttpStatus.BAD_REQUEST);
     }
 
@@ -40,11 +40,11 @@ public class ExceptionHandlingController {
      *
      * @param exception exception that occurred in application
      * @return ErrorResponse entity
-     * @see ErrorResponse
+     * @see ErrorResponseDto
      */
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(RuntimeException.class)
-    protected ErrorResponse handleInternalServerException(RuntimeException exception) {
+    protected ErrorResponseDto handleInternalServerException(RuntimeException exception) {
         return buildErrorResponse(exception, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -56,9 +56,9 @@ public class ExceptionHandlingController {
      * @param httpStatus status for response
      * @return ErrorResponse entity
      */
-    private ErrorResponse buildErrorResponse(Throwable exception, HttpStatus httpStatus) {
+    private ErrorResponseDto buildErrorResponse(Throwable exception, HttpStatus httpStatus) {
         String description = ofNullable(exception.getMessage()).orElse(DEFAULT_ERROR_DESCRIPTION);
-        return new ErrorResponse(httpStatus.value(), httpStatus.name(), description);
+        return new ErrorResponseDto(httpStatus.value(), httpStatus.name(), description);
     }
 
 }
