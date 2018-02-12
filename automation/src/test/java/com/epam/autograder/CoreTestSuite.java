@@ -16,12 +16,14 @@ public class CoreTestSuite extends BaseTest {
         RestClientHelper.verifyStatusCode(response, HttpStatus.SC_INTERNAL_SERVER_ERROR);
     }
 
-    @Test
+    @Test(enabled = false)
     public void test_postSubmission_OK() {
         Submission testSubmission = new Submission(
                 "cdp_autograder_hello_world",
                 "GIT",
-                "git@git.epam.com:.../...git"
+                "git@git.epam.com:.../...git",
+                "etre"
+
         );
 
         HttpResponse response = coreRestClient.postSubmission(testSubmission);
