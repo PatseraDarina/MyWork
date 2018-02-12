@@ -39,6 +39,7 @@ test {
         useDefaultListeners = false
         options.outputDirectory = file("$project.buildDir//testngOutput")
         options.listeners << 'org.uncommons.reportng.HTMLReporter'
+        options.listeners << 'com.epam.autograder.aqa.listener.CustomListener'
         options.suites 'src/test/resources/TestSuite.xml'
     }
 }

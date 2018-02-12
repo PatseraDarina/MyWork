@@ -1,4 +1,4 @@
-package com.epam.autograder.aqa.com.epam.autograder.aqa.aspect;
+package com.epam.autograder.aqa.aspect;
 
 import com.epam.autograder.aqa.util.AspectHelper;
 import org.aspectj.lang.JoinPoint;

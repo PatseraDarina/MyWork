@@ -11,9 +11,9 @@ import java.util.concurrent.ThreadLocalRandom;
 public class RunnerTestSuite extends BaseTest {
 
     @Test
-    public void test_createContainer_internalServerError() {
+    public void test_createContainer_badRequest() {
         HttpResponse response = runnerRestClient.createContainer(null);
-        RestClientHelper.verifyStatusCode(response, HttpStatus.SC_INTERNAL_SERVER_ERROR);
+        RestClientHelper.verifyStatusCode(response, HttpStatus.SC_BAD_REQUEST);
     }
 
     @Test
