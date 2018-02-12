@@ -1,7 +1,7 @@
 package com.epam.autograder.aqa.core;
 
 import com.epam.autograder.aqa.annotation.Step;
-import com.epam.autograder.aqa.entity.Submission;
+import com.epam.autograder.core.dto.SubmissionDto;
 import org.apache.http.HttpResponse;
 
 public class CoreRestClient extends RestClient {
@@ -13,7 +13,7 @@ public class CoreRestClient extends RestClient {
     }
 
     @Step
-    public HttpResponse postSubmission(Submission submission) {
+    public HttpResponse postSubmission(SubmissionDto submission) {
         return post(POST_SUBMISSION, submission);
     }
 

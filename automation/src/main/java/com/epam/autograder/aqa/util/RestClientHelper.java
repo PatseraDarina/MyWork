@@ -38,6 +38,14 @@ public class RestClientHelper {
     }
 
     @Step
+    public static void verifyStatusCode(HttpResponse response, int expectedCode) {
+        int actualCode = getStatusCode(response);
+        Assert.assertEquals(expectedCode, actualCode,
+                String.format("FAIL to Verify Status Code. Actual: '%d', Expected: %d",
+                        actualCode, expectedCode));
+    }
+
+    @Step
     public static void verifyStatusCode(HttpResponse response, Integer... expectedCodes) {
         int actualCode = getStatusCode(response);
         Assert.assertTrue(Arrays.asList(expectedCodes).contains(actualCode),
