@@ -1,12 +1,12 @@
 package com.epam.autograder.core.resource;
 
-import com.epam.autograder.core.entity.InputSource;
-import com.epam.autograder.core.entity.Submission;
+import com.epam.autograder.core.dto.InputSourceDto;
+import com.epam.autograder.core.dto.SubmissionDto;
 import com.epam.autograder.core.repository.SubmissionRepository;
 import com.epam.autograder.core.service.SubmissionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
@@ -34,7 +34,7 @@ public class SubmissionResourceTest extends MockMvcBaseIntegrationTest {
     private static final String ENVIRONMENT_ID_VALUE = "gcdp_autograder_hello_world";
     private static final String INPUT_SOURCE_VALUE = "GIT";
     private static final String INPUT_DATA_VALUE = "git@git.epam.com:.../...git";
-    private Submission submission;
+    private SubmissionDto submission;
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
@@ -42,10 +42,10 @@ public class SubmissionResourceTest extends MockMvcBaseIntegrationTest {
     @Autowired
     private SubmissionService submissionService;
 
-    @Before
+    @BeforeEach
     public void init() {
-        submission = new Submission();
-        submission.setInputSource(InputSource.GIT);
+        submission = new SubmissionDto();
+        submission.setInputSource(InputSourceDto.GIT);
         submission.setInputData(INPUT_DATA_VALUE);
         submission.setEnvironmentId(ENVIRONMENT_ID_VALUE);
     }
@@ -57,7 +57,7 @@ public class SubmissionResourceTest extends MockMvcBaseIntegrationTest {
      */
     @Test
     public void shouldReturnStatusSuccess() throws Exception {
-        when(submissionService.createSubmission(any(Submission.class))).thenReturn(submissionRepository.save(submission));
+        when(submissionService.createSubmission(any(SubmissionDto.class))).thenReturn(submissionRepository.save(submission));
         mockMvc.perform(RestDocumentationRequestBuilders.post(URL_TEMPLATE).content(objectMapper.writeValueAsString(submission))
                 .contentType(applicationJsonUtf8))
                 .andExpect(jsonPath(ENVIRONMENT_ID, is(ENVIRONMENT_ID_VALUE)))
@@ -87,7 +87,7 @@ public class SubmissionResourceTest extends MockMvcBaseIntegrationTest {
      */
     @Test
     public void shouldReturnServerStatusErrorWhenErrorOnServer() throws Exception {
-        when(submissionService.createSubmission(any(Submission.class))).thenThrow(RuntimeException.class);
+        when(submissionService.createSubmission(any(SubmissionDto.class))).thenThrow(RuntimeException.class);
         mockMvc.perform(RestDocumentationRequestBuilders.post(URL_TEMPLATE).content(objectMapper.writeValueAsString(submission))
                 .contentType(applicationJsonUtf8))
                 .andExpect(status().is5xxServerError());

@@ -9,14 +9,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.nio.charset.Charset;
@@ -34,9 +30,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Eduard Khachirov
  * @see ExceptionHandlingController
  */
-@SpringBootTest
-@ExtendWith({SpringExtension.class})
-public class ExceptionHandlingControllerTest {
+
+public class ExceptionHandlingControllerTest extends MockMvcBaseIntegrationTest{
 
     private static final String STATUS_CODE_FIELD = "$.statusCode";
     private static final String STATUS_NAME_FIELD = "$.statusName";
@@ -50,8 +45,6 @@ public class ExceptionHandlingControllerTest {
 
     @Mock
     private SubmissionResource stubController;
-
-    private MockMvc mockMvc;
 
     /**
      * Sets up resources for testing
