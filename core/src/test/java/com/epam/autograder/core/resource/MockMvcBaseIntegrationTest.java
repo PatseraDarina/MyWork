@@ -14,7 +14,6 @@ import org.springframework.restdocs.cli.CliDocumentation;
 import org.springframework.restdocs.http.HttpDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.operation.preprocess.OperationResponsePreprocessor;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -33,7 +32,6 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
  * mockMvcBase test
  */
 @SpringBootTest
-@ActiveProfiles("DEV")
 @ContextConfiguration(classes = {CoreTestConfiguration.class, CoreApplication.class})
 @ExtendWith({SpringExtension.class, RestDocumentationExtension.class})
 public class MockMvcBaseIntegrationTest {
