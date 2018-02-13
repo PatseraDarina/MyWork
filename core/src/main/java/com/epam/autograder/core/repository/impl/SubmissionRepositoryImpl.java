@@ -3,10 +3,11 @@ package com.epam.autograder.core.repository.impl;
 import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.epam.autograder.core.dto.SubmissionDto;
-import com.epam.autograder.core.mapper.entity.SubmissionToEntityMapper;
+import com.epam.autograder.core.mapper.Mapper;
 import com.epam.autograder.core.repository.SubmissionRepository;
 
 import jetbrains.exodus.entitystore.Entity;
@@ -23,7 +24,8 @@ public class SubmissionRepositoryImpl implements SubmissionRepository {
 
     private static final String SUBMISSION_ENTITY_NAME = "Submission";
     @Autowired
-    private SubmissionToEntityMapper mapper;
+    @Qualifier("submissionToEntityMapper")
+    private Mapper<SubmissionDto, Entity> mapper;
     private PersistentEntityStore store;
 
     /**

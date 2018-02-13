@@ -18,8 +18,8 @@ import org.springframework.restdocs.cli.CliDocumentation;
 import org.springframework.restdocs.http.HttpDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.operation.preprocess.OperationResponsePreprocessor;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -35,7 +35,7 @@ import capital.scalable.restdocs.AutoDocumentation;
  * mockMvcBase test
  */
 @SpringBootTest
-@ActiveProfiles("dev")
+@TestPropertySource(locations = {"classpath:application.properties"})
 @ExtendWith({SpringExtension.class, RestDocumentationExtension.class})
 @ContextConfiguration(classes = {CoreTestConfiguration.class, CoreApplication.class})
 public class MockMvcBaseIntegrationTest {
