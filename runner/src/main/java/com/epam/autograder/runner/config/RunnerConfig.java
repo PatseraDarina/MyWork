@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,5 +56,13 @@ public class RunnerConfig {
         status.put(Result.BAD_REQUEST, HttpStatus.BAD_REQUEST);
         status.put(Result.INTERNAL_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         return status;
+    }
+
+    /**
+     * @return MethodValidationPostProcessor Bean
+     */
+    @Bean
+    public MethodValidationPostProcessor methodValidationPostProcessor() {
+        return new MethodValidationPostProcessor();
     }
 }

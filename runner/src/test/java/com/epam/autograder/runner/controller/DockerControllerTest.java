@@ -8,7 +8,9 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 
 import java.util.Map;
 
@@ -30,7 +32,10 @@ public class DockerControllerTest extends MockMvcBase {
     @Mock
     private Sandbox sandbox;
     @Mock
+    private BindingResult bindingResult;
+    @Mock
     private Map<Result, HttpStatus> statusMap;
+
 
     /**
      * Tests creating container
@@ -41,10 +46,31 @@ public class DockerControllerTest extends MockMvcBase {
     public void createContainer() throws Exception {
         when(service.runDocker(sandbox)).thenReturn(Result.OK);
         when(statusMap.get(Result.OK)).thenReturn(HttpStatus.OK);
-        ResponseEntity<?> responseEntity = new ResponseEntity<>(HttpStatus.OK);
-        mockMvc.perform(post("/containers"))
-                .andExpect(status().is4xxClientError());
-        assertThat(controller.acceptSandbox(sandbox), is(responseEntity));
+        ResponseEntity<?> responseEntity = new ResponseEntity(HttpStatus.OK);
+        mockMvc.perform(post("/sandboxes").contentType(MediaType.APPLICATION_JSON).content(" {\n"
+                + " \"id\" : \"1\",\n"
+                + " \"type\" : \"busybox\",\n"
+                + " \"payload\" : \"payload\",\n"
+                + " \"status\" : \"COMPLETE\"\n"
+                + " }"))
+                .andExpect(status().is5xxServerError());
+        assertThat(controller.acceptSandbox(sandbox, bindingResult), is(responseEntity));
+    }
+
+    /**
+     * Tests creating container with not valid parameters
+     *
+     * @throws Exception exception
+     */
+    @Test
+    public void createContainerWithNotValidParameters() throws Exception {
+        when(service.runDocker(sandbox)).thenReturn(Result.BAD_REQUEST);
+        when(statusMap.get(Result.BAD_REQUEST)).thenReturn(HttpStatus.BAD_REQUEST);
+        when(bindingResult.hasErrors()).thenReturn(true);
+        ResponseEntity<?> responseEntityWithMastake = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        mockMvc.perform(post("/sandboxes"))
+                .andExpect(status().isBadRequest());
+        assertThat(controller.acceptSandbox(sandbox, bindingResult), is(responseEntityWithMastake));
     }
 
     /**

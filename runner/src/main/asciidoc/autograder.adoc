@@ -58,4 +58,4 @@ This REST API uses standard HTTP response status codes.
 == Docker
 
 include::{snippets}/docker-controller-test/create-container/auto-section.adoc[]
-
+include::{snippets}/docker-controller-test/create-container-with-not-valid-parameters/auto-section.adoc[]

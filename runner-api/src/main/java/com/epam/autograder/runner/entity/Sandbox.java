@@ -1,7 +1,6 @@
 package com.epam.autograder.runner.entity;
 
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -12,14 +11,13 @@ public class Sandbox {
      * Id of the sandbox
      */
     @NotEmpty(message = "Id cannot be null or empty")
-    @Pattern(regexp = "\\S+", message = "Spaces are not allowed")
+    @Pattern(regexp = "^[\\w\\d\\-]+$", message = "Wrong id format")
     private String id;
 
     /**
      * Environment id
      */
     @NotEmpty(message = "Type cannot be null or empty")
-    @Pattern(regexp = "\\S+", message = "Spaces are not allowed")
     private String type;
 
     /**
@@ -32,7 +30,6 @@ public class Sandbox {
      * Current status of the environment
      */
     @NotNull(message = "Status cannot be null")
-    @Valid
     private SandboxStatus status;
 
     public String getId() {
