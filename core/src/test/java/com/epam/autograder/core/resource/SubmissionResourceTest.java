@@ -1,6 +1,5 @@
 package com.epam.autograder.core.resource;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -9,37 +8,37 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.nio.charset.Charset;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import com.epam.autograder.core.CoreApplication;
-import com.epam.autograder.core.CoreTestConfiguration;
-import com.epam.autograder.core.entity.InputSource;
-import com.epam.autograder.core.entity.Submission;
-import com.epam.autograder.core.repository.SubmissionRepository;
-import com.epam.autograder.core.service.SubmissionService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
+
+import com.epam.autograder.core.dto.InputSourceDto;
+import com.epam.autograder.core.dto.SubmissionDto;
+import com.epam.autograder.core.exception.BusinessException;
+import com.epam.autograder.core.repository.SubmissionRepository;
+import com.epam.autograder.core.service.SubmissionService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jetbrains.exodus.entitystore.PersistentEntityStore;
 
 /**
  * Test class for testing SubmissionResource functionality
  */
-@ContextConfiguration(classes = {CoreTestConfiguration.class, CoreApplication.class})
-@ActiveProfiles("coreConfigurationProfile")
 public class SubmissionResourceTest extends MockMvcBaseIntegrationTest {
+
     private static final String URL_TEMPLATE = "/submission";
-    private MediaType applicationJsonUtf8 = new MediaType(
-            MediaType.APPLICATION_JSON.getType(),
-            MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
     private static final String ENVIRONMENT_ID = "environmentId";
     private static final String INPUT_SOURCE = "inputSource";
     private static final String INPUT_DATA = "inputData";
     private static final String ENVIRONMENT_ID_VALUE = "gcdp_autograder_hello_world";
     private static final String INPUT_SOURCE_VALUE = "GIT";
     private static final String INPUT_DATA_VALUE = "git@git.epam.com:.../...git";
-    private Submission submission;
+    private MediaType applicationJsonUtf8 = new MediaType(
+            MediaType.APPLICATION_JSON.getType(),
+            MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
+    private SubmissionDto submission;
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
@@ -47,9 +46,10 @@ public class SubmissionResourceTest extends MockMvcBaseIntegrationTest {
     @Autowired
     private SubmissionService submissionService;
 
-    public SubmissionResourceTest() {
-        submission = new Submission();
-        submission.setInputSource(InputSource.GIT);
+    @BeforeEach
+    public void init() {
+        submission = new SubmissionDto();
+        submission.setInputSource(InputSourceDto.GIT);
         submission.setInputData(INPUT_DATA_VALUE);
         submission.setEnvironmentId(ENVIRONMENT_ID_VALUE);
     }
@@ -61,13 +61,13 @@ public class SubmissionResourceTest extends MockMvcBaseIntegrationTest {
      */
     @Test
     public void shouldReturnStatusSuccess() throws Exception {
-        when(submissionService.createSubmission(any(Submission.class))).thenReturn(submissionRepository.save(submission));
-        assertThat(mockMvc.perform(RestDocumentationRequestBuilders.post(URL_TEMPLATE).content(objectMapper.writeValueAsString(submission))
+        when(submissionService.createSubmission(any(SubmissionDto.class))).thenReturn(submissionRepository.save(submission));
+        mockMvc.perform(RestDocumentationRequestBuilders.post(URL_TEMPLATE).content(objectMapper.writeValueAsString(submission))
                 .contentType(applicationJsonUtf8))
                 .andExpect(jsonPath(ENVIRONMENT_ID, is(ENVIRONMENT_ID_VALUE)))
                 .andExpect(jsonPath(INPUT_SOURCE, is(INPUT_SOURCE_VALUE)))
                 .andExpect(jsonPath(INPUT_DATA, is(INPUT_DATA_VALUE)))
-                .andExpect(status().isOk()));
+                .andExpect(status().isOk());
     }
 
     /**
@@ -77,11 +77,10 @@ public class SubmissionResourceTest extends MockMvcBaseIntegrationTest {
      */
     @Test
     public void shouldReturnClientStatusErrorWhenBadRequest() throws Exception {
-        String INCORRECT_REQUEST_BODY = "{\"submissionId\" : , \"environmentId\" : \"gcdp_autograder_hello_world\", "
-                + "\"inputSource\" : \"GIT\",  \"inputTTTTData\" : \"git@git.epam.com:.../...git\"}";
-        assertThat(mockMvc.perform(RestDocumentationRequestBuilders.post(URL_TEMPLATE).content(objectMapper.writeValueAsString(INCORRECT_REQUEST_BODY))
+        when(submissionService.createSubmission(any(SubmissionDto.class))).thenThrow(BusinessException.class);
+        mockMvc.perform(RestDocumentationRequestBuilders.post(URL_TEMPLATE).content(objectMapper.writeValueAsString(submission))
                 .contentType(applicationJsonUtf8))
-                .andExpect(status().is4xxClientError()));
+                .andExpect(status().is4xxClientError());
     }
 
     /**
@@ -91,11 +90,9 @@ public class SubmissionResourceTest extends MockMvcBaseIntegrationTest {
      */
     @Test
     public void shouldReturnServerStatusErrorWhenErrorOnServer() throws Exception {
-        when(submissionService.createSubmission(any(Submission.class))).thenThrow(RuntimeException.class);
-        assertThat(mockMvc.perform(RestDocumentationRequestBuilders.post(URL_TEMPLATE).content(objectMapper.writeValueAsString(submission))
+        when(submissionService.createSubmission(any(SubmissionDto.class))).thenThrow(RuntimeException.class);
+        mockMvc.perform(RestDocumentationRequestBuilders.post(URL_TEMPLATE).content(objectMapper.writeValueAsString(submission))
                 .contentType(applicationJsonUtf8))
-                .andExpect(status().is5xxServerError()));
+                .andExpect(status().is5xxServerError());
     }
 }
-
-

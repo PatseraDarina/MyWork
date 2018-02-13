@@ -1,25 +1,5 @@
 package com.epam.autograder.core.exception.controller;
 
-import com.epam.autograder.core.dto.SubmissionDto;
-import com.epam.autograder.core.exception.BusinessException;
-import com.epam.autograder.core.resource.ExceptionHandlingController;
-import com.epam.autograder.core.resource.SubmissionResource;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import java.nio.charset.Charset;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
@@ -27,15 +7,32 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+import java.nio.charset.Charset;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import com.epam.autograder.core.dto.SubmissionDto;
+import com.epam.autograder.core.exception.BusinessException;
+import com.epam.autograder.core.resource.ExceptionHandlingController;
+import com.epam.autograder.core.resource.MockMvcBaseIntegrationTest;
+import com.epam.autograder.core.resource.SubmissionResource;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * Class tests exception handling in application
  *
  * @author Eduard Khachirov
  * @see ExceptionHandlingController
  */
-@SpringBootTest
-@ExtendWith({SpringExtension.class})
-public class ExceptionHandlingControllerTest {
+
+public class ExceptionHandlingControllerTest extends MockMvcBaseIntegrationTest {
 
     private static final String STATUS_CODE_FIELD = "$.statusCode";
     private static final String STATUS_NAME_FIELD = "$.statusName";
@@ -49,8 +46,6 @@ public class ExceptionHandlingControllerTest {
 
     @Mock
     private SubmissionResource stubController;
-
-    private MockMvc mockMvc;
 
     /**
      * Sets up resources for testing
@@ -102,5 +97,4 @@ public class ExceptionHandlingControllerTest {
                 .andExpect(jsonPath(STATUS_NAME_FIELD, is(expectedHttpStatus.name())))
                 .andExpect(jsonPath(DESCRIPTION_FIELD, is(expectedDescription))));
     }
-
 }

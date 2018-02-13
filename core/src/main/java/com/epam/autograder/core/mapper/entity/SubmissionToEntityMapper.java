@@ -1,33 +1,24 @@
-package com.epam.autograder.core.mapper;
+package com.epam.autograder.core.mapper.entity;
 
 import org.springframework.stereotype.Component;
 
-import com.epam.autograder.core.entity.Submission;
+import com.epam.autograder.core.dto.SubmissionDto;
+import com.epam.autograder.core.mapper.Mapper;
 
 import jetbrains.exodus.entitystore.Entity;
-import jetbrains.exodus.entitystore.StoreTransaction;
 
 /**
- * Mapper for submission
+ * Maps Submission to DB Entity
  */
 @Component
-public class SubmissionMapper {
+public class SubmissionToEntityMapper implements Mapper<SubmissionDto, Entity> {
 
-    private static final String SUBMISSION_ENTITY_NAME = "Submission";
     private static final String ENVIRONMENT_ID_PROPERTY = "environmentId";
     private static final String INPUT_SOURCE_PROPERTY = "inputSource";
     private static final String INPUT_DATA_PROPERTY = "inputData";
 
-    /**
-     * Transform submission to entity
-     *
-     * @param submission  submission
-     * @param transaction transaction
-     * @return entity
-     */
-    public Entity submissionToEntity(Submission submission, StoreTransaction transaction) {
-        Entity submissionEntity = transaction.newEntity(SUBMISSION_ENTITY_NAME);
-
+    @Override
+    public Entity map(SubmissionDto submission, Entity submissionEntity) {
         submissionEntity.setProperty(ENVIRONMENT_ID_PROPERTY, submission.getEnvironmentId());
         submissionEntity.setProperty(INPUT_SOURCE_PROPERTY, submission.getInputSource().toString());
         submissionEntity.setProperty(INPUT_DATA_PROPERTY, submission.getInputData());
