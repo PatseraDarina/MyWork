@@ -3,56 +3,50 @@ package com.epam.autograder.core.resource;
 import static capital.scalable.restdocs.jackson.JacksonResultHandlers.prepareJackson;
 import static capital.scalable.restdocs.response.ResponseModifyingPreprocessors.limitJsonArrayLength;
 import static capital.scalable.restdocs.response.ResponseModifyingPreprocessors.replaceBinaryContent;
-import static org.junit.Assert.assertNotNull;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 
-
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.cli.CliDocumentation;
 import org.springframework.restdocs.http.HttpDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.operation.preprocess.OperationResponsePreprocessor;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.epam.autograder.core.repository.impl.SubmissionRepositoryImpl;
+import com.epam.autograder.core.CoreApplication;
+import com.epam.autograder.core.CoreTestConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import capital.scalable.restdocs.AutoDocumentation;
 import jetbrains.exodus.entitystore.PersistentEntityStore;
-import jetbrains.exodus.entitystore.PersistentEntityStores;
 
 /**
  * mockMvcBase test
  */
 @SpringBootTest
 @ExtendWith({SpringExtension.class, RestDocumentationExtension.class})
+@ContextConfiguration(classes = {CoreTestConfiguration.class, CoreApplication.class})
 public class MockMvcBaseIntegrationTest {
 
     private static final String CLASS_METHOD_NAME = "{class-name}/{method-name}";
 
     protected MockMvc mockMvc;
     @Autowired
-    protected SubmissionRepositoryImpl submissionRepository;
-    @Value("${test_store_dir}")
-    private String dataStoreDir;
-    @Autowired
     private ObjectMapper objectMapper;
     @Autowired
     private WebApplicationContext context;
-    private PersistentEntityStore persistentEntityStore;
 
 
     /**
@@ -88,30 +82,6 @@ public class MockMvcBaseIntegrationTest {
                 .build();
     }
 
-    /**
-     * Initialize store
-     */
-    @Before
-    public void initStore() {
-        String userDir = System.getProperty("user.dir");
-        Path dirPath = Paths.get(userDir, dataStoreDir);
-
-        persistentEntityStore = PersistentEntityStores.newInstance(dirPath.toString());
-        submissionRepository.setStore(persistentEntityStore);
-    }
-
-    /**
-     * Close and clean entity store
-     *
-     * @throws IOException IOException
-     */
-    @After
-    public void closeAndDeleteStore() throws IOException {
-        persistentEntityStore.clear();
-        persistentEntityStore.close();
-        FileUtils.deleteDirectory(new File(persistentEntityStore.getLocation()));
-    }
-
     protected RestDocumentationResultHandler commonDocumentation() {
         return document(CLASS_METHOD_NAME,
                 preprocessRequest(), commonResponsePreprocessor());
@@ -121,12 +91,5 @@ public class MockMvcBaseIntegrationTest {
         return preprocessResponse(replaceBinaryContent(), limitJsonArrayLength(objectMapper),
                 prettyPrint());
     }
-
-    /**
-     * check on null
-     */
-    @Test
-    public void contextLoads() {
-        assertNotNull("Context shouldn't be null", context);
-    }
 }
+
