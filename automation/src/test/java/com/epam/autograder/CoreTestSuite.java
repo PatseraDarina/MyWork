@@ -6,6 +6,8 @@ import com.epam.autograder.core.dto.InputSourceDto;
 import com.epam.autograder.core.dto.SubmissionDto;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
