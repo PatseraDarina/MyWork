@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import jetbrains.exodus.entitystore.PersistentEntityStore;
 import jetbrains.exodus.entitystore.PersistentEntityStores;
@@ -14,6 +15,7 @@ import jetbrains.exodus.entitystore.PersistentEntityStores;
  * Configuration class for store
  */
 @Configuration
+@Profile("default")
 public class StoreConfig {
 
     @Value("${store_dir}")
@@ -26,7 +28,6 @@ public class StoreConfig {
     public PersistentEntityStore getStore() {
         String userDir = System.getProperty("user.dir");
         Path dirPath = Paths.get(userDir, dataStoreDir);
-        System.out.println("<<<<<<<<<< Store >>>>>>>>>>");
         return PersistentEntityStores.newInstance(dirPath.toString());
     }
 }

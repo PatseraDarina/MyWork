@@ -21,8 +21,6 @@ import com.epam.autograder.core.repository.SubmissionRepository;
 import com.epam.autograder.core.service.SubmissionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import jetbrains.exodus.entitystore.PersistentEntityStore;
-
 /**
  * Test class for testing SubmissionResource functionality
  */
@@ -38,13 +36,14 @@ public class SubmissionResourceTest extends MockMvcBaseIntegrationTest {
     private MediaType applicationJsonUtf8 = new MediaType(
             MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
+
     private SubmissionDto submission;
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private SubmissionRepository submissionRepository;
-    @Autowired
     private SubmissionService submissionService;
+    @Autowired
+    private SubmissionRepository submissionRepository;
 
     @BeforeEach
     public void init() {

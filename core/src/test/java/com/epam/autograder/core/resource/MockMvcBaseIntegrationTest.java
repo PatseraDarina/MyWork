@@ -30,24 +30,22 @@ import com.epam.autograder.core.CoreTestConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import capital.scalable.restdocs.AutoDocumentation;
-import jetbrains.exodus.entitystore.PersistentEntityStore;
 
 /**
  * mockMvcBase test
  */
 @SpringBootTest
+@ActiveProfiles("dev")
 @ExtendWith({SpringExtension.class, RestDocumentationExtension.class})
 @ContextConfiguration(classes = {CoreTestConfiguration.class, CoreApplication.class})
 public class MockMvcBaseIntegrationTest {
 
     private static final String CLASS_METHOD_NAME = "{class-name}/{method-name}";
-
     protected MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
     private WebApplicationContext context;
-
 
     /**
      * Sets up.

@@ -2,9 +2,9 @@ package com.epam.autograder.core.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.Profile;
 
 import com.epam.autograder.core.dto.InputSourceDto;
 import com.epam.autograder.core.dto.SubmissionDto;
@@ -19,12 +19,11 @@ public class SubmissionRepositoryTest extends RepositoryBaseTest {
     private static final String ENVIRONMENT_ID = "gcdp_autograder_hello_world";
     private static final String INPUT_DATA = "git@git.epam.com:.../...git";
 
-    /**
-     * Verifies if the submission was saved with generated id
-     */
     @Nested
-    class testSaveMethod{
+    class testSaveMethod {
+
         @Test
+        @DisplayName("Verifies if the submission was saved with generated id")
         public void testSaveSubmission_OK() {
             SubmissionDto submission = new SubmissionDto();
             submission.setEnvironmentId(ENVIRONMENT_ID);
