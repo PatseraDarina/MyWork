@@ -60,5 +60,3 @@ include::{snippets}/submission-resource-test/test-create-submission_-business-ex
 ==== INTERNAL_SERVER_ERROR (500)
 include::{snippets}/submission-resource-test/test-create-submission_-runtime-exception/curl-request.adoc[]
 include::{snippets}/submission-resource-test/test-create-submission_-runtime-exception/http-response.adoc[]
-
-TODO: to be implemented
