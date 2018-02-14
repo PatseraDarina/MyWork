@@ -25,10 +25,12 @@ import java.io.IOException;
 @Service("dockerServiceImpl")
 public class DockerServiceImpl implements DockerService {
     private static final Logger LOGGER = Logger.getLogger(DockerServiceImpl.class);
-    private static final String FILE_DIRECTORY = "var" + File.separator + "runner" + File.separator + "input"
-            + File.separator + "payload";
+    private static final String FILE_DIRECTORY = File.separator + "var" + File.separator + "runner" + File.separator + "input" + File.separator
+            + "payload";
     private static final String FILE_NAME = "payload";
+    private static final String OUTPUT_PATH = File.separator + "var" + File.separator + "runner" + File.separator + "output" + File.separator;
 
+    private String currentPathToProject;
 
     @Autowired
     @Qualifier("dockerClient")
@@ -36,26 +38,22 @@ public class DockerServiceImpl implements DockerService {
     @Autowired
     @Qualifier("inVolume")
     private Volume inputVolume;
+
     @Autowired
     @Qualifier("outVolume")
     private Volume outputVolume;
-    @Autowired
-    @Qualifier("inBind")
     private Bind inputBind;
-    @Autowired
-    @Qualifier("outBind")
     private Bind outputBind;
 
 
     @Override
     public Result runDocker(Submission submission) {
-
         Info info = dockerClient.infoCmd().exec();
         LOGGER.info("DOCKER INFO: " + info);
-
         String imageName = submission.getEnvironmentId();
         try {
             writeToFile(submission.getPayload());
+            initBinds();
             CreateContainerResponse container = dockerClient
                     .createContainerCmd(imageName).withVolumes(inputVolume, outputVolume)
                     .withBinds(
@@ -63,6 +61,7 @@ public class DockerServiceImpl implements DockerService {
                     .withName(String.valueOf(submission.getSubmissionId()))
                     .exec();
             dockerClient.startContainerCmd(container.getId()).exec();
+
         } catch (NotFoundException | ConflictException e) {
             LOGGER.warn("Exception: " + e);
             return Result.BAD_REQUEST;
@@ -75,9 +74,25 @@ public class DockerServiceImpl implements DockerService {
         return Result.OK;
     }
 
+    /**
+     * @param payload String that get from Submission
+     * @throws IOException may occur while writing in file
+     */
     private void writeToFile(String payload) throws IOException {
-        File file = new File(FILE_DIRECTORY, FILE_NAME);
-        FileUtils.writeStringToFile(file, payload);
-
+        currentPathToProject = new java.io.File(".").getCanonicalPath();
+        File payloadFile = new File(currentPathToProject + FILE_DIRECTORY, FILE_NAME);
+        FileUtils.writeStringToFile(payloadFile, payload);
     }
+
+    /**
+     * @throws IOException may occur while directory creating
+     */
+    private void initBinds() throws IOException {
+        File outputDirectory = new File(currentPathToProject + OUTPUT_PATH);
+        if (outputDirectory.mkdirs()) {
+            inputBind = new Bind(currentPathToProject + FILE_DIRECTORY, inputVolume);
+            outputBind = new Bind(currentPathToProject + OUTPUT_PATH, outputVolume);
+        }
+    }
+
 }
