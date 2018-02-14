@@ -24,39 +24,39 @@
 | Internal Server Error
 |===
 
-[[resources-submission-resource-test-should-return-status-success]]
+[[create-submission]]
 == Create Submission
 
-include::{snippets}/submission-resource-test/test-create-submission_-ok/auto-method-path.adoc[]
+include::{snippets}/create-submission/status-ok/auto-method-path.adoc[]
 
-include::{snippets}/submission-resource-test/test-create-submission_-ok/auto-description.adoc[]
+include::{snippets}/create-submission/status-ok/auto-description.adoc[]
 
 === Path parameters
 
-include::{snippets}/submission-resource-test/test-create-submission_-ok/auto-path-parameters.adoc[]
+include::{snippets}/create-submission/status-ok/auto-path-parameters.adoc[]
 
 === Query parameters
 
-include::{snippets}/submission-resource-test/test-create-submission_-ok/auto-request-parameters.adoc[]
+include::{snippets}/create-submission/status-ok/auto-request-parameters.adoc[]
 
 === Request fields
 
-include::{snippets}/submission-resource-test/test-create-submission_-ok/auto-request-fields.adoc[]
+include::{snippets}/create-submission/status-ok/auto-request-fields.adoc[]
 
 === Response fields
 
-include::{snippets}/submission-resource-test/test-create-submission_-ok/auto-response-fields.adoc[]
+include::{snippets}/create-submission/status-ok/auto-response-fields.adoc[]
 
 === Examples:
 
 ==== SUCCESS (200)
-include::{snippets}/submission-resource-test/test-create-submission_-ok/curl-request.adoc[]
-include::{snippets}/submission-resource-test/test-create-submission_-ok/http-response.adoc[]
+include::{snippets}/create-submission/status-ok/curl-request.adoc[]
+include::{snippets}/create-submission/status-ok/http-response.adoc[]
 
 ==== BAD_REQUEST (400)
-include::{snippets}/submission-resource-test/test-create-submission_-business-exception/curl-request.adoc[]
-include::{snippets}/submission-resource-test/test-create-submission_-business-exception/http-response.adoc[]
+include::{snippets}/create-submission/status-bad-request/curl-request.adoc[]
+include::{snippets}/create-submission/status-bad-request/http-response.adoc[]
 
 ==== INTERNAL_SERVER_ERROR (500)
-include::{snippets}/submission-resource-test/test-create-submission_-runtime-exception/curl-request.adoc[]
-include::{snippets}/submission-resource-test/test-create-submission_-runtime-exception/http-response.adoc[]
+include::{snippets}/create-submission/status-internal-server-error/curl-request.adoc[]
+include::{snippets}/create-submission/status-internal-server-error/http-response.adoc[]

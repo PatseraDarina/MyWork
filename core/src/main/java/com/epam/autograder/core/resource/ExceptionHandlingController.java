@@ -20,7 +20,7 @@ import static java.util.Optional.ofNullable;
 @ResponseBody
 public class ExceptionHandlingController {
 
-    private static final String DEFAULT_ERROR_DESCRIPTION = "Oops...looks like something went wrong";
+    public static final String DEFAULT_ERROR_DESCRIPTION = "Oops...looks like something went wrong";
 
     /**
      * Handle BusinessExceptions and send response with HTTP Bad Request(400) status and description of problem.
