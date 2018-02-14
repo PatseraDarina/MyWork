@@ -7,14 +7,15 @@ import java.nio.file.Paths;
 
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.EventListener;
 
 import jetbrains.exodus.entitystore.PersistentEntityStore;
-import jetbrains.exodus.entitystore.PersistentEntityStoreImpl;
 import jetbrains.exodus.entitystore.PersistentEntityStores;
 
+@Configuration
 public class StoreTestConfiguration {
 
     @EventListener
