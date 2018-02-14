@@ -69,18 +69,19 @@ public class MockMvcBase {
                         .withHost(LOCALHOST)
                         .withPort(PORT)
                         .and().snippets()
-                .withDefaults(CliDocumentation.curlRequest(),
-                        HttpDocumentation.httpRequest(),
-                        HttpDocumentation.httpResponse(),
-                        AutoDocumentation.requestFields(),
-                        AutoDocumentation.responseFields(),
-                        AutoDocumentation.pathParameters(),
-                        AutoDocumentation.requestParameters(),
-                        AutoDocumentation.description(),
-                        AutoDocumentation.methodAndPath(),
-                        AutoDocumentation.section()))
+                        .withDefaults(CliDocumentation.curlRequest(),
+                                HttpDocumentation.httpRequest(),
+                                HttpDocumentation.httpResponse(),
+                                AutoDocumentation.requestFields(),
+                                AutoDocumentation.responseFields(),
+                                AutoDocumentation.pathParameters(),
+                                AutoDocumentation.requestParameters(),
+                                AutoDocumentation.description(),
+                                AutoDocumentation.methodAndPath(),
+                                AutoDocumentation.section()))
                 .build();
     }
+
 
     /**
      * Common documentation.

@@ -1,7 +1,6 @@
 package com.epam.autograder.runner.service;
 
 import com.epam.autograder.runner.entity.Sandbox;
-import com.epam.autograder.runner.entity.SandboxStatus;
 import com.epam.autograder.runner.result.Result;
 
 
@@ -17,11 +16,19 @@ public interface DockerService {
      */
     Result runDocker(Sandbox sandbox);
 
-    /**
-     * Gets status of the container by {@code id}
-     *
-     * @param id identifier for getting container status
-     * @return container status
-     */
-    SandboxStatus getStatus(String id);
+//    /**
+//     * Gets status of the container by {@code id}
+//     *
+//     * @param id identifier for getting container status
+//     * @return container status
+//     */
+//    SandboxStatus getState(String id);
+
+//    /**
+//     * Gets sandbox object from Json file by specified identifier.
+//     *
+//     * @param id unique container directory name, that contains "sandbox.json"
+//     * @return sandbox object that was parsed from "sandbox.json"
+//     */
+//    Sandbox getSandbox(String id);
 }

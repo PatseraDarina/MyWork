@@ -7,8 +7,9 @@ import javax.validation.constraints.Pattern;
 import java.util.Objects;
 
 public class Sandbox {
+
     /**
-     * Id of the sandbox
+     * Sandbox id
      */
     @NotEmpty(message = "Id cannot be null or empty")
     @Pattern(regexp = "^[\\w\\d\\-]+$", message = "Wrong id format")

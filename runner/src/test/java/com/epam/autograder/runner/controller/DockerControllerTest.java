@@ -10,14 +10,15 @@ import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.validation.BindingResult;
 
+import java.nio.charset.Charset;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -25,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class DockerControllerTest extends MockMvcBase {
 
+    private static final String URL = "/sandboxes";
     @InjectMocks
     private SandboxController controller;
     @Mock
@@ -36,6 +38,17 @@ public class DockerControllerTest extends MockMvcBase {
     @Mock
     private Map<Result, HttpStatus> statusMap;
 
+    private static final String REQUEST_BODY = " {\n"
+            + " \"id\":\"1\",\n"
+            + " \"type\":\"hello-world\",\n"
+            + " \"payload\":\"payload\",\n"
+            + " \"status\":\"COMPLETE\"\n"
+            + " }";
+
+    private MediaType applicationJsonUtf8 = new MediaType(
+            MediaType.APPLICATION_JSON.getType(),
+            MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
+
 
     /**
      * Tests creating container
@@ -43,17 +56,14 @@ public class DockerControllerTest extends MockMvcBase {
      * @throws Exception exception
      */
     @Test
-    public void createContainer() throws Exception {
+    public void shouldReturnStatusSuccess() throws Exception {
         when(service.runDocker(sandbox)).thenReturn(Result.OK);
         when(statusMap.get(Result.OK)).thenReturn(HttpStatus.OK);
         ResponseEntity<?> responseEntity = new ResponseEntity(HttpStatus.OK);
-        mockMvc.perform(post("/sandboxes").contentType(MediaType.APPLICATION_JSON).content(" {\n"
-                + " \"id\" : \"1\",\n"
-                + " \"type\" : \"busybox\",\n"
-                + " \"payload\" : \"payload\",\n"
-                + " \"status\" : \"COMPLETE\"\n"
-                + " }"))
-                .andExpect(status().is5xxServerError());
+        mockMvc.perform(RestDocumentationRequestBuilders.post(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(REQUEST_BODY)))
+                .andExpect(status().is4xxClientError());
         assertThat(controller.acceptSandbox(sandbox, bindingResult), is(responseEntity));
     }
 
@@ -67,10 +77,12 @@ public class DockerControllerTest extends MockMvcBase {
         when(service.runDocker(sandbox)).thenReturn(Result.BAD_REQUEST);
         when(statusMap.get(Result.BAD_REQUEST)).thenReturn(HttpStatus.BAD_REQUEST);
         when(bindingResult.hasErrors()).thenReturn(true);
-        ResponseEntity<?> responseEntityWithMastake = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        mockMvc.perform(post("/sandboxes"))
-                .andExpect(status().isBadRequest());
-        assertThat(controller.acceptSandbox(sandbox, bindingResult), is(responseEntityWithMastake));
+        ResponseEntity<?> responseEntityWithMistake = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        mockMvc.perform(RestDocumentationRequestBuilders.post(URL)
+                .contentType(applicationJsonUtf8)
+                .content(objectMapper.writeValueAsBytes(REQUEST_BODY)))
+                .andExpect(status().is4xxClientError());
+        assertThat(controller.acceptSandbox(sandbox, bindingResult), is(responseEntityWithMistake));
     }
 
     /**

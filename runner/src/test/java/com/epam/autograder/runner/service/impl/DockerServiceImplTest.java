@@ -2,6 +2,7 @@ package com.epam.autograder.runner.service.impl;
 
 import com.epam.autograder.runner.entity.Sandbox;
 import com.epam.autograder.runner.result.Result;
+
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerResponse;
@@ -23,7 +24,6 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class DockerServiceImplTest {
-    private static final String IMAGE = "image";
     @Mock
     private DockerClient dockerClient;
     @InjectMocks
@@ -56,12 +56,5 @@ public class DockerServiceImplTest {
         assertThat(dockerService.runDocker(sandbox), is(Result.OK));
     }
 
-    /**
-     * Tests of status getting.
-     */
-    /*@Test
-    public void getStatus() {
-      when(dockerService.getStatus("id")).thenReturn(SandboxStatus.COMPLETE);
-        assertThat(dockerService.getStatus("id"), is(SandboxStatus.COMPLETE));
-    }*/
+
 }

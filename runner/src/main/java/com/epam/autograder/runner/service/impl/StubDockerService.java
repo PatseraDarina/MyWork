@@ -1,7 +1,6 @@
 package com.epam.autograder.runner.service.impl;
 
 import com.epam.autograder.runner.entity.Sandbox;
-import com.epam.autograder.runner.entity.SandboxStatus;
 import com.epam.autograder.runner.result.Result;
 import com.epam.autograder.runner.service.DockerService;
 import org.springframework.stereotype.Service;
@@ -18,8 +17,4 @@ public class StubDockerService implements DockerService {
         return Result.OK;
     }
 
-    @Override
-    public SandboxStatus getStatus(String id) {
-        return SandboxStatus.COMPLETE;
-    }
 }

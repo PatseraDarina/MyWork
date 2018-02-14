@@ -57,5 +57,5 @@ This REST API uses standard HTTP response status codes.
 [[overview-http-topics]]
 == Docker
 
-include::{snippets}/docker-controller-test/create-container/auto-section.adoc[]
+include::{snippets}/docker-controller-test/should-return-status-success/auto-section.adoc[]
 include::{snippets}/docker-controller-test/create-container-with-not-valid-parameters/auto-section.adoc[]
