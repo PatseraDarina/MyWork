@@ -1,5 +1,7 @@
 package com.epam.autograder.core.mapper.entity;
 
+import java.util.Objects;
+
 import org.springframework.stereotype.Component;
 
 import com.epam.autograder.core.dto.SubmissionDto;
@@ -19,10 +21,13 @@ public class SubmissionToEntityMapper implements Mapper<SubmissionDto, Entity> {
 
     @Override
     public Entity map(SubmissionDto submission, Entity submissionEntity) {
-        submissionEntity.setProperty(ENVIRONMENT_ID_PROPERTY, submission.getEnvironmentId());
-        submissionEntity.setProperty(INPUT_SOURCE_PROPERTY, submission.getInputSource().toString());
-        submissionEntity.setProperty(INPUT_DATA_PROPERTY, submission.getInputData());
+        if (Objects.nonNull(submissionEntity) && Objects.nonNull(submission)) {
+            submissionEntity.setProperty(ENVIRONMENT_ID_PROPERTY, submission.getEnvironmentId());
+            submissionEntity.setProperty(INPUT_SOURCE_PROPERTY, submission.getInputSource().toString());
+            submissionEntity.setProperty(INPUT_DATA_PROPERTY, submission.getInputData());
 
-        return submissionEntity;
+            return submissionEntity;
+        }
+        return null;
     }
 }

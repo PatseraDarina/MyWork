@@ -18,6 +18,9 @@ import jetbrains.exodus.entitystore.PersistentEntityStores;
 @Configuration
 public class StoreTestConfiguration {
 
+    private static final String USER_DIR = "user.dir";
+    private static final String TEST_STORE_DIR = "testApplicationStore";
+
     @EventListener
     public void handleContextRefresh(ContextClosedEvent event) throws IOException {
         PersistentEntityStore store = getStore();
@@ -28,8 +31,8 @@ public class StoreTestConfiguration {
     @Primary
     @Bean
     public PersistentEntityStore getStore() {
-        String userDir = System.getProperty("user.dir");
-        Path dirPath = Paths.get(userDir, "testApplicationStore");
+        String userDir = System.getProperty(USER_DIR);
+        Path dirPath = Paths.get(userDir, TEST_STORE_DIR);
         return PersistentEntityStores.newInstance(dirPath.toString());
     }
 }

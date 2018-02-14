@@ -16,6 +16,7 @@ import jetbrains.exodus.entitystore.PersistentEntityStores;
 @Configuration
 public class StoreConfig {
 
+    private static final String USER_DIR = "user.dir";
     @Value("${store_dir}")
     private String dataStoreDir;
 
@@ -24,7 +25,7 @@ public class StoreConfig {
      */
     @Bean
     public PersistentEntityStore getStore() {
-        String userDir = System.getProperty("user.dir");
+        String userDir = System.getProperty(USER_DIR);
         Path dirPath = Paths.get(userDir, dataStoreDir);
         return PersistentEntityStores.newInstance(dirPath.toString());
     }

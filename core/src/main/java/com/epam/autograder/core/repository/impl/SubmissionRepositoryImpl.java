@@ -1,5 +1,6 @@
 package com.epam.autograder.core.repository.impl;
 
+import java.util.Objects;
 import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,6 @@ import jetbrains.exodus.entitystore.PersistentEntityStore;
 
 /**
  * Implementation for the Submission repository.
- *
- * @author Valeriia Chub
  */
 @Repository
 public class SubmissionRepositoryImpl implements SubmissionRepository {
@@ -26,15 +25,8 @@ public class SubmissionRepositoryImpl implements SubmissionRepository {
     @Autowired
     @Qualifier("submissionToEntityMapper")
     private Mapper<SubmissionDto, Entity> mapper;
-    private PersistentEntityStore store;
-
-    /**
-     * @param store store
-     */
     @Autowired
-    public void setStore(PersistentEntityStore store) {
-        this.store = store;
-    }
+    private PersistentEntityStore store;
 
     /**
      * close entity store
@@ -53,10 +45,16 @@ public class SubmissionRepositoryImpl implements SubmissionRepository {
         EntityId id = store.computeInTransaction(txn -> {
             Entity submissionEntity = txn.newEntity(SUBMISSION_ENTITY_NAME);
             submissionEntity = mapper.map(submission, submissionEntity);
-            txn.saveEntity(submissionEntity);
-            return submissionEntity.getId();
+            if (Objects.nonNull(submissionEntity)) {
+                txn.saveEntity(submissionEntity);
+                return submissionEntity.getId();
+            }
+            return null;
         });
-        submission.setSubmissionId(id.getLocalId());
+
+        if (Objects.nonNull(submission)) {
+            submission.setSubmissionId(id.getLocalId());
+        }
         return submission;
     }
 }

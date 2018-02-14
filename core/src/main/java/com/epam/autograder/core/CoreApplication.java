@@ -18,7 +18,6 @@ import org.springframework.context.annotation.ComponentScan;
         "com.epam.autograder.core.repository",
         "com.epam.autograder.core.resource",
         "com.epam.autograder.core.service",
-        "com.epam.autograder.core.exception",
         "com.epam.autograder.core.mapper",
         "com.epam.autograder.core.config"})
 public class CoreApplication {
