@@ -1,0 +1,24 @@
+tasks {
+    task("createBaseImage") {
+        doLast {
+            exec {
+                commandLine "docker", "build", "-t", "base_image:${version}", "."
+            }
+        }
+    }
+    task("runImage") doLast {
+        exec {
+            commandLine "docker", "run", "base_image:${version}"
+        }
+    }
+    task copyDocs(type: Copy) {
+        from "${rootDir}/agent/src/agent/"
+        into "$projectDir/go"
+    }
+}
+tasks["createBaseImage"].dependsOn("copyDocs")
+
+
+
+
+

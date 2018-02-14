@@ -12,6 +12,7 @@ import com.github.dockerjava.api.model.Info;
 import com.github.dockerjava.api.model.Volume;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -32,14 +33,13 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class DockerServiceImplTest {
+    private static final String FILE_DIRECTORY = File.separator + "var" + File.separator + "runner" + File.separator + "input" + File.separator
+            + "payload";
+    private static final String OUTPUT_PATH = File.separator + "var" + File.separator + "runner" + File.separator + "output" + File.separator;
+
     private static final String INPUT_PAYLOAD_PATH = "D:" + File.separator + "AutoGrader_Winter" + File.separator
             + "EPM-RDK1-AutoGrader"
-            + File.separator + "var" + File.separator + "runner" + File.separator + "input" + File.separator
-            + "payload" + File.separator + "payload";
-    private static final String OUTPUT_PATH = "D:" + File.separator + "AutoGrader_Winter" + File.separator
-            + "EPM-RDK1-AutoGrader" + File.separator + "var" + File.separator + "runner" + File.separator + "output";
-    private static final String FILE_DIRECTORY = "var" + File.separator;
-    private static final String FILE_NAME = "payload";
+            + File.separator + "var";
     private static final String IMAGE = "image";
 
     @Mock
@@ -64,12 +64,21 @@ public class DockerServiceImplTest {
     @Autowired
     @Qualifier("outVolume")
     private Volume volume2;
-    @Autowired
-    @Qualifier("inBind")
     private Bind bind1;
-    @Autowired
-    @Qualifier("outBind")
     private Bind bind2;
+    private String current;
+
+    /**
+     * Create directory
+     *
+     * @throws IOException file directory exception
+     */
+    @Before
+    public void setUp() throws IOException {
+        current = new java.io.File(".").getCanonicalPath();
+        bind1 = new Bind(current + FILE_DIRECTORY, volume1);
+        bind2 = new Bind(current + OUTPUT_PATH, volume2);
+    }
 
     /**
      * Tests of docker running.
@@ -101,7 +110,7 @@ public class DockerServiceImplTest {
      */
     @After
     public void destroyTestFolder() throws IOException {
-        File file = new File(FILE_DIRECTORY);
-        FileUtils.deleteDirectory(file);
+        File directory = new File(current + File.separator + "var" + File.separator);
+        FileUtils.deleteDirectory(directory);
     }
 }
