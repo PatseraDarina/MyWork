@@ -1,18 +1,14 @@
 package com.epam.autograder.core.resource;
 
-import static capital.scalable.restdocs.jackson.JacksonResultHandlers.prepareJackson;
-import static capital.scalable.restdocs.response.ResponseModifyingPreprocessors.limitJsonArrayLength;
-import static capital.scalable.restdocs.response.ResponseModifyingPreprocessors.replaceBinaryContent;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-
+import capital.scalable.restdocs.AutoDocumentation;
+import com.epam.autograder.core.CoreApplication;
+import com.epam.autograder.core.CoreTestConfiguration;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.cli.CliDocumentation;
 import org.springframework.restdocs.http.HttpDocumentation;
@@ -25,20 +21,27 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.epam.autograder.core.CoreApplication;
-import com.epam.autograder.core.CoreTestConfiguration;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.nio.charset.Charset;
 
-import capital.scalable.restdocs.AutoDocumentation;
+import static capital.scalable.restdocs.jackson.JacksonResultHandlers.prepareJackson;
+import static capital.scalable.restdocs.response.ResponseModifyingPreprocessors.limitJsonArrayLength;
+import static capital.scalable.restdocs.response.ResponseModifyingPreprocessors.replaceBinaryContent;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 
 /**
  * mockMvcBase test
  */
 @SpringBootTest
+@ContextConfiguration(classes = {CoreTestConfiguration.class, CoreApplication.class})
 @TestPropertySource(locations = {"classpath:application.properties"})
 @ExtendWith({SpringExtension.class, RestDocumentationExtension.class})
-@ContextConfiguration(classes = {CoreTestConfiguration.class, CoreApplication.class})
 public class MockMvcBaseIntegrationTest {
+    protected static final MediaType APPLICATION_JSON_UTF8 = new MediaType(
+            MediaType.APPLICATION_JSON.getType(),
+            MediaType.APPLICATION_JSON.getSubtype(),
+            Charset.forName("utf8"));
 
     private static final String CLASS_METHOD_NAME = "{class-name}/{method-name}";
     protected MockMvc mockMvc;
