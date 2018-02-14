@@ -21,11 +21,11 @@ public class SubmissionRepositoryTest extends RepositoryBaseTest {
     private static final String INPUT_DATA = "git@git.epam.com:.../...git";
 
     @Nested
-    class testSave {
+    class Save {
 
         @Test
         @DisplayName("Verifies if the submission was saved with generated id")
-        public void testSaveSubmission_OK() {
+        public void ok() {
             SubmissionDto submission = new SubmissionDto();
             submission.setEnvironmentId(ENVIRONMENT_ID);
             submission.setInputSource(InputSourceDto.GIT);
@@ -38,7 +38,7 @@ public class SubmissionRepositoryTest extends RepositoryBaseTest {
 
         @Test
         @DisplayName("Verifies that method was not save a submission when it null")
-        public void testSaveSubmission_Null() {
+        public void submissionIsNull() {
             SubmissionDto savedSubmission = submissionRepository.save(null);
 
             assertNull(savedSubmission);

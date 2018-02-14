@@ -42,17 +42,13 @@ public class SubmissionRepositoryImpl implements SubmissionRepository {
      */
     @Override
     public SubmissionDto save(SubmissionDto submission) {
-        EntityId id = store.computeInTransaction(txn -> {
-            Entity submissionEntity = txn.newEntity(SUBMISSION_ENTITY_NAME);
-            submissionEntity = mapper.map(submission, submissionEntity);
-            if (Objects.nonNull(submissionEntity)) {
+        if (Objects.nonNull(submission)) {
+            EntityId id = store.computeInTransaction(txn -> {
+                Entity submissionEntity = txn.newEntity(SUBMISSION_ENTITY_NAME);
+                submissionEntity = mapper.map(submission, submissionEntity);
                 txn.saveEntity(submissionEntity);
                 return submissionEntity.getId();
-            }
-            return null;
-        });
-
-        if (Objects.nonNull(submission)) {
+            });
             submission.setSubmissionId(id.getLocalId());
         }
         return submission;

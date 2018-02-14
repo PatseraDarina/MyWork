@@ -14,7 +14,6 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableAutoConfiguration
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @ComponentScan(basePackages = {
-        "com.epam.autograder.core.entity",
         "com.epam.autograder.core.repository",
         "com.epam.autograder.core.resource",
         "com.epam.autograder.core.service",

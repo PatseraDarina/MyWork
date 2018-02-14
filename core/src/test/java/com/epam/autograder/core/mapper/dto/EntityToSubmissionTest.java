@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -31,31 +30,35 @@ public class EntityToSubmissionTest extends BaseTest {
     @InjectMocks
     private EntityToSubmissionMapper mapper;
 
-    @Nested
-    class testMap {
+    @BeforeEach
+    public void init() {
+        when(entity.getId()).thenReturn(mock(EntityId.class));
+        when(entity.getProperty("environmentId")).thenReturn("git@git.epam.com:.../...git");
+        when(entity.getProperty("inputSource")).thenReturn(InputSourceDto.GIT);
+        when(entity.getProperty("inputData")).thenReturn("gcdp_autograder_hello_world");
+    }
 
-        @BeforeEach
-        public void setUp() {
-            when(entity.getId()).thenReturn(mock(EntityId.class));
-            when(entity.getProperty("environmentId")).thenReturn("git@git.epam.com:.../...git");
-            when(entity.getProperty("inputSource")).thenReturn(InputSourceDto.GIT);
-            when(entity.getProperty("inputData")).thenReturn("gcdp_autograder_hello_world");
-        }
+    @Test
+    @DisplayName("Verifies that submission was successful mapped into entity")
+    void testMap_Successful() {
+        SubmissionDto submission = mapper.map(entity, submissionDto);
 
-        @Test
-        @DisplayName("Verifies that submission was successful mapped into entity")
-        void testMap_Successful() {
-            SubmissionDto submission = mapper.map(entity, submissionDto);
+        assertNotNull(submission);
+    }
 
-            assertNotNull(submission);
-        }
+    @Test
+    @DisplayName("Verifies that submission was not mapped into entity, when submission is null")
+    void testMap_WhenSubmissionIsNull() {
+        SubmissionDto submission = mapper.map(entity, null);
 
-        @Test
-        @DisplayName("Verifies that submission was not mapped into entity, when submission is null")
-        void testMap_WhenSubmissionIsNull() {
-            SubmissionDto submission = mapper.map(entity, null);
+        assertNull(submission);
+    }
 
-            assertNull(submission);
-        }
+    @Test
+    @DisplayName("Verifies that submission was not mapped into entity, when entity is null")
+    void testMap_WhenEntityIsNull() {
+        SubmissionDto submission = mapper.map(null, submissionDto);
+
+        assertNull(submission);
     }
 }
