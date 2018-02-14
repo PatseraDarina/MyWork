@@ -1,7 +1,7 @@
 package com.epam.autograder.core.resource;
 
-import com.epam.autograder.core.dto.ErrorResponseDto;
-import com.epam.autograder.core.exception.BusinessException;
+import static java.util.Optional.ofNullable;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import static java.util.Optional.ofNullable;
+import com.epam.autograder.core.dto.ErrorResponseDto;
+import com.epam.autograder.core.exception.BusinessException;
 
 /**
  * Class provides cross-cutting exception handling for all application controllers
@@ -60,5 +61,4 @@ public class ExceptionHandlingController {
         String description = ofNullable(exception.getMessage()).orElse(DEFAULT_ERROR_DESCRIPTION);
         return new ErrorResponseDto(httpStatus.value(), httpStatus.name(), description);
     }
-
 }

@@ -14,11 +14,11 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableAutoConfiguration
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @ComponentScan(basePackages = {
-        "com.epam.autograder.core.entity",
         "com.epam.autograder.core.repository",
         "com.epam.autograder.core.resource",
         "com.epam.autograder.core.service",
-        "com.epam.autograder.core.exception"})
+        "com.epam.autograder.core.mapper",
+        "com.epam.autograder.core.config"})
 public class CoreApplication {
 
     /**
