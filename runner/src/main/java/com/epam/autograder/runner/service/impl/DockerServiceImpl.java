@@ -1,8 +1,11 @@
 package com.epam.autograder.runner.service.impl;
 
 import com.epam.autograder.runner.entity.Sandbox;
+import com.epam.autograder.runner.entity.SandboxStatus;
 import com.epam.autograder.runner.result.Result;
 import com.epam.autograder.runner.service.DockerService;
+import com.epam.autograder.runner.util.DockerStatusConverter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.exception.ConflictException;
@@ -25,11 +28,11 @@ import java.io.IOException;
 @Service("dockerServiceImpl")
 public class DockerServiceImpl implements DockerService {
     private static final Logger LOGGER = Logger.getLogger(DockerServiceImpl.class);
-    private static final String FILE_DIRECTORY = File.separator + "var" + File.separator + "runner" + File.separator + "input" + File.separator
-            + "payload";
+    private static final String SANDBOX_JSON = "sandbox.json";
+    private String fileDirectory;
+    private String sandboxJson;
     private static final String FILE_NAME = "payload";
-    private static final String OUTPUT_PATH = File.separator + "var" + File.separator + "runner" + File.separator + "output" + File.separator;
-
+    private String outputPath;
     private String currentPathToProject;
 
     @Autowired
@@ -45,23 +48,23 @@ public class DockerServiceImpl implements DockerService {
     private Bind inputBind;
     private Bind outputBind;
 
-
     @Override
     public Result runDocker(Sandbox sandbox) {
         Info info = dockerClient.infoCmd().exec();
         LOGGER.info("DOCKER INFO: " + info);
         String imageName = sandbox.getType();
         try {
+            initPath(sandbox.getId());
             writeToFile(sandbox.getPayload());
             initBinds();
             CreateContainerResponse container = dockerClient
-                    .createContainerCmd(imageName).withVolumes(inputVolume, outputVolume)
+                    .createContainerCmd(imageName)
+                    .withVolumes(inputVolume, outputVolume)
                     .withBinds(
                             inputBind, outputBind)
                     .withName(String.valueOf(sandbox.getId()))
                     .exec();
             dockerClient.startContainerCmd(container.getId()).exec();
-
         } catch (NotFoundException | ConflictException e) {
             LOGGER.warn("Exception: " + e);
             return Result.BAD_REQUEST;
@@ -71,86 +74,104 @@ public class DockerServiceImpl implements DockerService {
         }
         info = dockerClient.infoCmd().exec();
         LOGGER.info("DOCKER INFO: " + info);
+        try {
+            writeJsonObject(sandbox);
+        } catch (IOException e) {
+            LOGGER.warn("Exception: " + e);
+            return Result.BAD_REQUEST;
+        }
         return Result.OK;
     }
 
+    @Override
+    public Sandbox getSandboxById(String id) {
+        Sandbox sandbox = new Sandbox();
+        try {
+            initPath(id);
+            sandbox = getJsonObject(id);
+            sandbox.setStatus(getSandboxStatus(id));
+            writeJsonObject(sandbox);
+        } catch (IOException e) {
+            LOGGER.warn("Exception: " + e);
+            return null;
+        }
+        return sandbox;
+    }
 
-//    @Override
-//    public SandboxStatus getState(String idContainer) {
-//        String containerDir = ROOT_DIR + idContainer;
-//        if (isExist(containerDir)) {
-//            if (isExist(RESULT_FILE)) {
-//                try {
-//                    if (isStatusOk((State) getJsonObject(RESULT_FILE, State.class))) {
-//                        return SandboxStatus.COMPLETE;
-//                    }
-//                } catch (IOException e) {
-//                    LOGGER.warn(e.getMessage(), e);
-//                    return SandboxStatus.FAILED;
-//                }
-//            } else {
-//                if (isExist(SANDBOX_FILE)) {
-//                    return SandboxStatus.RUNNING;
-//                }
-//            }
-//        }
-//        return SandboxStatus.FAILED;
-//    }
-//
-//    @Override
-//    public Sandbox getSandbox(String id) {
-//        String path = ROOT_DIR + id + SANDBOX_FILE;
-//        Sandbox sandbox;
-//        try {
-//            sandbox = (Sandbox) getJsonObject(path, Sandbox.class);
-//        } catch (IOException e) {
-//            LOGGER.warn(e.getMessage(), e);
-//            sandbox = new Sandbox();
-//            sandbox.setStatus(SandboxStatus.FAILED);
-//        }
-//        return sandbox;
-//    }
+    /**
+     * @param id gets from Core request
+     * @return Sandbox from sandbox.json file
+     */
+    private Sandbox getJsonObject(String id) throws IOException {
+        Sandbox sandbox = new Sandbox();
+        File file = new File(sandboxJson + SANDBOX_JSON);
+        return new ObjectMapper().readValue(file, sandbox.getClass());
+    }
 
-//    private boolean isExist(String path) {
-//        File file = new File(path);
-//        return (file.exists());
-//    }
+    /**
+     * @param sandbox gets from Core request
+     */
+    public void writeJsonObject(Sandbox sandbox) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        new File(sandboxJson).mkdirs();
+        objectMapper.writeValue(new File(sandboxJson + SANDBOX_JSON), sandbox);
+    }
+
+    /**
+     * @param idContainer gets from Core request
+     * @return SandboxStatus current status of container by {@code idContainer}
+     */
+    private SandboxStatus getSandboxStatus(String idContainer) {
+        SandboxStatus status = null;
+        try {
+            status = DockerStatusConverter.getSandboxStatus(dockerClient.inspectContainerCmd(String.valueOf(idContainer)).exec().getState());
+        } catch (NotFoundException e) {
+            LOGGER.info("Container not found");
+            try {
+                return getJsonObject(idContainer).getStatus();
+            } catch (IOException e1) {
+                LOGGER.info("Container not found");
+                return SandboxStatus.FAILED;
+            }
+        }
+        return status;
+    }
 
     /**
      * @param payload String that get from Submission
      * @throws IOException may occur while writing in file
      */
     private void writeToFile(String payload) throws IOException {
-        currentPathToProject = new java.io.File(".").getCanonicalPath();
-        File payloadFile = new File(currentPathToProject + FILE_DIRECTORY, FILE_NAME);
+        File payloadFile = new File(fileDirectory, FILE_NAME);
         FileUtils.writeStringToFile(payloadFile, payload);
     }
 
-//    private State getState(String path) throws IOException {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        File file = new File(path);
-//        return objectMapper.readValue(file, State.class);
-//    }
+
     /**
      * @throws IOException may occur while directory creating
      */
     private void initBinds() throws IOException {
-        File outputDirectory = new File(currentPathToProject + OUTPUT_PATH);
+        File outputDirectory = new File(currentPathToProject + outputPath);
         if (outputDirectory.mkdirs()) {
-            inputBind = new Bind(currentPathToProject + FILE_DIRECTORY, inputVolume);
-            outputBind = new Bind(currentPathToProject + OUTPUT_PATH, outputVolume);
+            inputBind = new Bind(fileDirectory, inputVolume);
+            outputBind = new Bind(currentPathToProject + outputPath, outputVolume);
         }
     }
 
-//    private Object getJsonObject(String path, Class clazz) throws IOException {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        File file = new File(path);
-//        return objectMapper.readValue(file, clazz);
-//    }
-//
-//    private Object getJsonObject(String path, Class clazz) throws IOException {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        File file = new File(path);
-//        return objectMapper.readValue(file, clazz);
-//    }
+    /**
+     * @param idContainer gets from Core request
+     */
+    private void initPath(String idContainer) {
+        try {
+            String temp = new File(".").getCanonicalPath();
+            currentPathToProject = temp;
+            outputPath = File.separator + "var" + File.separator + "runner" + File.separator + idContainer + File.separator + "output" + File.separator;
+            fileDirectory = temp + File.separator + "var" + File.separator + "runner" + File.separator + idContainer + File.separator + "input" + File.separator
+                    + "payload";
+            sandboxJson = temp + File.separator + "var" + File.separator + "runner" + File.separator + idContainer + File.separator;
+        } catch (IOException e) {
+            LOGGER.info("Path not found");
+        }
+
+    }
 }

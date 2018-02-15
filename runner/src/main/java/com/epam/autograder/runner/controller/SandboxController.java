@@ -24,6 +24,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -59,11 +60,10 @@ public class SandboxController {
      */
     @GetMapping("/sandboxes/{id}")
     public ResponseEntity<?> getContainerStatus(@Pattern(regexp = "^[\\w\\d\\-]+$", message = "Wrong id format") @PathVariable String id) {
-        Sandbox sandbox = new Sandbox();
-        sandbox.setStatus(SandboxStatus.FAILED);
-        sandbox.setId(id);
-        sandbox.setPayload("payload");
-        sandbox.setType("busybox");
+        Sandbox sandbox = dockerService.getSandboxById(id);
+        if (Objects.isNull(sandbox)) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(sandbox, HttpStatus.OK);
     }
 

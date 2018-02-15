@@ -27,6 +27,7 @@ import java.io.IOException;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 
@@ -36,9 +37,9 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class DockerServiceImplTest {
 
-    private static final String FILE_DIRECTORY = File.separator + "var" + File.separator + "runner" + File.separator + "input" + File.separator
+    private static final String FILE_DIRECTORY = File.separator + "var" + File.separator + "runner" + File.separator  + "123" + File.separator + "input" + File.separator
             + "payload";
-    private static final String OUTPUT_PATH = File.separator + "var" + File.separator + "runner" + File.separator + "output" + File.separator;
+    private static final String OUTPUT_PATH = File.separator + "var" + File.separator + "runner" + File.separator  + "123" + File.separator + "output" + File.separator;
 
 //    private static final String INPUT_PAYLOAD_PATH = "D:" + File.separator + "AutoGrader_Winter" + File.separator
 //            + "EPM-RDK1-AutoGrader"
@@ -61,6 +62,8 @@ public class DockerServiceImplTest {
     private InfoCmd infoCmd;
     @Mock
     private Sandbox sandbox;
+    @Mock
+    private File file;
     @Autowired
     @Qualifier("inVolume")
     private Volume volume1;
@@ -90,12 +93,16 @@ public class DockerServiceImplTest {
     public void shouldReturnResultOkAfterRunDocker() {
         when(dockerClient.infoCmd()).thenReturn(infoCmd);
         when(infoCmd.exec()).thenReturn(info);
+        when(sandbox.getId()).thenReturn(("123"));
         when(dockerClient.createContainerCmd(sandbox.getType())).thenReturn(createContainerCmd);
         when(dockerClient.createContainerCmd(sandbox.getType()).withName(String.valueOf(sandbox.getId()))).thenReturn(createContainerCmd);
         when(dockerClient.createContainerCmd(IMAGE)).thenReturn(createContainerCmd);
         when(dockerClient.createContainerCmd(IMAGE).withVolumes(volume1, volume2)).thenReturn(createContainerCmd);
         when(dockerClient.createContainerCmd(IMAGE).withVolumes(volume1, volume2).withBinds(bind1, bind2))
                 .thenReturn(createContainerCmd);
+        when(dockerClient.createContainerCmd(IMAGE).withVolumes(volume1, volume2).withBinds(bind1, bind2).withName(String.valueOf(sandbox.getId())))
+                .thenReturn(createContainerCmd);
+
         when(createContainerCmd.exec()).thenReturn(containerResponse);
         when(dockerClient.startContainerCmd(containerResponse.getId())).thenReturn(startContainerCmd);
         assertThat(dockerService.runDocker(sandbox), is(Result.OK));

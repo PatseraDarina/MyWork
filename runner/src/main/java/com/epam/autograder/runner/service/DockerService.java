@@ -30,5 +30,5 @@ public interface DockerService {
 //     * @param id unique container directory name, that contains "sandbox.json"
 //     * @return sandbox object that was parsed from "sandbox.json"
 //     */
-//    Sandbox getSandbox(String id);
+    Sandbox getSandboxById(String id);
 }

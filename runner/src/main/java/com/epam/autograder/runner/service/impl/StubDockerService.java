@@ -17,4 +17,9 @@ public class StubDockerService implements DockerService {
         return Result.OK;
     }
 
+    @Override
+    public Sandbox getSandboxById(String id) {
+        return null;
+    }
+
 }
