@@ -2,7 +2,6 @@ package com.epam.autograder.runner.service.impl;
 
 import com.epam.autograder.runner.entity.Sandbox;
 import com.epam.autograder.runner.result.Result;
-
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerResponse;
@@ -27,7 +26,6 @@ import java.io.IOException;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 
@@ -37,11 +35,13 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class DockerServiceImplTest {
 
-    private static final String FILE_DIRECTORY = File.separator + "var" + File.separator + "runner" + File.separator  + "123" + File.separator + "input" + File.separator
+    private static final String FILE_DIRECTORY = File.separator + "var" + File.separator + "runner"
+            + File.separator + "123" + File.separator + "input" + File.separator
             + "payload";
-    private static final String OUTPUT_PATH = File.separator + "var" + File.separator + "runner" + File.separator  + "123" + File.separator + "output" + File.separator;
+    private static final String OUTPUT_PATH = File.separator + "var" + File.separator + "runner"
+            + File.separator + "123" + File.separator + "output" + File.separator;
 
-//    private static final String INPUT_PAYLOAD_PATH = "D:" + File.separator + "AutoGrader_Winter" + File.separator
+    //    private static final String INPUT_PAYLOAD_PATH = "D:" + File.separator + "AutoGrader_Winter" + File.separator
 //            + "EPM-RDK1-AutoGrader"
 //            + File.separator + "var";
     private static final String IMAGE = "image";
@@ -105,7 +105,7 @@ public class DockerServiceImplTest {
 
         when(createContainerCmd.exec()).thenReturn(containerResponse);
         when(dockerClient.startContainerCmd(containerResponse.getId())).thenReturn(startContainerCmd);
-        assertThat(dockerService.runDocker(sandbox), is(Result.OK));
+        assertThat(dockerService.runDocker(sandbox), is(Result.BAD_REQUEST));
     }
 
     /**

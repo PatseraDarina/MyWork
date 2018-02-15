@@ -85,10 +85,10 @@ public class DockerServiceImpl implements DockerService {
 
     @Override
     public Sandbox getSandboxById(String id) {
-        Sandbox sandbox = new Sandbox();
+        Sandbox sandbox;
         try {
             initPath(id);
-            sandbox = getJsonObject(id);
+            sandbox = getJsonObject();
             sandbox.setStatus(getSandboxStatus(id));
             writeJsonObject(sandbox);
         } catch (IOException e) {
@@ -99,10 +99,9 @@ public class DockerServiceImpl implements DockerService {
     }
 
     /**
-     * @param id gets from Core request
      * @return Sandbox from sandbox.json file
      */
-    private Sandbox getJsonObject(String id) throws IOException {
+    private Sandbox getJsonObject() throws IOException {
         Sandbox sandbox = new Sandbox();
         File file = new File(sandboxJson + SANDBOX_JSON);
         return new ObjectMapper().readValue(file, sandbox.getClass());
@@ -110,11 +109,16 @@ public class DockerServiceImpl implements DockerService {
 
     /**
      * @param sandbox gets from Core request
+     * @throws IOException may occur while writing in file
      */
     public void writeJsonObject(Sandbox sandbox) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        new File(sandboxJson).mkdirs();
-        objectMapper.writeValue(new File(sandboxJson + SANDBOX_JSON), sandbox);
+        if (!new File(sandboxJson).mkdirs()) {
+            objectMapper.writeValue(new File(sandboxJson + SANDBOX_JSON), sandbox);
+        } else {
+            LOGGER.info("Can not write sandbox in file");
+        }
+
     }
 
     /**
@@ -128,7 +132,7 @@ public class DockerServiceImpl implements DockerService {
         } catch (NotFoundException e) {
             LOGGER.info("Container not found");
             try {
-                return getJsonObject(idContainer).getStatus();
+                return getJsonObject().getStatus();
             } catch (IOException e1) {
                 LOGGER.info("Container not found");
                 return SandboxStatus.FAILED;
@@ -165,13 +169,15 @@ public class DockerServiceImpl implements DockerService {
         try {
             String temp = new File(".").getCanonicalPath();
             currentPathToProject = temp;
-            outputPath = File.separator + "var" + File.separator + "runner" + File.separator + idContainer + File.separator + "output" + File.separator;
-            fileDirectory = temp + File.separator + "var" + File.separator + "runner" + File.separator + idContainer + File.separator + "input" + File.separator
+            outputPath = File.separator + "var" + File.separator + "runner" + File.separator
+                    + idContainer + File.separator + "output" + File.separator;
+            fileDirectory = temp + File.separator + "var" + File.separator + "runner" + File.separator
+                    + idContainer + File.separator + "input" + File.separator
                     + "payload";
-            sandboxJson = temp + File.separator + "var" + File.separator + "runner" + File.separator + idContainer + File.separator;
+            sandboxJson = temp + File.separator + "var" + File.separator + "runner" + File.separator
+                    + idContainer + File.separator;
         } catch (IOException e) {
             LOGGER.info("Path not found");
         }
-
     }
 }

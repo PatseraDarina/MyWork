@@ -24,11 +24,11 @@ public interface DockerService {
 //     */
 //    SandboxStatus getState(String id);
 
-//    /**
-//     * Gets sandbox object from Json file by specified identifier.
-//     *
-//     * @param id unique container directory name, that contains "sandbox.json"
-//     * @return sandbox object that was parsed from "sandbox.json"
-//     */
+    /**
+     * Gets sandbox object from Json file by specified identifier.
+     *
+     * @param id unique container directory name, that contains "sandbox.json"
+     * @return sandbox object that was parsed from "sandbox.json"
+     */
     Sandbox getSandboxById(String id);
 }
