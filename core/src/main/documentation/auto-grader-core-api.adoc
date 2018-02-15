@@ -24,42 +24,39 @@
 | Internal Server Error
 |===
 
-[[resources-submission-resource-test-should-return-status-success]]
+[[create-submission]]
 == Create Submission
 
-include::{snippets}/submission-resource-test/should-return-status-success/auto-method-path.adoc[]
+include::{snippets}/create-submission/status-ok/auto-method-path.adoc[]
 
-include::{snippets}/submission-resource-test/should-return-status-success/auto-description.adoc[]
+include::{snippets}/create-submission/status-ok/auto-description.adoc[]
 
 === Path parameters
 
-include::{snippets}/submission-resource-test/should-return-status-success/auto-path-parameters.adoc[]
+include::{snippets}/create-submission/status-ok/auto-path-parameters.adoc[]
 
 === Query parameters
 
-include::{snippets}/submission-resource-test/should-return-status-success/auto-request-parameters.adoc[]
+include::{snippets}/create-submission/status-ok/auto-request-parameters.adoc[]
 
 === Request fields
 
-include::{snippets}/submission-resource-test/should-return-status-success/auto-request-fields.adoc[]
+include::{snippets}/create-submission/status-ok/auto-request-fields.adoc[]
 
 === Response fields
 
-include::{snippets}/submission-resource-test/should-return-status-success/auto-response-fields.adoc[]
+include::{snippets}/create-submission/status-ok/auto-response-fields.adoc[]
 
 === Examples:
 
 ==== SUCCESS (200)
-include::{snippets}/submission-resource-test/should-return-status-success/curl-request.adoc[]
-include::{snippets}/submission-resource-test/should-return-status-success/http-response.adoc[]
+include::{snippets}/create-submission/status-ok/curl-request.adoc[]
+include::{snippets}/create-submission/status-ok/http-response.adoc[]
 
 ==== BAD_REQUEST (400)
-include::{snippets}/submission-resource-test/should-return-status-client-error-when-u-r-l-template-is-wrong/curl-request.adoc[]
-
-include::{snippets}/submission-resource-test/should-return-status-client-error-when-u-r-l-template-is-wrong/http-response.adoc[]
-
+include::{snippets}/create-submission/status-bad-request/curl-request.adoc[]
+include::{snippets}/create-submission/status-bad-request/http-response.adoc[]
 
 ==== INTERNAL_SERVER_ERROR (500)
-
-
-TODO: to be implemented
+include::{snippets}/create-submission/status-internal-server-error/curl-request.adoc[]
+include::{snippets}/create-submission/status-internal-server-error/http-response.adoc[]

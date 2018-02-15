@@ -10,3 +10,7 @@ include 'runner'
 include 'core'
 include 'runner-api'
 //include 'agent'
+include 'core-api'
+include 'automation'
+include 'baseimage'
+

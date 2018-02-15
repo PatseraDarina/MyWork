@@ -1,14 +1,22 @@
 package com.epam.autograder.core.service;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * BaseTestClass
  */
-@RunWith(MockitoJUnitRunner.class)
 public class BaseTest {
+
+    /**
+     * Sets up.
+     */
+    @BeforeEach
+    void setUp() {
+        initMocks(this);
+    }
 
     /**
      * BaseTest

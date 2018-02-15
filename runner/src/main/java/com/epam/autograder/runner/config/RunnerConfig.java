@@ -4,8 +4,10 @@ import com.epam.autograder.runner.result.Result;
 import com.epam.autograder.runner.service.DockerService;
 import com.epam.autograder.runner.service.impl.DockerServiceImpl;
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.model.Volume;
 import com.github.dockerjava.core.DockerClientBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -24,7 +26,6 @@ import java.util.Map;
 public class RunnerConfig {
 
     private static final String DOCKER_HOST = "DOCKER_HOST";
-
     @Autowired
     private Environment environment;
 
@@ -65,4 +66,23 @@ public class RunnerConfig {
     public MethodValidationPostProcessor methodValidationPostProcessor() {
         return new MethodValidationPostProcessor();
     }
+
+    /**
+     * @param path to inputFolder in Docker
+     * @return Volume
+     */
+    @Bean
+    public Volume inVolume(@Value("${volume.input}") String path) {
+        return new Volume(path);
+    }
+
+    /**
+     * @param path to outputFolder in Docker
+     * @return Volume
+     */
+    @Bean
+    public Volume outVolume(@Value("${volume.output}") String path) {
+        return new Volume(path);
+    }
+
 }

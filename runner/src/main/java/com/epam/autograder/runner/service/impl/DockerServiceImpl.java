@@ -7,7 +7,9 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.exception.ConflictException;
 import com.github.dockerjava.api.exception.NotFoundException;
+import com.github.dockerjava.api.model.Bind;
 import com.github.dockerjava.api.model.Info;
+import com.github.dockerjava.api.model.Volume;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,27 +25,43 @@ import java.io.IOException;
 @Service("dockerServiceImpl")
 public class DockerServiceImpl implements DockerService {
     private static final Logger LOGGER = Logger.getLogger(DockerServiceImpl.class);
-    private static final String FILE_DIRECTORY = "var/runner/input/payload";
+    private static final String FILE_DIRECTORY = File.separator + "var" + File.separator + "runner" + File.separator + "input" + File.separator
+            + "payload";
     private static final String FILE_NAME = "payload";
+    private static final String OUTPUT_PATH = File.separator + "var" + File.separator + "runner" + File.separator + "output" + File.separator;
 
+    private String currentPathToProject;
 
     @Autowired
     @Qualifier("dockerClient")
     private DockerClient dockerClient;
+    @Autowired
+    @Qualifier("inVolume")
+    private Volume inputVolume;
+
+    @Autowired
+    @Qualifier("outVolume")
+    private Volume outputVolume;
+    private Bind inputBind;
+    private Bind outputBind;
+
 
     @Override
     public Result runDocker(Sandbox sandbox) {
         Info info = dockerClient.infoCmd().exec();
         LOGGER.info("DOCKER INFO: " + info);
-
         String imageName = sandbox.getType();
         try {
             writeToFile(sandbox.getPayload());
+            initBinds();
             CreateContainerResponse container = dockerClient
-                    .createContainerCmd(imageName)
+                    .createContainerCmd(imageName).withVolumes(inputVolume, outputVolume)
+                    .withBinds(
+                            inputBind, outputBind)
                     .withName(String.valueOf(sandbox.getId()))
                     .exec();
             dockerClient.startContainerCmd(container.getId()).exec();
+
         } catch (NotFoundException | ConflictException e) {
             LOGGER.warn("Exception: " + e);
             return Result.BAD_REQUEST;
@@ -98,9 +116,14 @@ public class DockerServiceImpl implements DockerService {
 //        return (file.exists());
 //    }
 
+    /**
+     * @param payload String that get from Submission
+     * @throws IOException may occur while writing in file
+     */
     private void writeToFile(String payload) throws IOException {
-        File file = new File(FILE_DIRECTORY, FILE_NAME);
-        FileUtils.writeStringToFile(file, payload);
+        currentPathToProject = new java.io.File(".").getCanonicalPath();
+        File payloadFile = new File(currentPathToProject + FILE_DIRECTORY, FILE_NAME);
+        FileUtils.writeStringToFile(payloadFile, payload);
     }
 
 //    private State getState(String path) throws IOException {
@@ -108,7 +131,23 @@ public class DockerServiceImpl implements DockerService {
 //        File file = new File(path);
 //        return objectMapper.readValue(file, State.class);
 //    }
+    /**
+     * @throws IOException may occur while directory creating
+     */
+    private void initBinds() throws IOException {
+        File outputDirectory = new File(currentPathToProject + OUTPUT_PATH);
+        if (outputDirectory.mkdirs()) {
+            inputBind = new Bind(currentPathToProject + FILE_DIRECTORY, inputVolume);
+            outputBind = new Bind(currentPathToProject + OUTPUT_PATH, outputVolume);
+        }
+    }
 
+//    private Object getJsonObject(String path, Class clazz) throws IOException {
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        File file = new File(path);
+//        return objectMapper.readValue(file, clazz);
+//    }
+//
 //    private Object getJsonObject(String path, Class clazz) throws IOException {
 //        ObjectMapper objectMapper = new ObjectMapper();
 //        File file = new File(path);

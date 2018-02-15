@@ -1,5 +1,6 @@
 package com.epam.autograder.aqa.core;
 
+import com.epam.autograder.aqa.annotation.Step;
 import com.epam.autograder.aqa.util.JsonHelper;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Request;
@@ -14,6 +15,7 @@ public abstract class RestClient {
         this.baseUrl = baseUrl;
     }
 
+    @Step
     protected HttpResponse get(String path) {
         try {
             return Request.Get(this.baseUrl.concat(path)).execute().returnResponse();
@@ -22,6 +24,7 @@ public abstract class RestClient {
         }
     }
 
+    @Step
     protected HttpResponse post(String path, Object content) {
         try {
             return Request.Post(this.baseUrl.concat(path))
@@ -31,6 +34,7 @@ public abstract class RestClient {
         }
     }
 
+    @Step
     protected HttpResponse delete(String path) {
         try {
             return Request.Delete(this.baseUrl.concat(path)).execute().returnResponse();

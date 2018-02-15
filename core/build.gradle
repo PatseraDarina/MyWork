@@ -14,6 +14,7 @@ buildscript {
         classpath("org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16")
         classpath('de.aaschmid:gradle-cpd-plugin:1.0')
         classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.17.2')
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.2'
     }
 }
 
@@ -38,6 +39,7 @@ ext {
 apply plugin: 'org.asciidoctor.convert'
 apply plugin: 'com.palantir.docker'
 apply plugin: "com.palantir.docker-run"
+apply plugin: 'org.junit.platform.gradle.plugin'
 
 apply from: "$projectDir/gradle/jacoco/jacoco.gradle"
 apply from: "$projectDir/gradle/checkstyle/checkstyle.gradle"
@@ -59,7 +61,13 @@ dependencies {
     jsondoclet "capital.scalable:spring-auto-restdocs-json-doclet:1.0.11"
     testCompile('org.springframework.restdocs:spring-restdocs-core:2.0.0.RELEASE')
     testCompile('org.springframework.restdocs:spring-restdocs-mockmvc:2.0.0.RELEASE')
-    testCompile('org.springframework.boot:spring-boot-starter-test:1.5.2.RELEASE')
+    testCompile('org.springframework.boot:spring-boot-starter-test:1.5.2.RELEASE') {
+        exclude group: 'junit', module: 'junit'
+    }
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.0.2'
+    testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.0.2'
+    testCompileOnly('org.apiguardian:apiguardian-api:1.0.0')
+    compile project(':core-api')
     compile project (':runner-api')
 }
 
@@ -88,7 +96,7 @@ task jsonDoclet(type: Javadoc, dependsOn: compileJava) {
     options.memberLevel = JavadocMemberLevel.PACKAGE
 }
 
-test {
+junitPlatformTest {
     systemProperty 'org.springframework.restdocs.outputDir', snippetsDir
     systemProperty 'org.springframework.restdocs.javadocJsonDir', javadocJsonDir
     outputs.dir snippetsDir

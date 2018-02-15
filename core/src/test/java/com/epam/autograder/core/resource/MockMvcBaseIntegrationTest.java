@@ -1,45 +1,49 @@
 package com.epam.autograder.core.resource;
 
-import static capital.scalable.restdocs.jackson.JacksonResultHandlers.prepareJackson;
-import static capital.scalable.restdocs.response.ResponseModifyingPreprocessors.limitJsonArrayLength;
-import static capital.scalable.restdocs.response.ResponseModifyingPreprocessors.replaceBinaryContent;
-import static org.junit.Assert.assertNotNull;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import capital.scalable.restdocs.AutoDocumentation;
+import com.epam.autograder.core.CoreApplication;
+import com.epam.autograder.core.CoreTestConfiguration;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.restdocs.JUnitRestDocumentation;
+import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.cli.CliDocumentation;
 import org.springframework.restdocs.http.HttpDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.operation.preprocess.OperationResponsePreprocessor;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.nio.charset.Charset;
 
-import capital.scalable.restdocs.AutoDocumentation;
+import static capital.scalable.restdocs.jackson.JacksonResultHandlers.prepareJackson;
+import static capital.scalable.restdocs.response.ResponseModifyingPreprocessors.limitJsonArrayLength;
+import static capital.scalable.restdocs.response.ResponseModifyingPreprocessors.replaceBinaryContent;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 
 /**
  * mockMvcBase test
  */
 @SpringBootTest
-@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {CoreTestConfiguration.class, CoreApplication.class})
+@TestPropertySource(locations = {"classpath:application.properties"})
+@ExtendWith({SpringExtension.class, RestDocumentationExtension.class})
 public class MockMvcBaseIntegrationTest {
+    protected static final MediaType APPLICATION_JSON_UTF8 = new MediaType(
+            MediaType.APPLICATION_JSON.getType(),
+            MediaType.APPLICATION_JSON.getSubtype(),
+            Charset.forName("utf8"));
 
     private static final String CLASS_METHOD_NAME = "{class-name}/{method-name}";
-    @Rule
-    public final JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation();
     protected MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
@@ -47,10 +51,12 @@ public class MockMvcBaseIntegrationTest {
     private WebApplicationContext context;
 
     /**
-     * setUp method
+     * Sets up.
+     *
+     * @param restDocumentation the rest documentation
      */
-    @Before
-    public void setUp() {
+    @BeforeEach
+    public void setUp(RestDocumentationExtension restDocumentation) {
         String http = "http";
         String localhost = "localhost";
         int port = 8080;
@@ -86,12 +92,5 @@ public class MockMvcBaseIntegrationTest {
         return preprocessResponse(replaceBinaryContent(), limitJsonArrayLength(objectMapper),
                 prettyPrint());
     }
-
-    /**
-     * check on null
-     */
-    @Test
-    public void contextLoads() {
-        assertNotNull("Context shouldn't be null", context);
-    }
 }
+
