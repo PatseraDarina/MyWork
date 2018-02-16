@@ -1,0 +1,53 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://maven.eveoh.nl/content/repositories/releases"
+        }
+    }
+
+    dependencies {
+        classpath "nl.eveoh:gradle-aspectj:2.0"
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+project.ext {
+    aspectjVersion = "1.8.13"
+}
+
+apply plugin: 'java'
+apply plugin: 'aspectj'
+
+dependencies {
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.2'
+    compile group: 'com.google.inject', name: 'guice', version: '4.0'
+    compile group: 'org.apache.httpcomponents', name: 'fluent-hc', version: '4.5.5'
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.5'
+    compile group: 'org.testng', name: 'testng', version: '6.13.1'
+    testCompile (group: 'org.uncommons', name: 'reportng', version: '1.1.4') {
+        exclude group: "org.testng", module: "testng"
+    }
+    compile project (':core-api')
+    compile project (':runner-api')
+
+}
+
+task runTests (type: Test) {
+    systemProperties(System.getProperties())
+
+    useTestNG {
+        useDefaultListeners = false
+        options.outputDirectory = file("$project.buildDir//aqa_report")
+        options.listeners << 'org.uncommons.reportng.HTMLReporter'
+        options.listeners << 'com.epam.autograder.aqa.listener.CustomListener'
+        options.suites 'src/test/resources/TestSuite.xml'
+    }
+
+    testLogging.showStandardStreams = true
+}
+

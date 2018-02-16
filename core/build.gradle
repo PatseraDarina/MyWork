@@ -1,0 +1,164 @@
+javaProject()
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.7.RELEASE")
+        classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.2")
+        classpath("org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16")
+        classpath('de.aaschmid:gradle-cpd-plugin:1.0')
+        classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.17.2')
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.2'
+    }
+}
+
+repositories {
+    mavenLocal()
+    maven { url 'https://repo.spring.io/libs-snapshot' }
+    mavenCentral()
+}
+
+configurations {
+    providedRuntime
+    jsondoclet
+}
+
+ext {
+    // Folder that contains a meta-data(javaDoc) of controllers and DTO's
+    javadocJsonDir = file("$buildDir/generated-javadoc-json")
+    //Pieces of doc(with javaDoc's) those are generated after test execution
+    snippetsDir = file("$buildDir/generated-snippets")
+}
+
+apply plugin: 'org.asciidoctor.convert'
+apply plugin: 'com.palantir.docker'
+apply plugin: "com.palantir.docker-run"
+apply plugin: 'org.junit.platform.gradle.plugin'
+
+apply from: "$projectDir/gradle/jacoco/jacoco.gradle"
+apply from: "$projectDir/gradle/checkstyle/checkstyle.gradle"
+apply from: "$projectDir/gradle/pmd/pmd.gradle"
+apply from: "$projectDir/gradle/findbugs/findbugs.gradle"
+apply from: "$projectDir/gradle/cpd/cpd.gradle"
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter:1.5.10.RELEASE')
+    compile 'org.jetbrains.xodus:xodus-openAPI:1.1.0'
+    compile('org.jetbrains.xodus:xodus-environment:1.1.0')
+    compile('org.jetbrains.xodus:xodus-entity-store:1.1.0')
+
+
+    providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
+
+    testCompile('capital.scalable:spring-auto-restdocs-core:1.0.11')
+    jsondoclet "capital.scalable:spring-auto-restdocs-json-doclet:1.0.11"
+    testCompile('org.springframework.restdocs:spring-restdocs-core:2.0.0.RELEASE')
+    testCompile('org.springframework.restdocs:spring-restdocs-mockmvc:2.0.0.RELEASE')
+    testCompile('org.springframework.boot:spring-boot-starter-test:1.5.2.RELEASE') {
+        exclude group: 'junit', module: 'junit'
+    }
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.0.2'
+    testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.0.2'
+    testCompileOnly('org.apiguardian:apiguardian-api:1.0.0')
+    compile project(':core-api')
+    compile project (':runner-api')
+}
+
+// clean before generate documentation
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    dependsOn clean
+}
+
+//----- START Configuration Spring REST Docs -----
+/**
+ * This task scanning java source files and generates meta-data file in JSON format which contains javaDoc`s.
+ */
+task jsonDoclet(type: Javadoc, dependsOn: compileJava) {
+    // Specified a path for scanning javaDoc`s TODO need packages "entity" and "controller"
+    source = sourceSets.main.allJava
+    // the classpath to use to resolve type references in the source code
+    classpath = sourceSets.main.compileClasspath
+    // Folder that contains a meta-data(javaDoc) of controllers and DTO's
+    destinationDir = javadocJsonDir
+    // set path to doclet
+    options.docletpath = configurations.jsondoclet.files.asType(List)
+    // resource for exporting JavaDoc to JSON
+    options.doclet = 'capital.scalable.restdocs.jsondoclet.ExtractDocumentationAsJsonDoclet'
+    // works level
+    options.memberLevel = JavadocMemberLevel.PACKAGE
+}
+
+junitPlatformTest {
+    systemProperty 'org.springframework.restdocs.outputDir', snippetsDir
+    systemProperty 'org.springframework.restdocs.javadocJsonDir', javadocJsonDir
+    outputs.dir snippetsDir
+
+    dependsOn jsonDoclet
+}
+
+/**
+ * Add the documentation to jar file.
+ */
+task documentationToJar(type: Jar) {
+    baseName = "${project.archivesBaseName}"
+    classifier = 'documentation'
+    from("$buildDir/generated-docs/html") {
+        into 'static/docs'
+    }
+}
+
+/**
+ * This task generate a documentation based on meta-data (result of jsonDoclet task)
+ * and asciidoc template of documentation.
+ */
+asciidoctor {
+    // Template of documentation
+    sourceDir = file("src/main/documentation")
+    // Generated documentation file
+    outputDir = file("$buildDir/generated-docs")
+    // output format html or pdf, but not both
+    backends 'html'/*,'pdf'*/
+    //the first level-0 section title, located in the header
+    options doctype: 'book'
+    //snippets - "$buildDir/generated-snippets".
+    // Pieces of doc(with javaDoc's) those are generated after test execution
+    attributes "source-highlighter": "highlightjs", "snippets": snippetsDir
+
+    dependsOn test
+    finalizedBy documentationToJar
+}
+build.finalizedBy asciidoctor
+//----- END Configuration Spring REST Docs -----
+
+//----- START Docker configuration -----
+/**
+ * Builds and pushes docker images.
+ */
+docker {
+    //name for use a container, may include a tag
+    name "${project.group}/${jar.baseName}:${version}"
+    //(optional) an argument list of files to be included in the Docker build context
+    files jar.archivePath
+    //an argument map of string to string which will set --build-arg arguments to the docker build command
+    buildArgs(['JAR_FILE': "${jar.archiveName}"])
+}
+/**
+ * Tasks for starting, stopping, status and clean up a named container
+ */
+dockerRun {
+    //name for use a container, may include a tag
+    name "${jar.baseName}"
+    //name of the image
+    image "${project.group}/${jar.baseName}:${version}"
+    //applications port
+    ports '8080'
+}
+//----- END Docker configuration -----

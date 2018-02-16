@@ -1,0 +1,8 @@
+apply plugin: 'checkstyle'
+
+checkstyle {
+    toolVersion = '8.8'
+    configFile file("$projectDir/gradle/checkstyle/config/checkstyle-rules.xml")
+    checkstyleTest.enabled = false
+    maxWarnings = 10
+}
